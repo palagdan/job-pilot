@@ -1,0 +1,23 @@
+{
+  "name": "@job-pilot/logger",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "lint": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "pino": "^10.4.0",
+    "pino-pretty": "^13.2.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.7",
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}

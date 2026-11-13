@@ -52,3 +52,20 @@ export const errorStatus: Record<ErrorCode, number> = {
 /** "JP-500-a1b2c3" */
 export const formatErrorCode = (status: number, requestId: string): string =>
   `JP-${status}-${requestId.slice(0, 6)}`;
+
+/**
+ * Expected failure thrown by use cases ("not found", "agent busy", validation...). Carries a shared error code
+ * and a user-facing message; the api maps it to `apiErrorSchema` with `errorStatus[code]`. Anything that is not
+ * an `AppError` is treated as a bug → 500 `internal`.
+ */
+export class AppError extends Error {
+  readonly code: ErrorCode;
+  readonly fields: Record<string, string> | undefined;
+
+  constructor(code: ErrorCode, message: string, fields?: Record<string, string>) {
+    super(message);
+    this.name = 'AppError';
+    this.code = code;
+    this.fields = fields;
+  }
+}

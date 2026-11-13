@@ -14,6 +14,7 @@
     "@job-pilot/config": "workspace:*",
     "@job-pilot/db": "workspace:*",
     "@job-pilot/jobs": "workspace:*",
+    "@job-pilot/logger": "workspace:*",
     "zod": "^4.6.7"
   },
   "devDependencies": {

@@ -11,6 +11,11 @@ Turborepo monorepo, TypeScript everywhere.
 | ----------------- | ----------------------------------------------------------- |
 | `packages/shared` | Contracts: enums, zod DTOs, API route map, error shape      |
 | `packages/db`     | Persistence: Drizzle schema, migrations, client, seed       |
+| `packages/config` | Env validation (`parseEnv` + fragments)                     |
+| `packages/logger` | Logging port + pino adapter (pretty in dev, JSON otherwise) |
+| `packages/storage`| File storage port + S3 adapter (RustFS/R2/S3), signed URLs  |
+| `packages/jobs`   | Background job contract + typed pg-boss client              |
+| `packages/llm`    | Featherless LLM layer                                       |
 
 Conventions: kebab-case file names (enforced by both linters), no `index.*` files — entry points are `main.ts`,
 packages expose explicit subpaths (`@job-pilot/shared/targets`).
@@ -37,7 +42,8 @@ Google sign-in (optional locally): create an OAuth client (type Web) in Google C
 Without them the api runs, but sign-in is disabled. The browser reaches the api only through the web app
 (Next rewrites `/api/auth/*` and `/v1/*` to `API_URL`).
 
-Integration tests need the docker test DB: `TEST_DATABASE_URL=… pnpm test` (value in `.env.example`).
+Integration tests run against the docker services when `TEST_DATABASE_URL` / `TEST_S3_ENDPOINT` are set
+(values in `.env.example`): `TEST_DATABASE_URL=… TEST_S3_ENDPOINT=… pnpm test`.
 
 Local services:
 

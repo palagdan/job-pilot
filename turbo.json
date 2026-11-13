@@ -19,7 +19,8 @@
     "lint": {},
     "test": {
       "passThroughEnv": [
-        "TEST_DATABASE_URL"
+        "TEST_DATABASE_URL",
+        "TEST_S3_ENDPOINT"
       ]
     },
     "typecheck": {

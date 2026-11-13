@@ -1,6 +1,7 @@
 import { createDb } from '@job-pilot/db/client';
 import { runMigrations } from '@job-pilot/db/migrator';
 import { user } from '@job-pilot/db/schema/auth';
+import { silentLogger } from '@job-pilot/logger/logger';
 import { meSchema } from '@job-pilot/shared/user';
 import { betterAuth } from 'better-auth';
 import { testUtils } from 'better-auth/plugins';
@@ -8,6 +9,7 @@ import { eq } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createApp } from '../app.ts';
 import { createAuthOptions, createSessionReader } from '../infrastructure/auth/better-auth.ts';
+import { createMemoryRateLimitStore } from '../infrastructure/rate-limit/memory-rate-limit-store.ts';
 import { createDrizzleUserRepository } from '../infrastructure/repositories/drizzle-user-repository.ts';
 import { authBasePath } from './paths.ts';
 
@@ -32,6 +34,8 @@ describe.skipIf(!url)('auth flow (integration)', () => {
     plugins: [testUtils()],
   });
   const app = createApp({
+    log: silentLogger,
+    rateLimitStore: createMemoryRateLimitStore(),
     authHandler: auth.handler,
     sessions: createSessionReader(auth),
     users: createDrizzleUserRepository(db),
