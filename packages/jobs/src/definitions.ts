@@ -36,6 +36,16 @@ export const jobs = {
     payload: z.object({}),
     options: { retryLimit: 0, expireInSeconds: 60 },
   },
+  /** Enqueued by the worker schedule (one per source, keyed) and the dev CLI. Handled by the worker (Daniil). */
+  'source.run': {
+    payload: z.object({ sourceId: idSchema }),
+    options: { retryLimit: 1, expireInSeconds: 120 },
+  },
+  /** Scheduled every minute by the worker (Daniil). Handled by the worker (Daniil). */
+  'apify.poll-runs': {
+    payload: z.object({}),
+    options: { retryLimit: 0, expireInSeconds: 60 },
+  },
   /** Enqueued by the Apify webhook endpoint in the api (Daniil). Handled by the worker (Daniil). */
   'apify.ingest-dataset': {
     payload: z.object({ sourceRunId: idSchema }),

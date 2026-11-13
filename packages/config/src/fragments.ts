@@ -60,3 +60,11 @@ export const storageEnv = {
   /** true for RustFS/MinIO-style servers. */
   S3_FORCE_PATH_STYLE: z.stringbool().default(false),
 };
+
+export const apifyEnv = {
+  APIFY_TOKEN: z.string().min(1),
+  /** Cap on items per run; also passed to Apify so a run can never charge for more. */
+  APIFY_MAX_ITEMS: z.coerce.number().int().min(1).default(200),
+  /** Hard spend cap per run in USD (Apify `maxTotalChargeUsd`). */
+  APIFY_MAX_CHARGE_USD: z.coerce.number().positive().default(1),
+};

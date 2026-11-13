@@ -8,9 +8,11 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "source:run": "node --env-file-if-exists=../../.env src/scripts/run-source.ts"
   },
   "dependencies": {
+    "@job-pilot/apify": "workspace:*",
     "@job-pilot/config": "workspace:*",
     "@job-pilot/db": "workspace:*",
     "@job-pilot/jobs": "workspace:*",
