@@ -1,10 +1,10 @@
 import { cvFileBaseName, cvFileName } from '@job-pilot/shared/cv-file-name';
+import { formatPeriod } from '@job-pilot/shared/cv-format';
 import mammoth from 'mammoth';
 import { extractText } from 'unpdf';
 import { describe, expect, it } from 'vitest';
 import { cvContentHash } from './content-hash.ts';
 import { fixtureCv } from './fixture-cv.ts';
-import { formatPeriod } from './format.ts';
 import { renderCvDocx } from './render-docx.ts';
 import { renderCvPdf } from './render-pdf.ts';
 

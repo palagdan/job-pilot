@@ -1,7 +1,5 @@
 import { createRequire } from 'node:module';
 import type { CvContent } from '@job-pilot/shared/cv';
-import { Document, Font, Page, renderToBuffer, StyleSheet, Text, View } from '@react-pdf/renderer';
-import { createElement as h, type ReactElement } from 'react';
 import {
   contactLine,
   educationLine,
@@ -9,7 +7,9 @@ import {
   formatPeriod,
   roleLine,
   sectionTitles,
-} from './format.ts';
+} from '@job-pilot/shared/cv-format';
+import { Document, Font, Page, renderToBuffer, StyleSheet, Text, View } from '@react-pdf/renderer';
+import { createElement as h, type ReactElement } from 'react';
 
 /**
  * PDF renderer (React-PDF, no JSX so Node can run this file directly). One column, real text, standard section

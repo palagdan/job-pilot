@@ -1,7 +1,7 @@
-import type { CvContent } from '@job-pilot/shared/cv';
-import type { LanguageLevel } from '@job-pilot/shared/enums';
+import type { CvContent } from './cv.ts';
+import type { LanguageLevel } from './enums.ts';
 
-/** Shared text formatting for PDF and DOCX so both files say exactly the same thing. */
+/** CV text formatting shared by the PDF, the DOCX and the web preview, so all three say exactly the same thing. */
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 

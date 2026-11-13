@@ -1,0 +1,118 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  margin-bottom: var(--space-24);
+}
+
+.header h1 {
+  font-size: 28px;
+  letter-spacing: -0.02em;
+}
+
+.muted {
+  color: var(--color-muted);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.icon {
+  width: 12px;
+  height: 12px;
+  margin-right: var(--space-4);
+}
+
+/* Figma "Columns": file + preview left, details right. */
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: var(--space-24);
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding: var(--space-20);
+  background: var(--color-bg);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-xl);
+}
+
+.fileHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.changes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.changes li {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.check {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-top: 1px;
+  color: var(--color-accent);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.note {
+  font-size: var(--text-small);
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.writing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-12);
+  max-width: 520px;
+  margin: 80px auto;
+  padding: var(--space-32);
+  background: var(--color-bg);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-xl);
+  text-align: center;
+}
+
+.writing h1 {
+  font-size: 22px;
+}

@@ -1,5 +1,4 @@
 import type { CvContent } from '@job-pilot/shared/cv';
-import { BorderStyle, Document, Packer, Paragraph, TabStopType, TextRun } from 'docx';
 import {
   contactLine,
   educationLine,
@@ -7,7 +6,8 @@ import {
   formatPeriod,
   roleLine,
   sectionTitles,
-} from './format.ts';
+} from '@job-pilot/shared/cv-format';
+import { BorderStyle, Document, Packer, Paragraph, TabStopType, TextRun } from 'docx';
 
 /**
  * DOCX renderer (same content and order as the PDF). Plain paragraphs, real bullets, a right tab stop for dates —

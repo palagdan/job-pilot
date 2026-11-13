@@ -99,9 +99,9 @@ Roadmap per person:
 
 - [x] [Artem] CV structured JSON schema; renderers PDF (React-PDF, one-column ATS-friendly) + DOCX (`docx`), cached in `cv_file`, file naming per spec
 - [x] [Artem] CV endpoints: get, confirm (C02), keep original (C03), edit text, delete (C05 rules), compare/diff, download, replace upload (C04)
-- [ ] [Artem] 06 New CV review (preview, What changed, original, download, confirm / keep original)
-- [ ] [Artem] 09 CVs page (master card, special CV list, actions menu, compare view, E08 fallback to DOCX)
-- [ ] [Artem] 11 Profile and targets page (per-section save, "added from chat — Undo", next run)
+- [x] [Artem] 06 New CV review (preview, What changed, original, download, confirm / keep original)
+- [x] [Artem] 09 CVs page (master card, special CV list, actions menu, compare view, E08 fallback to DOCX)
+- [x] [Artem] 11 Profile and targets page (per-section save, "added from chat — Undo", next run)
 - [x] [Daniil] Master CV generation job: rewrite from profile, "What changed", Generating → Needs review, regenerate, failure E05; triggers "Agent is live" email (03)
 - [x] [Daniil] Dedupe (canonical URL + company + title hash), language detection, location normalization (city → CZ region), remote flag, `first_seen/last_seen`, expiry (not seen in N runs → expired)
 - [x] [Daniil] Per-source mapper unit tests with saved dataset fixtures

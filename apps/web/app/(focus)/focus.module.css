@@ -1,0 +1,21 @@
+.page {
+  min-height: 100dvh;
+  background: var(--color-surface);
+}
+
+.top {
+  padding: var(--space-24) var(--layout-content-padding) 0;
+}
+
+.top a {
+  display: inline-flex;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+}
+
+/* Figma 06: content 1120 wide, centered. */
+.main {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  padding: var(--space-24) var(--space-24) 56px;
+}

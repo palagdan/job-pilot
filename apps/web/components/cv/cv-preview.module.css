@@ -1,0 +1,82 @@
+/* Mirrors the PDF layout (packages/cv-render): one column, small caps section titles with a rule. */
+.page {
+  padding: var(--space-32) var(--space-32) var(--space-24);
+  background: #ffffff;
+  color: #0b0d12;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  font-size: var(--text-body);
+  line-height: 1.45;
+  /* The CV is a document: it stays light in dark mode, like a PDF viewer. */
+  color-scheme: light;
+}
+
+.page p {
+  margin: 0;
+}
+
+.name {
+  font-family: var(--font-heading), var(--font-heading-fallback);
+  font-size: 22px;
+  font-weight: var(--weight-bold);
+  line-height: 1.2;
+}
+
+.headline {
+  margin-top: var(--space-2) !important;
+  font-weight: var(--weight-semibold);
+}
+
+.meta {
+  font-size: var(--text-small);
+  color: #5f6672;
+}
+
+.section {
+  margin-top: var(--space-16);
+}
+
+.sectionTitle {
+  margin: 0 0 var(--space-8);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid #e4e7ec;
+  font-family: var(--font-body), var(--font-body-fallback);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.item + .item {
+  margin-top: var(--space-10);
+}
+
+.itemHead {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+
+.itemTitle {
+  font-weight: var(--weight-semibold);
+}
+
+.bullets {
+  margin: var(--space-4) 0 0;
+  padding-left: var(--space-16);
+}
+
+/* Compare view */
+.page [data-mark="added"] {
+  background: #dcfae6;
+  box-shadow: 0 0 0 2px #dcfae6;
+  border-radius: 2px;
+}
+
+.page [data-mark="removed"] {
+  background: #fee4e2;
+  box-shadow: 0 0 0 2px #fee4e2;
+  border-radius: 2px;
+  text-decoration: line-through;
+  text-decoration-color: #d92d20;
+}

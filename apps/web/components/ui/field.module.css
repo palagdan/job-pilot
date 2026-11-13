@@ -67,3 +67,10 @@
   color: var(--color-muted);
   cursor: not-allowed;
 }
+
+.textarea {
+  min-height: 80px;
+  resize: vertical;
+  line-height: var(--line-height-body);
+  align-items: flex-start;
+}

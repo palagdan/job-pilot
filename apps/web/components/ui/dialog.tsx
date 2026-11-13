@@ -76,7 +76,8 @@ export function ConfirmDialog({
   confirmLabel: ReactNode;
   cancelLabel?: ReactNode;
   tone?: 'default' | 'danger';
-  onConfirm: () => void | Promise<void>;
+  /** May return a promise (e.g. `mutation.mutateAsync`); its value is ignored. Rejections keep the dialog open. */
+  onConfirm: () => unknown;
   requireText?: string;
 }) {
   const [busy, setBusy] = useState(false);
