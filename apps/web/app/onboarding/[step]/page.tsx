@@ -4,8 +4,8 @@ import { notFound, redirect } from 'next/navigation';
 import { Stepper } from '../../../components/ui/stepper.tsx';
 import { onboardingPath, stepFromSlug, stepIndex, stepLabels } from '../../../lib/onboarding/steps.ts';
 import { requireUser } from '../../../lib/session/get-session-user.ts';
-import styles from '../onboarding.module.css';
 import { ConfirmProfileStep } from './confirm-profile-step.tsx';
+import { ScheduleStep } from './schedule-step.tsx';
 import { SetTargetsStep } from './set-targets-step.tsx';
 import { UploadStep } from './upload-step.tsx';
 
@@ -32,10 +32,7 @@ export default async function OnboardingStepPage({ params }: { params: Promise<{
       ) : step === 'set_targets' ? (
         <SetTargetsStep />
       ) : (
-        <section className={styles.card}>
-          <h2 className={styles.cardTitle}>{stepLabels[step]}</h2>
-          <p className={styles.muted}>This step is built next (M1). You are on step {stepIndex(step) + 1} of 4.</p>
-        </section>
+        <ScheduleStep />
       )}
     </>
   );
