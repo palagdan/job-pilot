@@ -4,6 +4,7 @@ import type { Opportunity } from '@job-pilot/shared/opportunity';
 import { skipReasons, type SkipReason } from '@job-pilot/shared/enums';
 import { limits } from '@job-pilot/shared/limits';
 import { ExternalLink } from 'lucide-react';
+import Link from 'next/link';
 import { type FormEvent, useState } from 'react';
 import { Badge, FitScore } from '../../../components/ui/status-badge.tsx';
 import { Button } from '../../../components/ui/button.tsx';
@@ -44,7 +45,7 @@ export type CardState =
   /** Skipped: collapsed row with Undo for 10 s. */
   | { kind: 'skipped' }
   /** Pursued: "Preparing your pack…". */
-  | { kind: 'pursued' };
+  | { kind: 'pursued'; itemId?: string };
 
 export function OpportunityCard({
   opportunity: o,
@@ -107,7 +108,14 @@ export function OpportunityCard({
       )}
 
       {state.kind === 'pursued' ? (
-        <output className={styles.preparing}>Preparing your pack…</output>
+        <output className={styles.preparing}>
+          Preparing your pack…{' '}
+          {state.itemId && (
+            <Link className={styles.link} href={`/review/${state.itemId}`}>
+              Open in Review
+            </Link>
+          )}
+        </output>
       ) : expired ? (
         <div className={styles.actions}>
           <Button size="sm" onClick={onDismiss} loading={busy}>

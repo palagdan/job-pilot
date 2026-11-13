@@ -50,6 +50,7 @@ describe.skipIf(!url)('email unsubscribe (integration)', () => {
       jobs: {} as never,
       agentJobs: {} as never,
       today: {} as never,
+      review: {} as never,
       agentRuns: {} as never,
       email: { preferences: createDrizzleEmailPreferencesRepository(db), secret },
     });

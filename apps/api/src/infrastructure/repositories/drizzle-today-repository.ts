@@ -1,7 +1,7 @@
 import type { Db } from '@job-pilot/db/client';
 import { activity } from '@job-pilot/db/schema/activity';
 import { opportunity } from '@job-pilot/db/schema/opportunities';
-import { note, pipelineItem } from '@job-pilot/db/schema/pipeline';
+import { followUp, note, pipelineItem } from '@job-pilot/db/schema/pipeline';
 import { targets } from '@job-pilot/db/schema/profile';
 import { eventListing, jobPosting, source } from '@job-pilot/db/schema/sources';
 import { ownedBy } from '@job-pilot/db/scoping';
@@ -85,7 +85,7 @@ const toRecord = (r: FeedRow): OpportunityRecord | null => {
   return null;
 };
 
-const pipelineSelect = (db: Db) =>
+export const pipelineSelect = (db: Db) =>
   db
     .select({
       item: pipelineItem,
@@ -104,7 +104,7 @@ const pipelineSelect = (db: Db) =>
 
 type PipelineRow = Awaited<ReturnType<ReturnType<typeof pipelineSelect>['execute']>>[number];
 
-const toPipelineRecord = (r: PipelineRow): PipelineItemRecord => ({
+export const toPipelineRecord = (r: PipelineRow): PipelineItemRecord => ({
   id: r.item.id,
   opportunityId: r.item.opportunityId,
   type: r.type,
@@ -127,6 +127,14 @@ type SkipSnapshot = {
   skipReason: string | null;
   skipNote: string | null;
   feedStatusChangedAt: string | null;
+};
+
+type PipelineSnapshot = {
+  status: string;
+  statusChangedAt: string;
+  sentAt: string | null;
+  registeredAt: string | null;
+  nextFollowUpAt: string | null;
 };
 
 export const createDrizzleTodayRepository = (db: Db): TodayRepository => ({
@@ -321,6 +329,40 @@ export const createDrizzleTodayRepository = (db: Db): TodayRepository => ({
       if (act.undoneAt) return 'already_undone';
       if (!act.undoableUntil) return 'not_undoable';
       if (act.undoableUntil.getTime() < now.getTime()) return 'expired';
+      if (act.action === 'pipeline.mark_sent' || act.action === 'pipeline.mark_registered') {
+        const before = act.before as PipelineSnapshot;
+        const after = act.after as { status: string; followUpId: string | null };
+        const [item] = await tx
+          .select({ status: pipelineItem.status })
+          .from(pipelineItem)
+          .where(ownedBy(pipelineItem, userId, eq(pipelineItem.id, act.entityId)))
+          .for('update');
+        if (!item || item.status !== after.status) return 'changed';
+        if (after.followUpId) {
+          // The follow-up is gone (or already acted on) → the item moved on; do not undo.
+          const removed = await tx
+            .delete(followUp)
+            .where(and(eq(followUp.id, after.followUpId), eq(followUp.status, 'pending')))
+            .returning({ id: followUp.id });
+          if (removed.length === 0) return 'changed';
+        }
+        const date = (v: string | null) => (v ? new Date(v) : null);
+        await tx
+          .update(pipelineItem)
+          .set({
+            status: before.status as never,
+            statusChangedAt: new Date(before.statusChangedAt),
+            sentAt: date(before.sentAt),
+            registeredAt: date(before.registeredAt),
+            nextFollowUpAt: date(before.nextFollowUpAt),
+          })
+          .where(eq(pipelineItem.id, act.entityId));
+        await tx
+          .update(activity)
+          .set({ undoneAt: now })
+          .where(and(eq(activity.id, act.id), isNull(activity.undoneAt)));
+        return 'undone';
+      }
       if (act.action !== 'opportunity.skip') return 'not_undoable';
 
       const before = act.before as SkipSnapshot;

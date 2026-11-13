@@ -5,6 +5,7 @@ import type { SkipReason } from '@job-pilot/shared/enums';
 import type { OpportunityType } from '@job-pilot/shared/enums';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Check, Circle, Sparkles } from 'lucide-react';
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { PageHeader } from '../../../components/shell/page-header.tsx';
 import { Banner } from '../../../components/ui/banner.tsx';
@@ -143,8 +144,8 @@ export function TodayScreen() {
   const pursue = (id: string) => {
     setCard(id, { kind: 'busy' });
     pursueMutation.mutate(id, {
-      onSuccess: () => {
-        setCard(id, { kind: 'pursued' });
+      onSuccess: (item) => {
+        setCard(id, { kind: 'pursued', itemId: item.id });
         void queryClient.invalidateQueries({ queryKey: ['pipeline'] });
         later(id, PURSUED_LINGER_MS, () => {
           setCard(id, null);
@@ -276,7 +277,8 @@ export function TodayScreen() {
         subtitle={
           <>
             {todayLabel.format(now)}
-            {data && ` — ${newCount} new, ${data.readyToSendCount} ready to send`}
+            {data && ` — ${newCount} new, `}
+            {data && (data.readyToSendCount > 0 ? <Link href="/review">{data.readyToSendCount} ready to send</Link> : '0 ready to send')}
           </>
         }
         actions={data && data.items.length > 0 ? runButton : undefined}

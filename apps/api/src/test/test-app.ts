@@ -26,6 +26,7 @@ import { createDrizzleCvRepository } from '../infrastructure/repositories/drizzl
 import { createDrizzleOpsReader } from '../infrastructure/repositories/drizzle-ops-reader.ts';
 import { createDrizzlePipelineRepository } from '../infrastructure/repositories/drizzle-pipeline-repository.ts';
 import { createDrizzleProfileRepository } from '../infrastructure/repositories/drizzle-profile-repository.ts';
+import { createDrizzleReviewRepository } from '../infrastructure/repositories/drizzle-review-repository.ts';
 import { createDrizzleScheduleRepository } from '../infrastructure/repositories/drizzle-schedule-repository.ts';
 import { createDrizzleTargetsRepository } from '../infrastructure/repositories/drizzle-targets-repository.ts';
 import { createDrizzleTodayRepository } from '../infrastructure/repositories/drizzle-today-repository.ts';
@@ -91,6 +92,7 @@ export const createTestApp = (overrides: Partial<AppDeps> = {}) => {
       enqueuePackPrepare: async (id) => void jobs.packPrepare.push(id),
     },
     today: createDrizzleTodayRepository(db),
+    review: createDrizzleReviewRepository(db),
     agentRuns: createDrizzleAgentRunRepository(db),
     devSessions: createDevSessionIssuer({ db, env: testEnv, basePath: authBasePath }),
     ...overrides,
