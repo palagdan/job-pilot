@@ -18,12 +18,14 @@ import {
 } from '../infrastructure/auth/better-auth.ts';
 import { createMemoryRateLimitStore } from '../infrastructure/rate-limit/memory-rate-limit-store.ts';
 import { createCvRenderer } from '../infrastructure/rendering/cv-render-adapter.ts';
+import { createDrizzleAgentRunRepository } from '../infrastructure/repositories/drizzle-agent-run-repository.ts';
 import { createDrizzleCvFactsReader } from '../infrastructure/repositories/drizzle-cv-facts-reader.ts';
 import { createDrizzleCvFileRepository } from '../infrastructure/repositories/drizzle-cv-file-repository.ts';
 import { createDrizzleCvRepository } from '../infrastructure/repositories/drizzle-cv-repository.ts';
 import { createDrizzleProfileRepository } from '../infrastructure/repositories/drizzle-profile-repository.ts';
 import { createDrizzleScheduleRepository } from '../infrastructure/repositories/drizzle-schedule-repository.ts';
 import { createDrizzleTargetsRepository } from '../infrastructure/repositories/drizzle-targets-repository.ts';
+import { createDrizzleTodayRepository } from '../infrastructure/repositories/drizzle-today-repository.ts';
 import { createDrizzleUploadRepository } from '../infrastructure/repositories/drizzle-upload-repository.ts';
 import { createDrizzleUserRepository } from '../infrastructure/repositories/drizzle-user-repository.ts';
 
@@ -50,6 +52,8 @@ export const createTestApp = (overrides: Partial<AppDeps> = {}) => {
   const jobs = {
     parse: [] as string[],
     generateMaster: [] as { userId: string; uploadId: string }[],
+    agentRuns: [] as string[],
+    packPrepare: [] as string[],
   };
   const emails: string[] = [];
   let dir = '';
@@ -75,6 +79,12 @@ export const createTestApp = (overrides: Partial<AppDeps> = {}) => {
       enqueueGenerateMasterCv: async (userId, uploadId) =>
         void jobs.generateMaster.push({ userId, uploadId }),
     },
+    agentJobs: {
+      enqueueAgentRun: async (runId) => void jobs.agentRuns.push(runId),
+      enqueuePackPrepare: async (id) => void jobs.packPrepare.push(id),
+    },
+    today: createDrizzleTodayRepository(db),
+    agentRuns: createDrizzleAgentRunRepository(db),
     devSessions: createDevSessionIssuer({ db, env: testEnv, basePath: authBasePath }),
     ...overrides,
   });

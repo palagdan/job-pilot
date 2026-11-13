@@ -11,3 +11,11 @@ export interface EmailJobQueue {
   /** Welcome email (01), once per user: deduplicated by `welcome:<userId>` in the worker. */
   enqueueWelcomeEmail(userId: string): Promise<void>;
 }
+
+/** Agent jobs the api enqueues (handled by Daniil's worker). */
+export interface AgentJobQueue {
+  /** agent.run: prefilter + rank for one queued `agent_run` row. */
+  enqueueAgentRun(runId: string): Promise<void>;
+  /** pack.prepare: write the CV/cover/answers for a freshly pursued pipeline item (no handler yet). */
+  enqueuePackPrepare(pipelineItemId: string): Promise<void>;
+}

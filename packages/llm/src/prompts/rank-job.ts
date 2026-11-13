@@ -20,14 +20,15 @@ export type RankJobInput = {
 /** One job vs the user's profile and targets → fit score, why, gap. */
 export const rankJobPrompt = definePrompt<RankJobInput>({
   name: 'rank-job',
-  version: 'rank-job@1',
+  version: 'rank-job@2',
   task: 'rank',
   system: [
     "You are a strict recruiter scoring how well a job fits a candidate's profile and targets.",
     'Score guide: 85–100 strong match on role, seniority, skills and location; 60–84 good match with gaps;',
     '30–59 partial (adjacent role or seniority mismatch); 0–29 different field or excluded.',
     'Excluded companies or a different profession must score below 20.',
-    'why: one short sentence in English, addressed to the candidate ("Matches your …"), max 140 characters.',
+    'why: one short sentence in English addressed to the candidate, max 140 characters. Score 60+: say what matches ("Matches your …"). Score below 60: name the main mismatch ("Different field: …", "Seniority mismatch: …"); never start with "Matches".',
+    'Say "excluded" only when the job matches one of the candidate exclusions listed in the targets.',
     'gapNote: the single biggest missing requirement in max 80 characters, or null if none.',
   ].join('\n'),
   user: ({ profile, targets, job }) =>
