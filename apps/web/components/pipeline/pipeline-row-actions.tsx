@@ -40,6 +40,22 @@ export function PipelineRowActions({ item }: { item: PipelineItem }) {
         menu={
           <>
             <MenuItem onSelect={() => router.push(reviewPath(item.id))}>Open</MenuItem>
+            {item.followUp && (
+              <>
+                <MenuSeparator />
+                {item.followUp.due && (
+                  <MenuItem description="The follow-up text is in Review" onSelect={() => router.push(reviewPath(item.id))}>
+                    Open follow-up
+                  </MenuItem>
+                )}
+                <MenuItem
+                  disabled={actions.completeFollowUp.isPending}
+                  onSelect={() => item.followUp && actions.completeFollowUp.mutate(item.followUp.id)}
+                >
+                  Mark follow-up as sent
+                </MenuItem>
+              </>
+            )}
             {beforeSending.has(item.status) && (
               <>
                 <MenuSeparator />

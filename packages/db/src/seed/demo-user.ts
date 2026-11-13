@@ -9,7 +9,7 @@ export const demoUserEmail = 'demo@jobpilot.local';
 /**
  * One onboarded user so screens have data before Google sign-in exists.
  * Re-running resets this user's profile, targets and schedule to the values below.
- * The full demo seed (CVs, Today items, every pipeline status) is a separate M5 item.
+ * CVs, Today items and the pipeline come from `seedDemoData`.
  */
 export const seedDemoUser = async (db: Db) =>
   db.transaction(async (tx) => {

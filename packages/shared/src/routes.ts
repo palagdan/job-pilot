@@ -307,7 +307,7 @@ export const routes = {
   completeFollowUp: {
     method: 'POST',
     path: '/v1/follow-ups/:id/done',
-    owner: 'daniil',
+    owner: 'artem',
     response: okSchema,
   },
 

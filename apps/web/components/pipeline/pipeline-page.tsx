@@ -11,7 +11,7 @@ import { Chip } from '../ui/chip.tsx';
 import { EmptyState } from '../ui/empty-state.tsx';
 import { Select } from '../ui/select.tsx';
 import { Skeleton, useDelayedFlag } from '../ui/skeleton.tsx';
-import { PipelineStatusBadge } from '../ui/status-badge.tsx';
+import { Badge, PipelineStatusBadge } from '../ui/status-badge.tsx';
 import { Table, TBody, Td, Th, THead, Tr } from '../ui/table.tsx';
 import { itemTitle, routeLabel, sortLabel, statusGroupLabel } from './pipeline-labels.ts';
 import { PipelineRowActions } from './pipeline-row-actions.tsx';
@@ -154,7 +154,9 @@ export function PipelinePage() {
                   <Td>
                     <PipelineStatusBadge status={item.status} />
                   </Td>
-                  <Td className={styles.next}>{item.nextStep ?? '-'}</Td>
+                  <Td className={styles.next}>
+                    {item.followUp?.due ? <Badge tone="warning">{item.nextStep}</Badge> : (item.nextStep ?? '-')}
+                  </Td>
                   <Td className={styles.actions}>
                     <PipelineRowActions item={item} />
                   </Td>

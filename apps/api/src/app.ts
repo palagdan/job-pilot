@@ -14,6 +14,7 @@ import type { AgentJobQueue, JobQueue } from './application/ports/job-queue.ts';
 import type { OpsReader } from './application/ports/ops-reader.ts';
 import type { PipelineRepository } from './application/ports/pipeline-repository.ts';
 import type { ProfileRepository } from './application/ports/profile-repository.ts';
+import type { PushSubscriptionRepository } from './application/ports/push-subscription-repository.ts';
 import type { RateLimitStore } from './application/ports/rate-limit-store.ts';
 import type { ReviewRepository } from './application/ports/review-repository.ts';
 import type { ScheduleRepository } from './application/ports/schedule-repository.ts';
@@ -35,11 +36,13 @@ import { createCvRoutes } from './http/routes/cv-routes.ts';
 import { createDevRoutes } from './http/routes/dev-routes.ts';
 import { createEmailRoutes } from './http/routes/email-routes.ts';
 import { createFileRoutes } from './http/routes/file-routes.ts';
+import { createFollowUpRoutes } from './http/routes/follow-up-routes.ts';
 import { createMeRoutes } from './http/routes/me-routes.ts';
 import { createOnboardingRoutes } from './http/routes/onboarding-routes.ts';
 import { createOpportunityRoutes } from './http/routes/opportunity-routes.ts';
 import { createPipelineRoutes } from './http/routes/pipeline-routes.ts';
 import { createProfileRoutes } from './http/routes/profile-routes.ts';
+import { createPushRoutes } from './http/routes/push-routes.ts';
 import {
   createDraftRoutes,
   createReviewItemRoutes,
@@ -70,6 +73,9 @@ export type AppDeps = {
   ops: OpsReader;
   /** Lower-case emails allowed to see /v1/admin (`ADMIN_EMAILS`). */
   admins: readonly string[];
+  pushSubscriptions: PushSubscriptionRepository;
+  /** VAPID public key; undefined = push disabled. */
+  vapidPublicKey?: string;
   cvFiles: CvFileRepository;
   renderer: CvRenderer;
   storage: FileStorage;
@@ -105,6 +111,8 @@ export const createApp = (deps: AppDeps) => {
     .route('/opportunities', createOpportunityRoutes(deps))
     .route('/undo', createUndoRoutes(deps))
     .route('/pipeline', createPipelineRoutes(deps))
+    .route('/follow-ups', createFollowUpRoutes(deps))
+    .route('/push', createPushRoutes({ ...deps, vapidPublicKey: deps.vapidPublicKey }))
     .route('/pipeline', createReviewItemRoutes(deps))
     .route('/review', createReviewListRoutes(deps))
     .route('/drafts', createDraftRoutes(deps))

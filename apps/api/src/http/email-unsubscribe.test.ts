@@ -44,6 +44,7 @@ describe.skipIf(!url)('email unsubscribe (integration)', () => {
       pipeline: {} as never,
       ops: {} as never,
       admins: [],
+      pushSubscriptions: {} as never,
       cvFiles: {} as never,
       renderer: {} as never,
       storage: {} as never,

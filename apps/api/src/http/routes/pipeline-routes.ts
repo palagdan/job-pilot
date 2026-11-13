@@ -11,7 +11,9 @@ import {
   stopPursuing,
   updatePipelineStatus,
 } from '../../application/pipeline/pipeline-use-cases.ts';
+import type { RateLimitStore } from '../../application/ports/rate-limit-store.ts';
 import type { AppEnv } from '../app-env.ts';
+import { createRateLimit, rateLimits } from '../middleware/rate-limit.ts';
 import { validate } from '../validate.ts';
 
 const id = validate('param', routeParams.id);
@@ -20,8 +22,11 @@ const id = validate('param', routeParams.id);
  * /v1/pipeline — 10 Pipeline: list (filters, sort), stats, row actions and notes (Artem).
  * Pack endpoints on the same prefix (drafts, sent, registered, retry, .ics) are Daniil's.
  */
-export const createPipelineRoutes = (deps: Omit<PipelineDeps, 'log'>) =>
-  new Hono<AppEnv>()
+export const createPipelineRoutes = (
+  deps: Omit<PipelineDeps, 'log'> & { rateLimitStore: RateLimitStore },
+) => {
+  const write = createRateLimit(deps.rateLimitStore, rateLimits.pipelineWrite);
+  return new Hono<AppEnv>()
     .get('/', validate('query', routes.listPipeline.query), async (c) =>
       c.json(await listPipeline({ ...deps, log: c.var.log }, c.var.user.id, c.req.valid('query'))),
     )
@@ -31,7 +36,7 @@ export const createPipelineRoutes = (deps: Omit<PipelineDeps, 'log'>) =>
         await getPipelineItem({ ...deps, log: c.var.log }, c.var.user.id, c.req.valid('param').id),
       ),
     )
-    .put('/:id/status', id, validate('json', routes.updatePipelineStatus.body), async (c) =>
+    .put('/:id/status', write, id, validate('json', routes.updatePipelineStatus.body), async (c) =>
       c.json(
         await updatePipelineStatus(
           { ...deps, log: c.var.log },
@@ -41,7 +46,7 @@ export const createPipelineRoutes = (deps: Omit<PipelineDeps, 'log'>) =>
         ),
       ),
     )
-    .put('/:id/route', id, validate('json', routes.changePipelineRoute.body), async (c) =>
+    .put('/:id/route', write, id, validate('json', routes.changePipelineRoute.body), async (c) =>
       c.json(
         await changePipelineRoute(
           { ...deps, log: c.var.log },
@@ -51,7 +56,7 @@ export const createPipelineRoutes = (deps: Omit<PipelineDeps, 'log'>) =>
         ),
       ),
     )
-    .post('/:id/stop', id, async (c) =>
+    .post('/:id/stop', write, id, async (c) =>
       c.json(
         await stopPursuing({ ...deps, log: c.var.log }, c.var.user.id, c.req.valid('param').id),
       ),
@@ -59,7 +64,7 @@ export const createPipelineRoutes = (deps: Omit<PipelineDeps, 'log'>) =>
     .get('/:id/notes', id, async (c) =>
       c.json(await listNotes({ ...deps, log: c.var.log }, c.var.user.id, c.req.valid('param').id)),
     )
-    .post('/:id/notes', id, validate('json', routes.addNote.body), async (c) =>
+    .post('/:id/notes', write, id, validate('json', routes.addNote.body), async (c) =>
       c.json(
         await addNote(
           { ...deps, log: c.var.log },
@@ -70,3 +75,4 @@ export const createPipelineRoutes = (deps: Omit<PipelineDeps, 'log'>) =>
         201,
       ),
     );
+};

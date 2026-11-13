@@ -83,3 +83,14 @@ export const emailEnv = {
   API_URL: z.url().default('http://localhost:3001'),
   BETTER_AUTH_SECRET: authEnv.BETTER_AUTH_SECRET,
 };
+
+/**
+ * Web Push (VAPID). Both keys empty = push disabled: the api answers `getVapidKey` with 404 and the worker skips
+ * sending. Generate a pair with `pnpm push:keys`.
+ */
+export const pushEnv = {
+  VAPID_PUBLIC_KEY: optionalString,
+  VAPID_PRIVATE_KEY: optionalString,
+  /** Contact for push services (`mailto:` or https URL). */
+  VAPID_SUBJECT: z.string().min(1).default('mailto:hello@jobpilot.local'),
+};

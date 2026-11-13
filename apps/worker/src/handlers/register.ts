@@ -5,7 +5,9 @@ import type { JobQueue } from '@job-pilot/jobs/client';
 import type { Llm } from '@job-pilot/llm/client';
 import type { FileStorage } from '@job-pilot/storage/file-storage';
 import type { Log } from '../log.ts';
+import type { PushSender } from '../push/push-sender.ts';
 import { agentRunHandler } from './agent-run.ts';
+import { cleanupDaily } from './cleanup-daily.ts';
 import { expirePostings } from './expire-postings.ts';
 import { finishSetupReminders } from './finish-setup-reminders.ts';
 import { generateMasterCv } from './generate-master-cv.ts';
@@ -13,6 +15,7 @@ import { ingestDataset } from './ingest-dataset.ts';
 import { parseCv } from './parse-cv.ts';
 import { pollApifyRuns } from './poll-apify-runs.ts';
 import { preparePack } from './prepare-pack.ts';
+import { pushPackReady } from './push-pack-ready.ts';
 import { runDigest } from './run-digest.ts';
 import { sendEmail } from './send-email.ts';
 import { startSourceRun } from './start-source-run.ts';
@@ -27,6 +30,8 @@ export type HandlerDeps = {
   apifyLimits: { maxItems: number; maxChargeUsd: number };
   agentMaxCandidates?: number;
   email: { sender: EmailSender; webUrl: string; apiUrl: string; unsubscribeSecret: string };
+  /** Undefined when VAPID keys are not set: `push.pack-ready` jobs are skipped. */
+  push?: PushSender;
 };
 
 /** The single place that maps job name to handler. */
@@ -50,4 +55,12 @@ export const registerHandlers = async (
   await queue.work('email.send', sendEmail({ ...deps, ...email }), { concurrency });
   await queue.work('email.finish-setup-reminders', finishSetupReminders(deps));
   await queue.work('email.run-digest', runDigest(deps), { concurrency });
+  await queue.work(
+    'push.pack-ready',
+    pushPackReady({ ...deps, send: deps.push, webUrl: email.webUrl }),
+    {
+      concurrency,
+    },
+  );
+  await queue.work('cleanup.daily', cleanupDaily(deps));
 };

@@ -35,7 +35,9 @@ const select = (db: Db) =>
 
 type Row = Awaited<ReturnType<ReturnType<typeof select>['execute']>>[number];
 
-const toRecord = (r: Row): PipelineItemRecord => ({
+type FollowUpRef = PipelineItemRecord['followUp'];
+
+const toRecord = (r: Row, followUps: Map<string, FollowUpRef>): PipelineItemRecord => ({
   id: r.item.id,
   opportunityId: r.item.opportunityId,
   type: r.type,
@@ -50,6 +52,7 @@ const toRecord = (r: Row): PipelineItemRecord => ({
   eventStartsAt: r.eventStartsAt,
   nextFollowUpAt: r.item.nextFollowUpAt,
   specialCvId: r.specialCvId,
+  followUp: followUps.get(r.item.id) ?? null,
   notesCount: r.notesCount,
   createdAt: r.item.createdAt,
 });
@@ -81,6 +84,32 @@ const orderBy = (sort: PipelineListQuery['sort']): SQL[] => {
   }
 };
 
+/** The earliest pending follow-up per item. */
+const pendingFollowUps = async (db: Db, itemIds: string[]) => {
+  if (itemIds.length === 0) return new Map<string, FollowUpRef>();
+  const rows = await db
+    .selectDistinctOn([followUp.pipelineItemId], {
+      id: followUp.id,
+      itemId: followUp.pipelineItemId,
+      sequence: followUp.sequence,
+      dueAt: followUp.dueAt,
+    })
+    .from(followUp)
+    .where(and(inArray(followUp.pipelineItemId, itemIds), eq(followUp.status, 'pending')))
+    .orderBy(followUp.pipelineItemId, asc(followUp.dueAt));
+  return new Map<string, FollowUpRef>(
+    rows.map((r) => [r.itemId, { id: r.id, sequence: r.sequence, dueAt: r.dueAt }]),
+  );
+};
+
+const withFollowUps = async (db: Db, rows: Row[]) => {
+  const followUps = await pendingFollowUps(
+    db,
+    rows.map((r) => r.item.id),
+  );
+  return rows.map((r) => toRecord(r, followUps));
+};
+
 export const createDrizzlePipelineRepository = (db: Db): PipelineRepository => ({
   countByStatus: async (userId) => {
     const rows = await db
@@ -104,12 +133,12 @@ export const createDrizzlePipelineRepository = (db: Db): PipelineRepository => (
       .orderBy(...orderBy(q.sort))
       .limit(q.limit)
       .offset(q.offset);
-    return rows.map(toRecord);
+    return withFollowUps(db, rows);
   },
 
   find: async (userId, id) => {
     const [row] = await select(db).where(ownedBy(pipelineItem, userId, eq(pipelineItem.id, id)));
-    return row ? toRecord(row) : null;
+    return row ? ((await withFollowUps(db, [row]))[0] ?? null) : null;
   },
 
   transition: (userId, id, change) =>
@@ -170,6 +199,65 @@ export const createDrizzlePipelineRepository = (db: Db): PipelineRepository => (
           interviewAt:
             (interviewAt === undefined ? current.interviewAt : interviewAt)?.toISOString() ?? null,
         },
+      });
+      return true;
+    }),
+
+  findFollowUp: async (userId, id) => {
+    const [row] = await db
+      .select({
+        id: followUp.id,
+        pipelineItemId: followUp.pipelineItemId,
+        sequence: followUp.sequence,
+        status: followUp.status,
+        itemStatus: pipelineItem.status,
+      })
+      .from(followUp)
+      .innerJoin(pipelineItem, eq(pipelineItem.id, followUp.pipelineItemId))
+      .where(ownedBy(pipelineItem, userId, eq(followUp.id, id)));
+    return row ?? null;
+  },
+
+  completeFollowUp: (userId, id, change) =>
+    db.transaction(async (tx) => {
+      const [done] = await tx
+        .update(followUp)
+        .set({ status: 'done', completedAt: change.now })
+        .where(
+          and(
+            eq(followUp.id, id),
+            eq(followUp.status, 'pending'),
+            sql`exists (select 1 from ${pipelineItem} where ${pipelineItem.id} = ${followUp.pipelineItemId} and ${pipelineItem.userId} = ${userId})`,
+          ),
+        )
+        .returning({ itemId: followUp.pipelineItemId, sequence: followUp.sequence });
+      if (!done) return false;
+
+      if (change.nextSequence !== null && change.nextDueAt) {
+        await tx.insert(followUp).values({
+          pipelineItemId: done.itemId,
+          sequence: change.nextSequence,
+          dueAt: change.nextDueAt,
+        });
+      }
+      const [next] = await tx
+        .select({ dueAt: followUp.dueAt })
+        .from(followUp)
+        .where(and(eq(followUp.pipelineItemId, done.itemId), eq(followUp.status, 'pending')))
+        .orderBy(asc(followUp.dueAt))
+        .limit(1);
+      await tx
+        .update(pipelineItem)
+        .set({ nextFollowUpAt: next?.dueAt ?? null })
+        .where(eq(pipelineItem.id, done.itemId));
+      await tx.insert(activity).values({
+        userId,
+        actor: 'user',
+        entity: 'follow_up',
+        entityId: id,
+        action: 'follow_up.done',
+        before: { status: 'pending' },
+        after: { status: 'done', nextDueAt: change.nextDueAt?.toISOString() ?? null },
       });
       return true;
     }),

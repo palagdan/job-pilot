@@ -37,6 +37,7 @@ const toPipelineDto = (r: ReviewItemRecord): PipelineItem => ({
   eventStartsAt: r.eventStartsAt?.toISOString() ?? null,
   nextFollowUpAt: r.nextFollowUpAt?.toISOString() ?? null,
   nextStep: r.nextFollowUpAt ? `Follow up on ${day(r.nextFollowUpAt)}` : null,
+  followUp: null,
   specialCvId: r.specialCvId,
   notesCount: r.notesCount,
   createdAt: r.createdAt.toISOString(),

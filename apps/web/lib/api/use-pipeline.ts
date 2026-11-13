@@ -86,6 +86,15 @@ export function usePipelineActions(item: PipelineItem) {
       },
       onError: fail,
     }),
+    /** "Mark follow-up as sent": the next one (if any) is scheduled by the api. */
+    completeFollowUp: useMutation({
+      mutationFn: (followUpId: string) => callApi('completeFollowUp', { params: { id: followUpId } }),
+      onSuccess: async () => {
+        await refresh();
+        toast(item.followUp && item.followUp.sequence < 2 ? 'Follow-up marked as sent. Next one in 7 days.' : 'Follow-up marked as sent');
+      },
+      onError: fail,
+    }),
     addNote: useMutation({
       mutationFn: (body: string) => callApi('addNote', { params, body: { body } }),
       onSuccess: async () => {

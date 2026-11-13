@@ -369,4 +369,58 @@ describe.skipIf(!testDatabaseUrl)('pipeline (integration)', () => {
     // sent → interview (sent, replied, interviews); interview; ready → preparing; event → skipped.
     expect(stats).toEqual({ readyToSend: 0, sent: 2, replied: 2, interviews: 2, offers: 0 });
   });
+
+  it('follow-ups: shown on the row, "Mark follow-up as sent" schedules the 2nd, then none', async () => {
+    const id = await addJob(bob.userId, 'sent', {
+      nextFollowUpAt: new Date('2026-11-12T08:00:00Z'),
+    });
+    const [fu] = await t.db
+      .insert(followUp)
+      .values({ pipelineItemId: id, sequence: 1, dueAt: new Date('2026-11-12T08:00:00Z') })
+      .returning({ id: followUp.id });
+    const fuId = fu?.id ?? '';
+    const row = await item(await req(bob.headers, 'GET', `/v1/pipeline/${id}`));
+    expect(row.followUp).toEqual({
+      id: fuId,
+      sequence: 1,
+      dueAt: '2026-11-12T08:00:00.000Z',
+      due: true,
+    });
+    expect(row.nextStep).toBe('Follow-up due');
+
+    expect((await req(alice.headers, 'POST', `/v1/follow-ups/${fuId}/done`)).status).toBe(404);
+    expect((await req(bob.headers, 'POST', `/v1/follow-ups/${fuId}/done`)).status).toBe(200);
+    expect((await req(bob.headers, 'POST', `/v1/follow-ups/${fuId}/done`)).status).toBe(200); // idempotent
+
+    const after = await item(await req(bob.headers, 'GET', `/v1/pipeline/${id}`));
+    expect(after.followUp).toMatchObject({
+      sequence: 2,
+      dueAt: '2026-11-20T10:00:00.000Z',
+      due: false,
+    });
+    expect(after.nextFollowUpAt).toBe('2026-11-20T10:00:00.000Z');
+    expect(after.nextStep).toBe('Second follow-up on 20 Nov');
+    const all = await t.db.select().from(followUp).where(eq(followUp.pipelineItemId, id));
+    expect(all.map((f) => [f.sequence, f.status]).sort()).toEqual([
+      [1, 'done'],
+      [2, 'pending'],
+    ]);
+
+    await req(bob.headers, 'POST', `/v1/follow-ups/${after.followUp?.id}/done`);
+    const last = await item(await req(bob.headers, 'GET', `/v1/pipeline/${id}`));
+    expect(last).toMatchObject({
+      followUp: null,
+      nextFollowUpAt: null,
+      nextStep: 'Wait for a reply',
+    });
+  });
+
+  it('a cancelled follow-up cannot be marked as sent', async () => {
+    const id = await addJob(bob.userId, 'sent');
+    const [fu] = await t.db
+      .insert(followUp)
+      .values({ pipelineItemId: id, sequence: 1, dueAt: now, status: 'cancelled' })
+      .returning({ id: followUp.id });
+    expect((await req(bob.headers, 'POST', `/v1/follow-ups/${fu?.id}/done`)).status).toBe(409);
+  });
 });

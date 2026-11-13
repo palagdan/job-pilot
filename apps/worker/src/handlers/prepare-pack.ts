@@ -4,7 +4,7 @@ import { opportunity } from '@job-pilot/db/schema/opportunities';
 import { draft, pipelineItem } from '@job-pilot/db/schema/pipeline';
 import { profile, profileProof, targets } from '@job-pilot/db/schema/profile';
 import { eventListing, jobPosting } from '@job-pilot/db/schema/sources';
-import type { JobHandler } from '@job-pilot/jobs/client';
+import type { JobHandler, JobQueue } from '@job-pilot/jobs/client';
 import type { Llm } from '@job-pilot/llm/client';
 import { writeCoverPrompt } from '@job-pilot/llm/prompts/write-cover';
 import {
@@ -32,6 +32,8 @@ export type PreparePackDeps = {
   db: Db;
   llm: Pick<Llm, 'generateObject' | 'generateText'>;
   log: Log;
+  /** For `push.pack-ready` once the pack is ready (Artem). Optional so tests can leave it out. */
+  queue?: Pick<JobQueue, 'send'>;
 };
 
 type DraftRow = typeof draft.$inferInsert;
@@ -47,7 +49,7 @@ const describeError = (error: unknown) => ({
  * the item `failed` (E06) and is not rethrown: the user decides between "Skip for now" and "Try again".
  */
 export const preparePack =
-  ({ db, llm, log }: PreparePackDeps): JobHandler<'pack.prepare'> =>
+  ({ db, llm, log, queue }: PreparePackDeps): JobHandler<'pack.prepare'> =>
   async ({ data: { pipelineItemId } }) => {
     const [item] = await db.select().from(pipelineItem).where(eq(pipelineItem.id, pipelineItemId));
     if (!item) {
@@ -227,6 +229,12 @@ export const preparePack =
           .where(eq(pipelineItem.id, pipelineItemId));
       });
       log.info('pack.prepare done', { pipelineItemId, ms: Date.now() - startedAt });
+      // Push "ready to send" (Artem). A failed enqueue must not mark the finished pack as failed.
+      await queue
+        ?.send('push.pack-ready', { pipelineItemId })
+        .catch((error: unknown) =>
+          log.warn('push.pack-ready enqueue failed', { pipelineItemId, error: String(error) }),
+        );
     } catch (error) {
       log.error('pack.prepare failed', { pipelineItemId, ...describeError(error) });
       await db

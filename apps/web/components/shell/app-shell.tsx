@@ -6,6 +6,7 @@ import { ApiError } from '../../lib/api/api-client.ts';
 import { useAgentControls } from '../../lib/api/use-agent.ts';
 import { useMe } from '../../lib/api/use-me.ts';
 import { useTheme } from '../../lib/theme/theme-provider.tsx';
+import { syncPushSubscription } from '../../lib/push/web-push.ts';
 import { OfflineBanner } from '../errors/offline-banner.tsx';
 import { Banner } from '../ui/banner.tsx';
 import styles from './app-shell.module.css';
@@ -30,6 +31,10 @@ export function AppShell({ children, chat, initialMe }: { children: ReactNode; c
     if (savedTheme && savedTheme !== theme) setTheme(savedTheme);
   }, [savedTheme, theme, setTheme]);
 
+  // Keeps this browser's push subscription current on the server (browsers rotate endpoints). Never prompts.
+  useEffect(() => {
+    void syncPushSubscription();
+  }, []);
 
   return (
     <div className={styles.shell}>

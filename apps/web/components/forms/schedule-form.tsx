@@ -17,6 +17,7 @@ import { ApiError, callApi } from '../../lib/api/api-client.ts';
 import { queryKeys } from '../../lib/api/query-client.ts';
 import formStyles from './schedule-form.module.css';
 import { notifyError } from '../../lib/errors/notify-error.ts';
+import { disablePush, enablePush, PushError, pushFailureMessage } from '../../lib/push/web-push.ts';
 
 const frequencyLabels: Record<RunFrequency, string> = { daily: 'Daily', every_3_days: 'Every 3 days', weekly: 'Weekly' };
 const frequencyOptions = runFrequencies.map((value) => ({ value, label: frequencyLabels[value] }));
@@ -84,22 +85,19 @@ export function ScheduleForm({
 
   const setPush = async (checked: boolean) => {
     setPushError(null);
-    if (!checked) return patch({ notifyPush: false });
-    if (typeof Notification === 'undefined') {
-      setPushError('This browser does not support notifications.');
+    if (!checked) {
+      patch({ notifyPush: false });
+      void disablePush();
       return;
     }
     setAsking(true);
     try {
-      const permission = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
-      if (permission === 'granted') patch({ notifyPush: true });
-      else {
-        patch({ notifyPush: false });
-        setPushError(pushDeniedMessage);
-      }
-    } catch {
+      // Permission prompt + service worker + subscription saved on the server (spec: denied → revert + error).
+      await enablePush();
+      patch({ notifyPush: true });
+    } catch (error) {
       patch({ notifyPush: false });
-      setPushError(pushDeniedMessage);
+      setPushError(pushFailureMessage(error instanceof PushError ? error.reason : 'failed', pushDeniedMessage));
     } finally {
       setAsking(false);
     }

@@ -98,6 +98,7 @@ const toPipelineDto = (r: PipelineItemRecord): PipelineItem => ({
   eventStartsAt: r.eventStartsAt?.toISOString() ?? null,
   nextFollowUpAt: r.nextFollowUpAt?.toISOString() ?? null,
   nextStep: null,
+  followUp: null,
   specialCvId: null,
   notesCount: r.notesCount,
   createdAt: r.createdAt.toISOString(),

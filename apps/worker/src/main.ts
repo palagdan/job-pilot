@@ -9,6 +9,7 @@ import { createFileStorageFromEnv } from '@job-pilot/storage/from-env';
 import { env } from './env.ts';
 import { registerHandlers } from './handlers/register.ts';
 import { log } from './log.ts';
+import { createWebPushSender } from './push/push-sender.ts';
 import { scheduleSources } from './sources/schedule-sources.ts';
 
 const { db, close } = createDb(env.DATABASE_URL);
@@ -18,6 +19,14 @@ const storage = createFileStorageFromEnv(env);
 const llm = createLlmFromEnv(env, { recordUsage: createDbUsageRecorder(db) });
 
 const apify = createApifyClient({ token: env.APIFY_TOKEN });
+const push =
+  env.VAPID_PUBLIC_KEY && env.VAPID_PRIVATE_KEY
+    ? createWebPushSender({
+        publicKey: env.VAPID_PUBLIC_KEY,
+        privateKey: env.VAPID_PRIVATE_KEY,
+        subject: env.VAPID_SUBJECT,
+      })
+    : undefined;
 
 queue.onError((error) => log.error('queue error', { error: error.message }));
 await queue.start();
@@ -28,6 +37,7 @@ await registerHandlers(
     storage,
     llm,
     apify,
+    push,
     log,
     agentMaxCandidates: env.AGENT_MAX_CANDIDATES,
     apifyLimits: { maxItems: env.APIFY_MAX_ITEMS, maxChargeUsd: env.APIFY_MAX_CHARGE_USD },

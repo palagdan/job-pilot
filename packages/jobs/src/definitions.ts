@@ -84,6 +84,19 @@ export const jobs = {
     payload: z.object({ runId: idSchema }),
     options: { retryLimit: 3, retryDelay: 30, expireInSeconds: 120 },
   },
+  /**
+   * Enqueued by the worker when a pack becomes ready to send (pack.prepare, Daniil). Handled by the worker (Artem):
+   * one Web Push per subscribed device, only if the user has push on and is not paused.
+   */
+  'push.pack-ready': {
+    payload: z.object({ pipelineItemId: idSchema }),
+    options: { retryLimit: 3, retryDelay: 30, retryBackoff: true, expireInSeconds: 120 },
+  },
+  /** Scheduled daily by the worker (Artem): expired sessions, dead push subscriptions, stale rows. */
+  'cleanup.daily': {
+    payload: z.object({}),
+    options: { retryLimit: 1, expireInSeconds: 600 },
+  },
   /** Scheduled hourly by the worker (Daniil). Handled by the worker (Daniil). Enqueues `email.send` for stalled sign-ups. */
   'email.finish-setup-reminders': {
     payload: z.object({}),

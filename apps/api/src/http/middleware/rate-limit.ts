@@ -58,6 +58,12 @@ export const rateLimits = {
   chat: { name: 'chat', max: 30, windowMs: 60_000, by: 'user' },
   /** Public one-click unsubscribe, per IP. */
   unsubscribe: { name: 'unsubscribe', max: 20, windowMs: 60_000, by: 'ip' },
+  /** Push subscribe/unsubscribe (M5): a browser does this a few times at most. */
+  push: { name: 'push', max: 20, windowMs: 10 * 60_000, by: 'user' },
+  /** CV regenerate: each one is an LLM run (M5 hardening). */
+  regenerateCv: { name: 'regenerate-cv', max: 5, windowMs: 60 * 60_000, by: 'user' },
+  /** Pipeline writes: status, route, stop, notes, follow-ups (M5 hardening). */
+  pipelineWrite: { name: 'pipeline-write', max: 60, windowMs: 10 * 60_000, by: 'user' },
   /** "Run now" (M3). */
   runNow: { name: 'run-now', max: 5, windowMs: 60 * 60_000, by: 'user' },
 } as const satisfies Record<string, RateLimitRule>;

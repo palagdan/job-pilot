@@ -22,6 +22,7 @@ import { createDrizzleEmailPreferencesRepository } from './infrastructure/reposi
 import { createDrizzleOpsReader } from './infrastructure/repositories/drizzle-ops-reader.ts';
 import { createDrizzlePipelineRepository } from './infrastructure/repositories/drizzle-pipeline-repository.ts';
 import { createDrizzleProfileRepository } from './infrastructure/repositories/drizzle-profile-repository.ts';
+import { createDrizzlePushSubscriptionRepository } from './infrastructure/repositories/drizzle-push-subscription-repository.ts';
 import { createDrizzleReviewRepository } from './infrastructure/repositories/drizzle-review-repository.ts';
 import { createDrizzleScheduleRepository } from './infrastructure/repositories/drizzle-schedule-repository.ts';
 import { createDrizzleTargetsRepository } from './infrastructure/repositories/drizzle-targets-repository.ts';
@@ -63,6 +64,8 @@ const app = createApp({
   pipeline: createDrizzlePipelineRepository(db),
   ops: createDrizzleOpsReader(db),
   admins: env.ADMIN_EMAILS,
+  pushSubscriptions: createDrizzlePushSubscriptionRepository(db),
+  vapidPublicKey: env.VAPID_PUBLIC_KEY,
   cvFiles: createDrizzleCvFileRepository(db),
   renderer: createCvRenderer(),
   storage: createFileStorageFromEnv(env),

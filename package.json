@@ -18,7 +18,8 @@
     "db:seed": "pnpm --filter @job-pilot/db db:seed",
     "db:reset": "pnpm --filter @job-pilot/db db:reset && pnpm db:seed",
     "db:studio": "pnpm --filter @job-pilot/db db:studio",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "push:keys": "pnpm --filter @job-pilot/worker exec web-push generate-vapid-keys"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.7",

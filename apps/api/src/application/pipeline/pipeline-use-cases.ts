@@ -44,11 +44,13 @@ export const nextStepText = (r: PipelineItemRecord, now: Date, timeZone: string)
       return r.type === 'event' ? 'Register yourself' : 'Send it yourself';
     case 'failed':
       return 'Pack failed - try again';
-    case 'sent':
-      if (!r.nextFollowUpAt) return 'Wait for a reply';
-      return r.nextFollowUpAt <= now
-        ? 'Follow-up due'
-        : `Follow up on ${formatDay(r.nextFollowUpAt, timeZone)}`;
+    case 'sent': {
+      const due = r.followUp?.dueAt ?? r.nextFollowUpAt;
+      if (!due) return 'Wait for a reply';
+      const second = (r.followUp?.sequence ?? 1) > 1;
+      if (due <= now) return second ? 'Second follow-up due' : 'Follow-up due';
+      return `${second ? 'Second follow-up' : 'Follow up'} on ${formatDay(due, timeZone)}`;
+    }
     case 'registered':
       return r.eventStartsAt ? formatDayTime(r.eventStartsAt, timeZone) : 'Go to the event';
     case 'replied':
@@ -84,6 +86,14 @@ export const toPipelineItem = (
   nextFollowUpAt: r.nextFollowUpAt?.toISOString() ?? null,
   nextStep: nextStepText(r, now, timeZone),
   specialCvId: r.specialCvId,
+  followUp: r.followUp
+    ? {
+        id: r.followUp.id,
+        sequence: r.followUp.sequence,
+        dueAt: r.followUp.dueAt.toISOString(),
+        due: r.followUp.dueAt <= now,
+      }
+    : null,
   notesCount: r.notesCount,
   createdAt: r.createdAt.toISOString(),
 });
@@ -240,4 +250,30 @@ export async function listNotes(deps: PipelineDeps, userId: string, id: string) 
 export async function addNote(deps: PipelineDeps, userId: string, id: string, body: string) {
   await findOrThrow(deps, userId, id);
   return toNote(await deps.pipeline.addNote(id, body));
+}
+
+/** Spec: up to two follow-ups; the 2nd is due 7 days after the 1st is sent. After that the agent marks No reply. */
+export const MAX_FOLLOW_UPS = 2;
+export const NEXT_FOLLOW_UP_DAYS = 7;
+
+/**
+ * POST /v1/follow-ups/:id/done — "Mark follow-up as sent" (the user sent it themselves). Schedules the next one
+ * while the application is still waiting for a reply. Idempotent for a follow-up already done.
+ */
+export async function completeFollowUp(deps: PipelineDeps, userId: string, id: string) {
+  const found = await deps.pipeline.findFollowUp(userId, id);
+  if (!found) throw new AppError('not_found', 'Follow-up not found.');
+  if (found.status === 'done') return { ok: true as const };
+  if (found.status === 'cancelled') throw new AppError('conflict', 'This follow-up was cancelled.');
+
+  const now = clock(deps);
+  const more = found.sequence < MAX_FOLLOW_UPS && found.itemStatus === 'sent';
+  const ok = await deps.pipeline.completeFollowUp(userId, id, {
+    now,
+    nextSequence: more ? found.sequence + 1 : null,
+    nextDueAt: more ? new Date(now.getTime() + NEXT_FOLLOW_UP_DAYS * 86_400_000) : null,
+  });
+  if (!ok)
+    throw new AppError('conflict', 'This follow-up changed meanwhile. Reload and try again.');
+  return { ok: true as const };
 }

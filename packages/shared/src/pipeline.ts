@@ -18,6 +18,16 @@ export const pipelineQuerySchema = cursorPageQuerySchema.extend({
 });
 export type PipelineQuery = z.infer<typeof pipelineQuerySchema>;
 
+/** The next pending follow-up of a sent application (1st: 5 days after sending, 2nd: 7 days after the 1st). */
+export const nextFollowUpSchema = z.object({
+  id: idSchema,
+  sequence: z.number().int(),
+  dueAt: dateTimeSchema,
+  /** Due now or overdue: Pipeline shows "Follow-up due" and "Mark follow-up as sent". */
+  due: z.boolean(),
+});
+export type NextFollowUp = z.infer<typeof nextFollowUpSchema>;
+
 export const pipelineItemSchema = z.object({
   id: idSchema,
   opportunityId: idSchema,
@@ -36,6 +46,8 @@ export const pipelineItemSchema = z.object({
   /** Text for the "Next follow-up" column: "Follow up on 17 Nov", "Send availability", ... */
   nextStep: z.string().nullable(),
   specialCvId: idSchema.nullable(),
+  /** Filled by the Pipeline endpoints; null elsewhere (Today pursue, Review). */
+  followUp: nextFollowUpSchema.nullable(),
   notesCount: z.number().int(),
   createdAt: dateTimeSchema,
 });

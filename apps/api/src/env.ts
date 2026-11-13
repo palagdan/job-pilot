@@ -1,5 +1,5 @@
 import { parseEnv } from '@job-pilot/config/env';
-import { authEnv, baseEnv, databaseEnv, storageEnv } from '@job-pilot/config/fragments';
+import { authEnv, baseEnv, databaseEnv, pushEnv, storageEnv } from '@job-pilot/config/fragments';
 import { z } from 'zod';
 
 export const env = parseEnv({
@@ -7,6 +7,7 @@ export const env = parseEnv({
   ...databaseEnv,
   ...authEnv,
   ...storageEnv,
+  ...pushEnv,
   PORT: z.coerce.number().int().default(3001),
   /** Comma-separated emails that may open the ops view (/v1/admin/ops). */
   ADMIN_EMAILS: z

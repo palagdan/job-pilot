@@ -17,6 +17,8 @@ export type PipelineItemRecord = {
   eventStartsAt: Date | null;
   nextFollowUpAt: Date | null;
   specialCvId: string | null;
+  /** The earliest pending follow-up, if any. */
+  followUp: { id: string; sequence: number; dueAt: Date } | null;
   notesCount: number;
   createdAt: Date;
 };
@@ -40,6 +42,14 @@ export type PipelineTransition = {
   now: Date;
 };
 
+export type FollowUpRecord = {
+  id: string;
+  pipelineItemId: string;
+  sequence: number;
+  status: 'pending' | 'done' | 'cancelled';
+  itemStatus: PipelineStatus;
+};
+
 export type NoteRecord = { id: string; body: string; createdAt: Date };
 
 export interface PipelineRepository {
@@ -49,6 +59,17 @@ export interface PipelineRepository {
   find(userId: string, id: string): Promise<PipelineItemRecord | null>;
   /** Applies the change and writes an `activity` row, in one transaction. False when the status moved meanwhile. */
   transition(userId: string, id: string, change: PipelineTransition): Promise<boolean>;
+  /** A follow-up of one of the user's items. */
+  findFollowUp(userId: string, id: string): Promise<FollowUpRecord | null>;
+  /**
+   * Marks a pending follow-up done, optionally schedules the next one (`nextDueAt`), re-derives the item's
+   * `next_follow_up_at` and logs the change, in one transaction. False when it was no longer pending.
+   */
+  completeFollowUp(
+    userId: string,
+    id: string,
+    change: { now: Date; nextSequence: number | null; nextDueAt: Date | null },
+  ): Promise<boolean>;
   /** Newest first. The caller checks ownership of the item. */
   listNotes(pipelineItemId: string): Promise<NoteRecord[]>;
   addNote(pipelineItemId: string, body: string): Promise<NoteRecord>;

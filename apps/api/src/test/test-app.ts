@@ -26,6 +26,7 @@ import { createDrizzleCvRepository } from '../infrastructure/repositories/drizzl
 import { createDrizzleOpsReader } from '../infrastructure/repositories/drizzle-ops-reader.ts';
 import { createDrizzlePipelineRepository } from '../infrastructure/repositories/drizzle-pipeline-repository.ts';
 import { createDrizzleProfileRepository } from '../infrastructure/repositories/drizzle-profile-repository.ts';
+import { createDrizzlePushSubscriptionRepository } from '../infrastructure/repositories/drizzle-push-subscription-repository.ts';
 import { createDrizzleReviewRepository } from '../infrastructure/repositories/drizzle-review-repository.ts';
 import { createDrizzleScheduleRepository } from '../infrastructure/repositories/drizzle-schedule-repository.ts';
 import { createDrizzleTargetsRepository } from '../infrastructure/repositories/drizzle-targets-repository.ts';
@@ -79,6 +80,8 @@ export const createTestApp = (overrides: Partial<AppDeps> = {}) => {
     pipeline: createDrizzlePipelineRepository(db),
     ops: createDrizzleOpsReader(db),
     admins: ['ops-admin@example.com'],
+    pushSubscriptions: createDrizzlePushSubscriptionRepository(db),
+    vapidPublicKey: 'test-vapid-public-key',
     cvFiles: createDrizzleCvFileRepository(db),
     renderer: createCvRenderer(),
     storage: createLocalFileStorage(dir),

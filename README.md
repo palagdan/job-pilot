@@ -43,7 +43,12 @@ Without them the api runs, but sign-in is disabled. The browser reaches the api 
 (Next rewrites `/api/auth/*` and `/v1/*` to `API_URL`).
 
 Local sign-in without Google: run `pnpm db:seed`, open the app and press **Dev: sign in as demo user**
-(`POST /api/dev/sign-in`, mounted by the api only when `NODE_ENV=development`).
+(`POST /api/dev/sign-in`, mounted by the api only when `NODE_ENV=development`). The seed gives the demo user a
+confirmed master CV, new Today cards and a pipeline item in every status. Re-running it **replaces** the demo user's
+opportunities, pipeline, CVs and runs (uploads are kept).
+
+Web Push (optional locally): `pnpm push:keys`, put the pair into `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY`, restart, then
+switch Push on in Profile and targets. Browsers allow push on `http://localhost`.
 UI reference: `/design-system` shows every token and component state.
 
 Integration tests run against the docker services when `TEST_DATABASE_URL` / `TEST_S3_ENDPOINT` are set
@@ -67,7 +72,8 @@ Local services:
 | `pnpm infra:reset`             | Stop and **delete all local data volumes**, start again     |
 | `pnpm db:generate`             | Create a migration from schema changes (`packages/db/src/schema`) |
 | `pnpm db:migrate`              | Apply migrations                                            |
-| `pnpm db:seed`                 | Seed demo data (safe to re-run; local DB only)              |
+| `pnpm db:seed`                 | Seed sources + demo user with data (re-run resets the demo user; local DB only) |
+| `pnpm push:keys`               | Generate a VAPID key pair for Web Push                      |
 | `pnpm db:reset`                | Drop the local DB schema, migrate, seed (local DB only)     |
 | `pnpm db:studio`               | Drizzle Studio                                              |
 | `pnpm lint` / `typecheck` / `build` | All packages via Turborepo                             |
