@@ -33,3 +33,10 @@ export const authEnv = {
   GOOGLE_CLIENT_ID: optionalString,
   GOOGLE_CLIENT_SECRET: optionalString,
 };
+
+export const llmEnv = {
+  FEATHERLESS_API_KEY: z.string().min(1),
+  FEATHERLESS_BASE_URL: z.url().default('https://api.featherless.ai/v1'),
+  LLM_CONCURRENCY_UNITS: z.coerce.number().int().min(1).default(4),
+  LLM_TIMEOUT_MS: z.coerce.number().int().min(1).default(60000),
+};
