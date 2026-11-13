@@ -1,10 +1,10 @@
 import { createJobQueue } from '@job-pilot/jobs/client';
-import type { EmailJobQueue, JobQueue } from '../../application/ports/job-queue.ts';
+import type { AgentJobQueue, EmailJobQueue, JobQueue } from '../../application/ports/job-queue.ts';
 
 /** JobQueue port on Daniil's typed pg-boss client (`@job-pilot/jobs`). Call `start()` once at boot. */
 export const createPgBossJobQueue = (
   connectionString: string,
-): JobQueue & EmailJobQueue & { start(): Promise<void>; stop(): Promise<void> } => {
+): JobQueue & EmailJobQueue & AgentJobQueue & { start(): Promise<void>; stop(): Promise<void> } => {
   const queue = createJobQueue({ connectionString });
   return {
     start: async () => {
@@ -18,6 +18,12 @@ export const createPgBossJobQueue = (
     },
     enqueueGenerateMasterCv: async (userId, uploadId) => {
       await queue.send('cv.generate-master', { userId, uploadId });
+    },
+    enqueueAgentRun: async (runId) => {
+      await queue.send('agent.run', { runId });
+    },
+    enqueuePackPrepare: async (pipelineItemId) => {
+      await queue.send('pack.prepare', { pipelineItemId });
     },
     enqueueWelcomeEmail: async (userId) => {
       await queue.send('email.send', {

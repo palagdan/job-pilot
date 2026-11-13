@@ -1,75 +1,63 @@
+import type { Logger } from '@job-pilot/logger/logger';
 import type { AgentRun, AgentStatus } from '@job-pilot/shared/agent-run';
-import { nextRunAt } from '@job-pilot/shared/next-run';
-import { loadUser } from '../onboarding/onboarding-rules.ts';
-import type { AgentRepository, AgentRunRecord } from '../ports/agent-repository.ts';
-import type { ScheduleRepository } from '../ports/schedule-repository.ts';
-import type { UserRepository } from '../ports/user-repository.ts';
+import { runStepKeys } from '@job-pilot/shared/enums';
+import { AppError } from '@job-pilot/shared/errors';
+import type { AgentRunRecord, AgentRunRepository } from '../ports/agent-run-repository.ts';
+import type { AgentJobQueue } from '../ports/job-queue.ts';
 
 export type AgentDeps = {
-  agent: AgentRepository;
-  schedules: ScheduleRepository;
-  users: UserRepository;
+  runs: AgentRunRepository;
+  agentJobs: AgentJobQueue;
+  log: Logger;
   now?: () => Date;
 };
 
-/** Spec §10: runs longer than 10 minutes show "This is taking longer than usual". */
-export const slowAfterMs = 10 * 60 * 1000;
-
 const clock = (deps: { now?: () => Date }) => (deps.now ?? (() => new Date()))();
 
-const toRun = (r: AgentRunRecord, now: Date): AgentRun => ({
+/** "This is taking longer than usual" after 10 minutes. */
+const SLOW_AFTER_MS = 10 * 60_000;
+
+const isActive = (r: AgentRunRecord) => r.status === 'queued' || r.status === 'running';
+
+export const toRunDto = (r: AgentRunRecord, now: Date): AgentRun => ({
   id: r.id,
   trigger: r.trigger,
   status: r.status,
-  steps: r.steps,
+  steps: r.steps.length ? r.steps : runStepKeys.map((key) => ({ key, status: 'waiting' as const })),
   newCount: r.newCount,
   startedAt: r.startedAt?.toISOString() ?? null,
   finishedAt: r.finishedAt?.toISOString() ?? null,
-  slow:
-    r.status === 'running' &&
-    r.startedAt !== null &&
-    now.getTime() - r.startedAt.getTime() > slowAfterMs,
+  slow: isActive(r) && now.getTime() - (r.startedAt ?? r.createdAt).getTime() > SLOW_AFTER_MS,
 });
 
-/** GET /v1/agent/status — paused?, current run, last run, next scheduled run (banners on Today, Settings). */
-export async function getAgentStatus(deps: AgentDeps, userId: string): Promise<AgentStatus> {
-  const user = await loadUser(deps.users, userId);
-  const [current, last, schedule] = await Promise.all([
-    deps.agent.currentRun(userId),
-    deps.agent.lastRun(userId),
-    deps.schedules.get(userId),
-  ]);
-  const now = clock(deps);
-  return {
-    paused: user.pausedAt !== null,
-    currentRun: current ? toRun(current, now) : null,
-    lastRun: last ? toRun(last, now) : null,
-    nextRunAt: user.pausedAt ? null : (schedule?.nextRunAt?.toISOString() ?? null),
-  };
-}
-
-/** C07 "Pause your agent?" — no runs and no emails until resumed. Idempotent. */
-export async function pauseAgent(deps: AgentDeps, userId: string): Promise<AgentStatus> {
-  const user = await loadUser(deps.users, userId);
-  if (!user.pausedAt) await deps.agent.setPaused(userId, clock(deps));
-  return getAgentStatus(deps, userId);
-}
-
-/**
- * Resume: clears the pause and moves the next run to the next slot from now (runs missed while paused are not
- * made up in a burst). Idempotent.
- */
-export async function resumeAgent(deps: AgentDeps, userId: string): Promise<AgentStatus> {
-  const user = await loadUser(deps.users, userId);
-  if (user.pausedAt) {
-    await deps.agent.setPaused(userId, null);
-    const schedule = await deps.schedules.get(userId);
-    if (schedule) {
-      await deps.schedules.setNextRunAt(
-        userId,
-        nextRunAt({ ...schedule, timezone: user.timezone }, clock(deps), schedule.lastRunAt),
-      );
-    }
+/** POST /v1/agent/runs — "Run now". 409 `agent_busy` while a run is queued or running. */
+export async function startRun(deps: AgentDeps, userId: string): Promise<AgentRun> {
+  const busy = () => new AppError('agent_busy', 'The agent is busy with a run.');
+  if (await deps.runs.findActive(userId)) throw busy();
+  const run = await deps.runs.createQueued(userId, 'manual');
+  if (!run) throw busy();
+  try {
+    await deps.agentJobs.enqueueAgentRun(run.id);
+  } catch (error) {
+    deps.log.error('agent.run enqueue failed', { runId: run.id, error: String(error) });
+    await deps.runs.markEnqueueFailed(run.id, 'Could not queue the run');
+    throw error;
   }
-  return getAgentStatus(deps, userId);
+  return toRunDto(run, clock(deps));
+}
+
+/** GET /v1/agent/status — current run (if any), last finished run, pause flag, next scheduled run. */
+export async function getAgentStatus(deps: AgentDeps, userId: string): Promise<AgentStatus> {
+  const now = clock(deps);
+  const [current, last, meta] = await Promise.all([
+    deps.runs.findActive(userId),
+    deps.runs.findLastFinished(userId),
+    deps.runs.getPauseAndNextRun(userId),
+  ]);
+  return {
+    paused: meta.paused,
+    currentRun: current ? toRunDto(current, now) : null,
+    lastRun: last ? toRunDto(last, now) : null,
+    nextRunAt: meta.paused ? null : (meta.nextRunAt?.toISOString() ?? null),
+  };
 }

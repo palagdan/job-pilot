@@ -5,6 +5,7 @@ import type { JobQueue } from '@job-pilot/jobs/client';
 import type { Llm } from '@job-pilot/llm/client';
 import type { FileStorage } from '@job-pilot/storage/file-storage';
 import type { Log } from '../log.ts';
+import { agentRunHandler } from './agent-run.ts';
 import { expirePostings } from './expire-postings.ts';
 import { finishSetupReminders } from './finish-setup-reminders.ts';
 import { generateMasterCv } from './generate-master-cv.ts';
@@ -23,6 +24,7 @@ export type HandlerDeps = {
   apify: ApifyClient;
   log: Log;
   apifyLimits: { maxItems: number; maxChargeUsd: number };
+  agentMaxCandidates?: number;
   email: { sender: EmailSender; webUrl: string; apiUrl: string; unsubscribeSecret: string };
 };
 
@@ -34,6 +36,11 @@ export const registerHandlers = async (
   const { queue, apifyLimits, email } = deps;
   await queue.work('cv.parse', parseCv(deps), { concurrency });
   await queue.work('cv.generate-master', generateMasterCv(deps), { concurrency });
+  await queue.work(
+    'agent.run',
+    agentRunHandler({ ...deps, maxCandidates: deps.agentMaxCandidates }),
+    { concurrency },
+  );
   await queue.work('source.run', startSourceRun({ ...deps, ...apifyLimits }), { concurrency });
   await queue.work('apify.poll-runs', pollApifyRuns(deps));
   await queue.work('apify.ingest-dataset', ingestDataset(deps), { concurrency: 1 });

@@ -14,6 +14,7 @@ import { createPgBossJobQueue } from './infrastructure/queue/pg-boss-job-queue.t
 import { createMemoryRateLimitStore } from './infrastructure/rate-limit/memory-rate-limit-store.ts';
 import { createCvRenderer } from './infrastructure/rendering/cv-render-adapter.ts';
 import { createDrizzleAgentRepository } from './infrastructure/repositories/drizzle-agent-repository.ts';
+import { createDrizzleAgentRunRepository } from './infrastructure/repositories/drizzle-agent-run-repository.ts';
 import { createDrizzleCvFactsReader } from './infrastructure/repositories/drizzle-cv-facts-reader.ts';
 import { createDrizzleCvFileRepository } from './infrastructure/repositories/drizzle-cv-file-repository.ts';
 import { createDrizzleCvRepository } from './infrastructure/repositories/drizzle-cv-repository.ts';
@@ -23,6 +24,7 @@ import { createDrizzlePipelineRepository } from './infrastructure/repositories/d
 import { createDrizzleProfileRepository } from './infrastructure/repositories/drizzle-profile-repository.ts';
 import { createDrizzleScheduleRepository } from './infrastructure/repositories/drizzle-schedule-repository.ts';
 import { createDrizzleTargetsRepository } from './infrastructure/repositories/drizzle-targets-repository.ts';
+import { createDrizzleTodayRepository } from './infrastructure/repositories/drizzle-today-repository.ts';
 import { createDrizzleUploadRepository } from './infrastructure/repositories/drizzle-upload-repository.ts';
 import { createDrizzleUserRepository } from './infrastructure/repositories/drizzle-user-repository.ts';
 
@@ -64,6 +66,9 @@ const app = createApp({
   renderer: createCvRenderer(),
   storage: createFileStorageFromEnv(env),
   jobs,
+  agentJobs: jobs,
+  today: createDrizzleTodayRepository(db),
+  agentRuns: createDrizzleAgentRunRepository(db),
   email: {
     preferences: createDrizzleEmailPreferencesRepository(db),
     secret: env.BETTER_AUTH_SECRET,
