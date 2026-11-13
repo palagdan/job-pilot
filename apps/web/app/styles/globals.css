@@ -1,0 +1,75 @@
+@import "./tokens.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-body), var(--font-body-fallback);
+  font-size: var(--text-body);
+  line-height: var(--line-height-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--font-heading), var(--font-heading-fallback);
+  line-height: var(--line-height-tight);
+}
+
+h1 {
+  font-size: var(--text-title);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--text-title-tracking);
+}
+
+h2 {
+  font-size: var(--text-heading);
+  font-weight: var(--weight-medium);
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--color-primary);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+/* Keyboard focus only (spec: "Focus: 2 px primary ring (keyboard only)"). */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

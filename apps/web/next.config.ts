@@ -5,6 +5,8 @@ const apiUrl = process.env.API_URL ?? 'http://localhost:3001';
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  /** Workspace packages are raw TypeScript. */
+  transpilePackages: ['@job-pilot/shared'],
   /**
    * The browser talks only to the web origin; Next proxies auth and api calls.
    * Session cookies stay first-party and no CORS is needed. Google redirect URI:

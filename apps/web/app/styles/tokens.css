@@ -1,0 +1,132 @@
+/*
+ * JobPilot design tokens — Brand v2 "JobPilot Blue".
+ * Source: Figma file HKT, variables "JobPilot / Color" (light = 07 Today, dark = "v1 / 04 Jobs / Dark",
+ * danger/warning = Frontend spec §4 and §8). Sizes, radii and type are read from the screens.
+ *
+ * Theme: light by default; dark when the OS prefers dark (theme "system") or <html data-theme="dark">.
+ * <html data-theme="light"> forces light. Components use these variables only — never raw hex values.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* --- Color: surfaces --- */
+  --color-bg: #ffffff; /* cards, panels, inputs */
+  --color-surface: #f6f7f9; /* page background, chips */
+  --color-soft: #eaf0ff; /* selected nav item, selected chip, route chip */
+  --color-line: #e4e7ec; /* borders, dividers */
+
+  /* --- Color: text --- */
+  --color-ink: #0b0d12; /* primary text */
+  --color-muted: #5f6672; /* secondary text, labels */
+
+  /* --- Color: brand & actions --- */
+  --color-primary: #1f5bff; /* links, selected chip text, focus ring, logo */
+  --color-on-primary: #ffffff;
+  --color-accent: #12a150; /* fit score, success */
+  --color-cta: #0b0d12; /* primary button background */
+  --color-on-cta: #ffffff;
+
+  /* --- Color: status --- */
+  --color-danger: #d92d20;
+  --color-danger-soft: #fee4e2;
+  --color-warning: #b54708;
+  --color-warning-soft: #fef0c7;
+
+  /* --- Typography --- */
+  /* --font-heading / --font-body are set by next/font in app/layout.tsx */
+  --font-heading-fallback: ui-sans-serif, system-ui, sans-serif;
+  --font-body-fallback: ui-sans-serif, system-ui, sans-serif;
+
+  --text-title: 24px; /* page title — Space Grotesk Bold */
+  --text-title-tracking: -0.02em;
+  --text-heading: 16px; /* panel titles, logo — Space Grotesk Medium/Bold */
+  --text-card-title: 15px; /* card titles — Space Grotesk Medium */
+  --text-nav: 14px; /* sidebar items — Inter Medium */
+  --text-body: 13px; /* body, buttons, inputs — Inter Regular/Medium */
+  --text-small: 12px; /* chips, meta lines — Inter Semibold/Regular */
+  --text-caption: 11px; /* labels ("TRY"), secondary meta */
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --line-height-tight: 1.2;
+  --line-height-body: 1.45;
+
+  /* --- Spacing (px names match Figma) --- */
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-5: 5px; /* chip vertical padding */
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-14: 14px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+
+  /* --- Radius --- */
+  --radius-xs: 4px; /* nav icon placeholder */
+  --radius-sm: 6px; /* app icon */
+  --radius-md: 10px; /* nav items, menus */
+  --radius-lg: 14px; /* chat bubbles */
+  --radius-xl: 16px; /* cards */
+  --radius-pill: 999px; /* buttons, chips, tags, chat input */
+
+  /* --- Layout --- */
+  --layout-sidebar-width: 240px;
+  --layout-chat-width: 320px;
+  --layout-content-padding: 32px;
+
+  /* --- Interaction (spec §4 "Component states") --- */
+  --control-min-height: 36px; /* minimum hit area */
+  --opacity-hover: 0.85;
+  --opacity-disabled: 0.35;
+  --focus-ring: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-primary); /* keyboard focus only */
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+}
+
+/* Dark values. Two selectors because the same block applies to "system + OS dark" and to forced dark. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --color-bg: #0b0d12;
+    --color-surface: #151922;
+    --color-soft: #16213f;
+    --color-line: #262c38;
+    --color-ink: #f4f6fa;
+    --color-muted: #9aa3b2;
+    --color-primary: #5b8cff;
+    --color-on-primary: #0b0d12;
+    --color-accent: #3ddc84;
+    --color-cta: #f4f6fa;
+    --color-on-cta: #0b0d12;
+    /* Not defined in Figma for dark — derived (same hue, readable on dark surfaces). Confirm with design. */
+    --color-danger: #f97066;
+    --color-danger-soft: #55160c;
+    --color-warning: #fdb022;
+    --color-warning-soft: #4e1d09;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #0b0d12;
+  --color-surface: #151922;
+  --color-soft: #16213f;
+  --color-line: #262c38;
+  --color-ink: #f4f6fa;
+  --color-muted: #9aa3b2;
+  --color-primary: #5b8cff;
+  --color-on-primary: #0b0d12;
+  --color-accent: #3ddc84;
+  --color-cta: #f4f6fa;
+  --color-on-cta: #0b0d12;
+  --color-danger: #f97066;
+  --color-danger-soft: #55160c;
+  --color-warning: #fdb022;
+  --color-warning-soft: #4e1d09;
+}

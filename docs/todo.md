@@ -66,7 +66,7 @@ Roadmap per person:
 - [x] [Artem] `packages/db`: Drizzle setup, migrations, seed script; docker-compose (Postgres + RustFS (S3; MinIO images discontinued) + Mailpit)
 - [x] [Artem] Better Auth (Google) in api; session cookie shared web↔api; `requireUser` middleware; user scoping helper
 - [x] [Artem] Storage service (upload, signed GET URL); request-id + structured logging (pino); error middleware (`JP-500-xxxxxx`); rate limit middleware
-- [ ] [Artem] Design tokens (light/dark from Figma variables), fonts via `next/font`, theme switch (system/light/dark) without reload
+- [x] [Artem] Design tokens (light/dark from Figma variables), fonts via `next/font`, theme switch (system/light/dark) without reload
 - [ ] [Artem] Compass logo, app icon, favicon
 - [ ] [Artem] Core components with all states: Button, TextInput, Select, SearchableSelect, TagInput, Chips, Toggle, Segmented, DropdownMenu/split button, Modal, Toast (queue, undo, sticky errors), Banner, Skeleton, Dropzone, StatusBadge, Stepper, Table, EmptyState _(may spill into week 2)_
 - [ ] [Artem] App shell: Sidebar (Today, Review, Pipeline, CVs, Profile and targets, user menu), Content, Chat panel slot; typed API client + TanStack Query setup
