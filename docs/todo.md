@@ -71,7 +71,6 @@ Roadmap per person:
 - [ ] [Artem] Core components with all states: Button, TextInput, Select, SearchableSelect, TagInput, Chips, Toggle, Segmented, DropdownMenu/split button, Modal, Toast (queue, undo, sticky errors), Banner, Skeleton, Dropzone, StatusBadge, Stepper, Table, EmptyState _(may spill into week 2)_
 - [ ] [Artem] App shell: Sidebar (Today, Review, Pipeline, CVs, Profile and targets, user menu), Content, Chat panel slot; typed API client + TanStack Query setup
 - [x] [Daniil] `apps/worker` with pg-boss; env validation (`packages/config`, zod) + `.env.example` — plus shared job contract `packages/jobs`
-- [ ] [Daniil] CI: lint, typecheck, Vitest, build on PR; integration tests against a test DB; Playwright setup
 - [x] [Daniil] **LLM layer** `packages/llm`: OpenAI SDK → `https://api.featherless.ai/v1`; `generateObject(zodSchema)` = JSON prompt + validate + 1 repair retry; timeouts, retries, global concurrency limit (Featherless plan limits), token/cost log per user & run, versioned prompt files; model per task in config (parse, rank, write CV, write drafts, chat)
 - [ ] [Daniil] Spike: pick Featherless models per task (quality vs speed on 5 sample CVs/jobs), document in `docs/llm.md`
 - [x] [Daniil] **Research & curate source list** — done, see `docs/sources.md`; (seed for `source`): name, kind (job/event), base URL, Apify actor id, input template, schedule, enabled. Candidates:
