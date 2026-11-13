@@ -74,7 +74,7 @@ Roadmap per person:
 - [ ] [Daniil] CI: lint, typecheck, Vitest, build on PR; integration tests against a test DB; Playwright setup
 - [x] [Daniil] **LLM layer** `packages/llm`: OpenAI SDK → `https://api.featherless.ai/v1`; `generateObject(zodSchema)` = JSON prompt + validate + 1 repair retry; timeouts, retries, global concurrency limit (Featherless plan limits), token/cost log per user & run, versioned prompt files; model per task in config (parse, rank, write CV, write drafts, chat)
 - [ ] [Daniil] Spike: pick Featherless models per task (quality vs speed on 5 sample CVs/jobs), document in `docs/llm.md`
-- [ ] [Daniil] **Research & curate source list** (seed for `source`): name, kind (job/event), base URL, Apify actor id, input template, schedule, enabled. Candidates:
+- [x] [Daniil] **Research & curate source list** — done, see `docs/sources.md`; (seed for `source`): name, kind (job/event), base URL, Apify actor id, input template, schedule, enabled. Candidates:
   - Jobs: Jobs.cz, Prace.cz, StartupJobs.cz, Profesia.cz, JenPrace.cz, cz.indeed.com, LinkedIn Jobs (Czechia), Welcome to the Jungle / Cocuma, Jobstack.it
   - Events: Luma (Prague/Brno/tech calendars), Meetup (CZ groups), Eventbrite (Prague), Czechitas, StartupJobs events
   - For each: check for an existing Apify Store actor; if none, write a small custom actor (Crawlee) in `apps/actors/` or mark deferred. Record ToS notes and cost per source.

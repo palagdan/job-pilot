@@ -1,6 +1,22 @@
-import { boolean, index, integer, jsonb, numeric, pgTable, text, uuid } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+import {
+  boolean,
+  check,
+  index,
+  integer,
+  jsonb,
+  numeric,
+  pgTable,
+  text,
+  uuid,
+} from 'drizzle-orm/pg-core';
 import { id, timestamps, timestamptz } from '../columns.ts';
-import { opportunityTypeEnum, sourceRunStatusEnum, workFormatEnum } from './enums.ts';
+import {
+  opportunityTypeEnum,
+  sourceProviderEnum,
+  sourceRunStatusEnum,
+  workFormatEnum,
+} from './enums.ts';
 
 /**
  * Global ingestion (not per user): Apify actors scrape sources on their own cron, items land in
@@ -8,23 +24,34 @@ import { opportunityTypeEnum, sourceRunStatusEnum, workFormatEnum } from './enum
  */
 
 /** Curated list of job boards and event sites (seeded from Daniil's source research). */
-export const source = pgTable('source', {
-  id: id(),
-  /** Stable slug, e.g. "jobs-cz", "luma-prague". */
-  key: text().notNull().unique(),
-  name: text().notNull(),
-  kind: opportunityTypeEnum().notNull(),
-  baseUrl: text().notNull(),
-  apifyActorId: text().notNull(),
-  /** Actor input; the ingestion job fills in placeholders. */
-  inputTemplate: jsonb().$type<Record<string, unknown>>().notNull().default({}),
-  /** Cron expression, e.g. "0 *\/6 * * *". */
-  cron: text().notNull(),
-  enabled: boolean().notNull().default(true),
-  /** ToS / legal notes from the research. */
-  notes: text(),
-  ...timestamps(),
-});
+export const source = pgTable(
+  'source',
+  {
+    id: id(),
+    /** Stable slug, e.g. "jobs-cz", "luma-prague". */
+    key: text().notNull().unique(),
+    name: text().notNull(),
+    kind: opportunityTypeEnum().notNull(),
+    baseUrl: text().notNull(),
+    provider: sourceProviderEnum().notNull().default('apify'),
+    /** "username/actor-name"; null when the provider is not Apify. */
+    apifyActorId: text(),
+    /** Actor input; the ingestion job fills in placeholders. */
+    inputTemplate: jsonb().$type<Record<string, unknown>>().notNull().default({}),
+    /** Cron expression, e.g. "0 *\/6 * * *". */
+    cron: text().notNull(),
+    enabled: boolean().notNull().default(true),
+    /** ToS / legal notes from the research. */
+    notes: text(),
+    ...timestamps(),
+  },
+  (t) => [
+    check(
+      'source_apify_actor_required',
+      sql`(${t.provider} = 'apify' and ${t.apifyActorId} is not null) or (${t.provider} <> 'apify' and ${t.apifyActorId} is null)`,
+    ),
+  ],
+);
 
 /** One Apify actor run (ops view: runs, items, failures per source). */
 export const sourceRun = pgTable(
