@@ -87,6 +87,10 @@ export type FileFormat = ValueOf<typeof fileFormats>;
 export const opportunityTypes = ['job', 'event'] as const;
 export type OpportunityType = ValueOf<typeof opportunityTypes>;
 
+/** How a source is fetched: an Apify actor, or the MPSV open-data JSON file (no Apify). */
+export const sourceProviders = ['apify', 'mpsv_open_data'] as const;
+export type SourceProvider = ValueOf<typeof sourceProviders>;
+
 export const sourceRunStatuses = [
   'running',
   'succeeded',
