@@ -17,7 +17,8 @@
     "db:migrate": "pnpm --filter @job-pilot/db db:migrate",
     "db:seed": "pnpm --filter @job-pilot/db db:seed",
     "db:reset": "pnpm --filter @job-pilot/db db:reset && pnpm db:seed",
-    "db:studio": "pnpm --filter @job-pilot/db db:studio"
+    "db:studio": "pnpm --filter @job-pilot/db db:studio",
+    "test": "turbo run test"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.7",
