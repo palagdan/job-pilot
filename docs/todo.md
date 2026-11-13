@@ -58,7 +58,7 @@ Roadmap per person:
 - [x] [Both] Schema v1 (Drizzle): user/account/session, profile (+salary, notice, languages), profile_proof, targets (find_jobs, find_events), schedule, upload, cv, cv_file, agent_run, source, job_posting, event_listing, opportunity, pipeline_item, draft, follow_up, note, activity, chat_thread, chat_message, email_log, push_subscription
 - [x] [Both] `packages/shared`: enums (statuses, routes, types, skip reasons…), zod DTOs, API route map, error shape `{code, message, requestId}`
 - [x] [Artem] `packages/db`: Drizzle setup, migrations, seed script; docker-compose (Postgres + RustFS (S3; MinIO images discontinued) + Mailpit)
-- [ ] [Artem] Better Auth (Google) in api; session cookie shared web↔api; `requireUser` middleware; user scoping helper
+- [x] [Artem] Better Auth (Google) in api; session cookie shared web↔api; `requireUser` middleware; user scoping helper
 - [ ] [Artem] Storage service (upload, signed GET URL); request-id + structured logging (pino); error middleware (`JP-500-xxxxxx`); rate limit middleware
 - [ ] [Artem] Design tokens (light/dark from Figma variables), fonts via `next/font`, theme switch (system/light/dark) without reload
 - [ ] [Artem] Compass logo, app icon, favicon

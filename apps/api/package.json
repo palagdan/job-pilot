@@ -4,21 +4,27 @@
   "type": "module",
   "scripts": {
     "dev": "node --env-file-if-exists=../../.env --watch src/main.ts",
-    "build": "tsc -p tsconfig.json",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "start": "node --env-file-if-exists=../../.env dist/main.js",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
     "@hono/node-server": "^2.1.8",
     "@job-pilot/config": "workspace:*",
+    "@job-pilot/db": "workspace:*",
+    "@job-pilot/shared": "workspace:*",
+    "better-auth": "^1.7.22",
+    "drizzle-orm": "^0.45.4",
     "hono": "^4.13.18",
     "zod": "^4.6.7"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.7",
     "@types/node": "^26.6.6",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
   }
 }

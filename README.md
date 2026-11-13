@@ -25,12 +25,19 @@ packages expose explicit subpaths (`@job-pilot/shared/targets`).
 
 ```sh
 pnpm install
-cp .env.example .env
+cp .env.example .env   # then set BETTER_AUTH_SECRET=$(openssl rand -base64 32)
 pnpm infra:up       # Postgres, object storage, Mailpit (waits until healthy)
 pnpm db:migrate
 pnpm db:seed        # demo user + starter sources
 pnpm dev            # runs web + api
 ```
+
+Google sign-in (optional locally): create an OAuth client (type Web) in Google Cloud, add the redirect URI
+`http://localhost:3000/api/auth/callback/google`, and set `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` in `.env`.
+Without them the api runs, but sign-in is disabled. The browser reaches the api only through the web app
+(Next rewrites `/api/auth/*` and `/v1/*` to `API_URL`).
+
+Integration tests need the docker test DB: `TEST_DATABASE_URL=… pnpm test` (value in `.env.example`).
 
 Local services:
 
