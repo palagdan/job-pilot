@@ -125,93 +125,6 @@
   font-size: var(--text-small);
 }
 
-/* Sample elements — tokens only */
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-10);
-  padding: var(--space-16);
-  background: var(--color-bg);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-xl);
-}
-
-.cardTop {
-  display: flex;
-  align-items: center;
-  gap: var(--space-12);
-}
-
-.chip,
-.chipSelected,
-.fit {
-  padding: var(--space-5) var(--space-12);
-  border-radius: var(--radius-pill);
-  font-size: var(--text-small);
-  font-weight: var(--weight-semibold);
-  white-space: nowrap;
-}
-
-.chip {
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
-}
-
-.chipSelected {
-  background: var(--color-soft);
-  color: var(--color-primary);
-}
-
-.fit {
-  background: var(--color-accent);
-  color: var(--color-on-primary);
-}
-
-.buttonPrimary,
-.buttonSecondary {
-  min-height: var(--control-min-height);
-  padding: var(--space-10) var(--space-16);
-  border-radius: var(--radius-pill);
-  font-size: var(--text-body);
-  font-weight: var(--weight-medium);
-  cursor: pointer;
-  transition: opacity var(--duration-fast);
-}
-
-.buttonPrimary {
-  background: var(--color-cta);
-  color: var(--color-on-cta);
-  border: 1px solid var(--color-cta);
-}
-
-.buttonSecondary {
-  background: var(--color-bg);
-  color: var(--color-ink);
-  border: 1px solid var(--color-line);
-}
-
-.buttonPrimary:hover,
-.buttonSecondary:hover {
-  opacity: var(--opacity-hover);
-}
-
-.bannerWarning,
-.bannerDanger {
-  padding: var(--space-10) var(--space-16);
-  border-radius: var(--radius-md);
-  font-weight: var(--weight-medium);
-}
-
-.bannerWarning {
-  background: var(--color-warning-soft);
-  color: var(--color-warning);
-}
-
-.bannerDanger {
-  background: var(--color-danger-soft);
-  color: var(--color-danger);
-}
-
 /* Theme switcher */
 .segmented {
   display: inline-flex;
@@ -255,4 +168,56 @@
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+/* Components gallery */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+  gap: var(--space-16);
+  align-items: start;
+}
+
+.demo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-14);
+  padding: var(--space-20);
+  background: var(--color-bg);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-xl);
+}
+
+.demoTitle {
+  font-size: var(--text-heading);
+}
+
+.state {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+.stateLabel {
+  flex-shrink: 0;
+  width: 84px;
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+  color: var(--color-muted);
+}
+
+.stateBody {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.skeletonCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  padding: var(--space-16);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-xl);
 }

@@ -3,7 +3,7 @@ import { Inter, Space_Grotesk } from 'next/font/google';
 import { cookies } from 'next/headers';
 import type { ReactNode } from 'react';
 import { parseTheme, themeAttribute, themeCookieName } from '../lib/theme/theme.ts';
-import { ThemeProvider } from '../lib/theme/theme-provider.tsx';
+import { Providers } from './providers.tsx';
 import './styles/globals.css';
 
 const heading = Space_Grotesk({
@@ -31,7 +31,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     <html lang="en" data-theme={themeAttribute(theme)} className={`${heading.variable} ${body.variable}`}>
       <body>
-        <ThemeProvider initialTheme={theme}>{children}</ThemeProvider>
+        <Providers theme={theme}>{children}</Providers>
       </body>
     </html>
   );

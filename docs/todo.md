@@ -67,9 +67,9 @@ Roadmap per person:
 - [x] [Artem] Better Auth (Google) in api; session cookie shared web↔api; `requireUser` middleware; user scoping helper
 - [x] [Artem] Storage service (upload, signed GET URL); request-id + structured logging (pino); error middleware (`JP-500-xxxxxx`); rate limit middleware
 - [x] [Artem] Design tokens (light/dark from Figma variables), fonts via `next/font`, theme switch (system/light/dark) without reload
-- [ ] [Artem] Compass logo, app icon, favicon
-- [ ] [Artem] Core components with all states: Button, TextInput, Select, SearchableSelect, TagInput, Chips, Toggle, Segmented, DropdownMenu/split button, Modal, Toast (queue, undo, sticky errors), Banner, Skeleton, Dropzone, StatusBadge, Stepper, Table, EmptyState _(may spill into week 2)_
-- [ ] [Artem] App shell: Sidebar (Today, Review, Pipeline, CVs, Profile and targets, user menu), Content, Chat panel slot; typed API client + TanStack Query setup
+- [x] [Artem] Compass logo, app icon, favicon
+- [x] [Artem] Core components with all states: Button, TextInput, Select, SearchableSelect, TagInput, Chips, Toggle, Segmented, DropdownMenu/split button, Modal, Toast (queue, undo, sticky errors), Banner, Skeleton, Dropzone, StatusBadge, Stepper, Table, EmptyState _(may spill into week 2)_
+- [x] [Artem] App shell: Sidebar (Today, Review, Pipeline, CVs, Profile and targets, user menu), Content, Chat panel slot; typed API client + TanStack Query setup
 - [x] [Daniil] `apps/worker` with pg-boss; env validation (`packages/config`, zod) + `.env.example` — plus shared job contract `packages/jobs`
 - [x] [Daniil] **LLM layer** `packages/llm`: OpenAI SDK → `https://api.featherless.ai/v1`; `generateObject(zodSchema)` = JSON prompt + validate + 1 repair retry; timeouts, retries, global concurrency limit (Featherless plan limits), token/cost log per user & run, versioned prompt files; model per task in config (parse, rank, write CV, write drafts, chat)
 - [ ] [Daniil] Spike: pick Featherless models per task (quality vs speed on 5 sample CVs/jobs), document in `docs/llm.md`

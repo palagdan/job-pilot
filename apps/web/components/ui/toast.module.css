@@ -1,0 +1,82 @@
+.viewport {
+  position: fixed;
+  bottom: var(--space-24);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  outline: none;
+  z-index: 70;
+}
+
+/* Figma "Toast": cta pill, onCta 13/500; Undo 13/600 primary. Error: dangerSoft, radius 14, danger text. */
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  padding: var(--space-10) var(--space-16);
+  border-radius: var(--radius-pill);
+  background: var(--color-cta);
+  color: var(--color-on-cta);
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.16);
+  animation: rise var(--duration-base) ease-out;
+}
+
+.toast[data-tone="error"] {
+  max-width: 420px;
+  border-radius: var(--radius-lg);
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.toast[data-state="closed"] {
+  animation: fade var(--duration-fast) ease-in forwards;
+}
+
+.message {
+  margin: 0;
+}
+
+.action,
+.close {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-primary);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+}
+
+.toast[data-tone="error"] .action,
+.toast[data-tone="error"] .close {
+  color: var(--color-danger);
+}
+
+.close {
+  display: inline-flex;
+}
+
+.close :global(svg) {
+  width: 14px;
+  height: 14px;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes fade {
+  to {
+    opacity: 0;
+  }
+}

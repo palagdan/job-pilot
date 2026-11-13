@@ -42,6 +42,10 @@ Google sign-in (optional locally): create an OAuth client (type Web) in Google C
 Without them the api runs, but sign-in is disabled. The browser reaches the api only through the web app
 (Next rewrites `/api/auth/*` and `/v1/*` to `API_URL`).
 
+Local sign-in without Google: run `pnpm db:seed`, open the app and press **Dev: sign in as demo user**
+(`POST /api/dev/sign-in`, mounted by the api only when `NODE_ENV=development`).
+UI reference: `/design-system` shows every token and component state.
+
 Integration tests run against the docker services when `TEST_DATABASE_URL` / `TEST_S3_ENDPOINT` are set
 (values in `.env.example`): `TEST_DATABASE_URL=… TEST_S3_ENDPOINT=… pnpm test`.
 

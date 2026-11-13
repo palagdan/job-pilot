@@ -1,0 +1,33 @@
+.card {
+  width: 100%;
+  overflow-x: auto;
+  background: var(--color-bg);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-xl);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.th {
+  padding: var(--space-12) var(--space-20);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-line);
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+  color: var(--color-muted);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.td {
+  padding: var(--space-12) var(--space-20);
+  font-size: var(--text-body);
+  vertical-align: middle;
+}
+
+.row + .row .td {
+  border-top: 1px solid var(--color-line);
+}

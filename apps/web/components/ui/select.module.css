@@ -1,0 +1,74 @@
+.trigger {
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.value {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron,
+.chevron :global(svg) {
+  width: 16px;
+  height: 16px;
+  color: var(--color-muted);
+  flex-shrink: 0;
+}
+
+.content {
+  min-width: var(--radix-select-trigger-width);
+  max-height: min(320px, var(--radix-select-content-available-height));
+  background: var(--color-bg);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.12);
+  z-index: 50;
+  overflow: hidden;
+}
+
+.viewport {
+  padding: var(--space-4);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-8) var(--space-10);
+  border-radius: calc(var(--radius-md) - 4px);
+  font-size: var(--text-body);
+  cursor: pointer;
+  outline: none;
+}
+
+.item[data-highlighted] {
+  background: var(--color-surface);
+}
+
+.item[data-disabled] {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}
+
+.itemText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.description {
+  font-size: var(--text-small);
+  color: var(--color-muted);
+}
+
+.check,
+.check :global(svg) {
+  width: 16px;
+  height: 16px;
+  color: var(--color-primary);
+}

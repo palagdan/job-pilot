@@ -1,0 +1,240 @@
+.shell {
+  display: grid;
+  grid-template-columns: var(--layout-sidebar-width) minmax(0, 1fr) var(--layout-chat-width);
+  height: 100dvh;
+  background: var(--color-surface);
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-height: 0;
+  padding: var(--space-24) var(--space-16);
+  background: var(--color-bg);
+  border-right: 1px solid var(--color-line);
+  overflow-y: auto;
+}
+
+.logo {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 0 var(--space-8);
+  margin-bottom: var(--space-20);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  padding: var(--space-10) var(--space-8);
+  border-radius: var(--radius-md);
+  color: var(--color-ink);
+  font-size: var(--text-nav);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+}
+
+.navItem svg {
+  width: 16px;
+  height: 16px;
+  color: var(--color-muted);
+}
+
+.navItem:hover {
+  background: var(--color-surface);
+}
+
+.navItem[aria-current="page"] {
+  background: var(--color-soft);
+}
+
+.navItem[aria-current="page"] svg {
+  color: var(--color-primary);
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  width: 100%;
+  margin-top: auto;
+  padding: var(--space-8);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+button.user:hover,
+button.user[data-state="open"] {
+  background: var(--color-surface);
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-line);
+  color: var(--color-ink);
+  font-weight: var(--weight-semibold);
+  object-fit: cover;
+}
+
+.userText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.userName {
+  overflow: hidden;
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userSub {
+  font-size: var(--text-caption);
+  color: var(--color-muted);
+}
+
+.userChevron {
+  width: 16px;
+  height: 16px;
+  color: var(--color-muted);
+}
+
+/* ---------- Content ---------- */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-20);
+  min-width: 0;
+  padding: var(--layout-content-padding);
+  overflow-y: auto;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+.pageTitle {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.pageTitle p {
+  color: var(--color-muted);
+}
+
+.pageActions {
+  display: flex;
+  gap: var(--space-8);
+}
+
+/* ---------- Chat panel ---------- */
+.chat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  min-height: 0;
+  padding: var(--space-24) var(--space-20);
+  background: var(--color-bg);
+  border-left: 1px solid var(--color-line);
+  overflow-y: auto;
+}
+
+.chatHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.chatHeader p {
+  font-size: var(--text-small);
+  color: var(--color-muted);
+}
+
+.chatEmpty {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-4);
+  text-align: center;
+  color: var(--color-muted);
+}
+
+.chatEmptyTitle {
+  color: var(--color-ink);
+  font-weight: var(--weight-medium);
+}
+
+/* Narrow screens: hide the chat column first, then the sidebar (mobile is out of v1; this only avoids breaking). */
+@media (max-width: 1100px) {
+  .shell {
+    grid-template-columns: var(--layout-sidebar-width) minmax(0, 1fr);
+  }
+
+  .chat {
+    display: none;
+  }
+}
+
+/* ---------- Full-page states (No access, 404, 500) ---------- */
+.fullPage {
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  padding: var(--space-24);
+}
+
+.fullPageCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-12);
+  max-width: 420px;
+  padding: var(--space-32);
+  background: var(--color-bg);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-xl);
+  text-align: center;
+}
+
+.fullPageEyebrow {
+  margin-top: var(--space-12);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.fullPageText {
+  margin-bottom: var(--space-8);
+  color: var(--color-muted);
+}

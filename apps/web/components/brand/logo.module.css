@@ -1,0 +1,31 @@
+.lockup {
+  display: inline-flex;
+  align-items: center;
+}
+
+.icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary);
+}
+
+.mark {
+  display: block;
+  background: var(--color-on-primary);
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+}
+
+.wordmark {
+  font-family: var(--font-heading), var(--font-heading-fallback);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+
+.pilot {
+  color: var(--color-primary);
+}

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import styles from './design-system.module.css';
+import { ComponentsGallery } from './components-gallery.tsx';
 import { ThemeSwitcher } from './theme-switcher.tsx';
 
 export const metadata: Metadata = { title: 'Design tokens — JobPilot' };
@@ -85,31 +86,8 @@ export default function DesignSystemPage() {
       </section>
 
       <section className={styles.section}>
-        <h2>Sample (tokens only — real components come next)</h2>
-        <article className={styles.card}>
-          <div className={styles.cardTop}>
-            <span className={styles.chip}>Job</span>
-            <div className={styles.grow}>
-              <p className={styles['type-card-title']}>Head of Performance Marketing</p>
-              <p className={`${styles['type-small']} ${styles.muted}`}>Company A - Prague - LinkedIn</p>
-            </div>
-            <span className={styles.fit}>87% fit</span>
-          </div>
-          <div className={styles.row}>
-            <span className={styles.chipSelected}>Direct</span>
-            <span className={`${styles.grow} ${styles['type-small']} ${styles.muted}`}>Apply on the company page</span>
-            <button type="button" className={styles.buttonSecondary}>
-              Skip
-            </button>
-            <button type="button" className={styles.buttonPrimary}>
-              Pursue
-            </button>
-          </div>
-        </article>
-        <div className={styles.row}>
-          <span className={styles.bannerWarning}>2 follow-ups are due today</span>
-          <span className={styles.bannerDanger}>The last run failed</span>
-        </div>
+        <h2>Components</h2>
+        <ComponentsGallery />
       </section>
     </main>
   );

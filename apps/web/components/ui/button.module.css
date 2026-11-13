@@ -1,0 +1,90 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-min-height);
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity var(--duration-fast);
+}
+
+.md {
+  padding: var(--space-10) var(--space-16);
+}
+
+.sm {
+  min-height: 30px;
+  padding: var(--space-5) var(--space-12);
+  font-size: var(--text-small);
+}
+
+.primary {
+  background: var(--color-cta);
+  border-color: var(--color-cta);
+  color: var(--color-on-cta);
+}
+
+.secondary {
+  background: var(--color-bg);
+  border-color: var(--color-line);
+  color: var(--color-ink);
+}
+
+.danger {
+  background: var(--color-danger);
+  border-color: var(--color-danger);
+  color: var(--color-bg);
+}
+
+.ghost {
+  background: transparent;
+  color: var(--color-ink);
+}
+
+.ghost:hover:not([aria-disabled]) {
+  background: var(--color-surface);
+  opacity: 1;
+}
+
+.button:hover:not([aria-disabled]) {
+  opacity: var(--opacity-hover);
+}
+
+.button[data-loading] {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.button[data-disabled] {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}
+
+/* Both labels share one grid cell, so the button keeps the width of the wider one. */
+.labels {
+  display: inline-grid;
+}
+
+.label {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+}
+
+.label[data-hidden] {
+  visibility: hidden;
+}
+
+.label :global(svg) {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}

@@ -8,7 +8,11 @@ import { testUtils } from 'better-auth/plugins';
 import { eq } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createApp } from '../app.ts';
-import { createAuthOptions, createSessionReader } from '../infrastructure/auth/better-auth.ts';
+import {
+  createAuthOptions,
+  createDevSessionIssuer,
+  createSessionReader,
+} from '../infrastructure/auth/better-auth.ts';
 import { createMemoryRateLimitStore } from '../infrastructure/rate-limit/memory-rate-limit-store.ts';
 import { createDrizzleUserRepository } from '../infrastructure/repositories/drizzle-user-repository.ts';
 import { authBasePath } from './paths.ts';
@@ -39,6 +43,7 @@ describe.skipIf(!url)('auth flow (integration)', () => {
     authHandler: auth.handler,
     sessions: createSessionReader(auth),
     users: createDrizzleUserRepository(db),
+    devSessions: createDevSessionIssuer({ db, env, basePath: authBasePath }),
   });
   let headers: Headers;
   let userId: string;
@@ -98,5 +103,42 @@ describe.skipIf(!url)('auth flow (integration)', () => {
       body: JSON.stringify({ provider: 'google', callbackURL: '/' }),
     });
     expect(res.status).toBeGreaterThanOrEqual(400);
+  });
+
+  it('dev sign-in issues a working session cookie for an existing user', async () => {
+    const res = await app.request('/api/dev/sign-in', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    expect(res.status).toBe(200);
+    const cookie = res.headers
+      .getSetCookie()
+      .map((c) => c.split(';')[0])
+      .join('; ');
+    const me = await app.request('/v1/me', { headers: { cookie } });
+    expect(me.status).toBe(200);
+    expect(((await me.json()) as { email: string }).email).toBe(email);
+  });
+
+  it('dev sign-in for an unknown email is 404', async () => {
+    const res = await app.request('/api/dev/sign-in', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ email: 'nobody@example.com' }),
+    });
+    expect(res.status).toBe(404);
+  });
+
+  it('dev routes do not exist when devSessions is not provided', async () => {
+    const prodLike = createApp({
+      log: silentLogger,
+      rateLimitStore: createMemoryRateLimitStore(),
+      authHandler: auth.handler,
+      sessions: createSessionReader(auth),
+      users: createDrizzleUserRepository(db),
+    });
+    const res = await prodLike.request('/api/dev/sign-in', { method: 'POST' });
+    expect(res.status).toBe(404);
   });
 });

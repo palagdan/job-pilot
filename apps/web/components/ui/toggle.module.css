@@ -1,0 +1,59 @@
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-16);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.label {
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+}
+
+.description {
+  font-size: var(--text-small);
+  color: var(--color-muted);
+}
+
+/* Figma "Toggle": 36×20, radius 10, knob r8 (16px) inset 2px. Off: line; on: primary. */
+.track {
+  position: relative;
+  flex-shrink: 0;
+  width: 36px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: var(--color-line);
+  cursor: pointer;
+  transition: background var(--duration-fast);
+}
+
+.track[data-state="checked"] {
+  background: var(--color-primary);
+}
+
+.track:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}
+
+.thumb {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  transform: translateX(2px);
+  transition: transform var(--duration-fast);
+}
+
+.thumb[data-state="checked"] {
+  transform: translateX(18px);
+}

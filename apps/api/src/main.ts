@@ -4,7 +4,11 @@ import { createLogger } from '@job-pilot/logger/logger';
 import { createApp } from './app.ts';
 import { env } from './env.ts';
 import { authBasePath } from './http/paths.ts';
-import { createAuth, createSessionReader } from './infrastructure/auth/better-auth.ts';
+import {
+  createAuth,
+  createDevSessionIssuer,
+  createSessionReader,
+} from './infrastructure/auth/better-auth.ts';
 import { createMemoryRateLimitStore } from './infrastructure/rate-limit/memory-rate-limit-store.ts';
 import { createDrizzleUserRepository } from './infrastructure/repositories/drizzle-user-repository.ts';
 
@@ -19,6 +23,10 @@ const app = createApp({
   authHandler: auth.handler,
   sessions: createSessionReader(auth),
   users: createDrizzleUserRepository(db),
+  // Development only: POST /api/dev/sign-in signs in the seeded demo user without Google.
+  ...(env.NODE_ENV === 'development'
+    ? { devSessions: createDevSessionIssuer({ db, env, basePath: authBasePath }) }
+    : {}),
 });
 
 if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {

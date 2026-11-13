@@ -1,0 +1,17 @@
+.group {
+  display: inline-flex;
+}
+
+.main {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  padding-right: var(--space-12);
+}
+
+.arrow {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  margin-left: -1px;
+  padding-left: var(--space-8);
+  padding-right: var(--space-10);
+}

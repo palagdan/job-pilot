@@ -1,6 +1,7 @@
 import type { Logger } from '@job-pilot/logger/logger';
 import { Hono } from 'hono';
 import { requestId } from 'hono/request-id';
+import type { DevSessionIssuer } from './application/ports/dev-session-issuer.ts';
 import type { RateLimitStore } from './application/ports/rate-limit-store.ts';
 import type { SessionReader } from './application/ports/session-reader.ts';
 import type { UserRepository } from './application/ports/user-repository.ts';
@@ -11,6 +12,7 @@ import { createRateLimit, rateLimits } from './http/middleware/rate-limit.ts';
 import { createRequestLogger } from './http/middleware/request-logger.ts';
 import { createRequireUser } from './http/middleware/require-user.ts';
 import { authBasePath } from './http/paths.ts';
+import { createDevRoutes } from './http/routes/dev-routes.ts';
 import { createMeRoutes } from './http/routes/me-routes.ts';
 
 export type AppDeps = {
@@ -20,6 +22,8 @@ export type AppDeps = {
   sessions: SessionReader;
   rateLimitStore: RateLimitStore;
   users: UserRepository;
+  /** Development only: enables `POST /api/dev/sign-in`. Leave undefined in production. */
+  devSessions?: DevSessionIssuer;
 };
 
 /** Builds the Hono app from its dependencies. Wiring happens in `main.ts`; tests pass fakes or test instances. */
@@ -28,13 +32,17 @@ export const createApp = (deps: AppDeps) => {
 
   const v1 = new Hono<AppEnv>().use(requireUser).route('/me', createMeRoutes(deps));
 
-  return new Hono<AppEnv>()
+  const app = new Hono<AppEnv>()
     .use(requestId())
     .use(createRequestLogger(deps.log, { skipPaths: ['/health'] }))
     .use(createRateLimit(deps.rateLimitStore, rateLimits.global))
     .get('/health', (c) => c.json({ status: 'ok' as const }))
     .on(['GET', 'POST'], `${authBasePath}/*`, (c) => deps.authHandler(c.req.raw))
-    .route('/v1', v1)
+    .route('/v1', v1);
+
+  if (deps.devSessions) app.route('/api/dev', createDevRoutes(deps.devSessions));
+
+  return app
     .notFound((c) => apiError(c, 'not_found', 'Not found.'))
     .onError(createErrorHandler(deps.log));
 };

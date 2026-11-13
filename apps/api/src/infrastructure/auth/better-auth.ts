@@ -2,6 +2,9 @@ import type { Db } from '@job-pilot/db/client';
 import { account, session, user, verification } from '@job-pilot/db/schema/auth';
 import { type BetterAuthOptions, betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { testUtils } from 'better-auth/plugins';
+import { eq } from 'drizzle-orm';
+import type { DevSessionIssuer } from '../../application/ports/dev-session-issuer.ts';
 import type { SessionReader } from '../../application/ports/session-reader.ts';
 import type { Env } from '../../env.ts';
 
@@ -77,3 +80,25 @@ export const createSessionReader = (auth: AuthInstance): SessionReader => ({
     return { id, email, name };
   },
 });
+
+/**
+ * Development-only session issuer: a separate Better Auth instance with the `testUtils` plugin (same DB and secret,
+ * so its cookies are valid for the real instance). Better Auth recommends keeping testUtils out of the main instance.
+ */
+export const createDevSessionIssuer = (
+  deps: Parameters<typeof createAuthOptions>[0],
+): DevSessionIssuer => {
+  const devAuth = betterAuth({ ...createAuthOptions(deps), plugins: [testUtils()] });
+  return {
+    issue: async (email) => {
+      const [row] = await deps.db
+        .select({ id: user.id })
+        .from(user)
+        .where(eq(user.email, email))
+        .limit(1);
+      if (!row) return null;
+      const { cookies } = await (await devAuth.$context).test.login({ userId: row.id });
+      return cookies.map(({ name, value }) => ({ name, value }));
+    },
+  };
+};

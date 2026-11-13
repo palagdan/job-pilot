@@ -1,0 +1,57 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgb(11 13 18 / 0.4);
+  z-index: 50;
+}
+
+/* Figma "Modal": bg, line border, radius 16, padding 20, gap 12, shadow 0 8 24 / 12%. */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(420px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  padding: var(--space-20);
+  background: var(--color-bg);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.12);
+  z-index: 51;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-heading), var(--font-heading-fallback);
+  font-size: 17px;
+  font-weight: var(--weight-medium);
+  line-height: var(--line-height-tight);
+  color: var(--color-ink);
+}
+
+.title[data-tone="danger"] {
+  color: var(--color-danger);
+}
+
+.description {
+  margin: 0;
+  font-size: var(--text-body);
+  color: var(--color-ink);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-8);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}

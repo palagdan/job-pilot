@@ -1,0 +1,107 @@
+/* Figma "Dropzone": surface, dashed line border, radius 12. */
+.zone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  width: 100%;
+  padding: var(--space-14);
+  border: 1px dashed var(--color-line);
+  border-radius: 12px;
+  background: var(--color-surface);
+  text-align: center;
+  transition: background var(--duration-fast), border-color var(--duration-fast);
+}
+
+.zone[data-size="large"] {
+  min-height: 150px;
+  gap: var(--space-8);
+  padding: var(--space-24);
+}
+
+.zone[data-state="dragover"] {
+  border-color: var(--color-primary);
+  background: var(--color-soft);
+  color: var(--color-primary);
+}
+
+.zone[data-state="done"] {
+  border-style: solid;
+}
+
+.zone[data-state="error"] {
+  border-color: var(--color-danger);
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.input {
+  display: none;
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+  color: var(--color-muted);
+}
+
+.title {
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+}
+
+.zone[data-size="large"] .title {
+  font-size: var(--text-nav);
+}
+
+.hint {
+  font-size: var(--text-small);
+  color: var(--color-muted);
+}
+
+.link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: var(--text-small);
+  font-weight: var(--weight-semibold);
+  color: var(--color-primary);
+  cursor: pointer;
+}
+
+.title .link {
+  font-size: inherit;
+}
+
+.zone[data-state="error"] .link {
+  color: inherit;
+}
+
+/* Figma "Progress": 6 px track, radius 3, primary fill. */
+.progress {
+  width: 100%;
+  height: 6px;
+  border: 0;
+  border-radius: 3px;
+  background: var(--color-line);
+  overflow: hidden;
+  appearance: none;
+}
+
+.progress::-webkit-progress-bar {
+  background: var(--color-line);
+}
+
+.progress::-webkit-progress-value {
+  border-radius: 3px;
+  background: var(--color-primary);
+  transition: width var(--duration-base);
+}
+
+.progress::-moz-progress-bar {
+  border-radius: 3px;
+  background: var(--color-primary);
+}

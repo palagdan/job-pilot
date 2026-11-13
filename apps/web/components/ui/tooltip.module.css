@@ -1,0 +1,10 @@
+.content {
+  max-width: 260px;
+  padding: var(--space-8) var(--space-10);
+  border-radius: var(--radius-md);
+  background: var(--color-cta);
+  color: var(--color-on-cta);
+  font-size: var(--text-small);
+  line-height: var(--line-height-body);
+  z-index: 60;
+}
