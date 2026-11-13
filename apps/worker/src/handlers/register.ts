@@ -4,6 +4,8 @@ import type { JobQueue } from '@job-pilot/jobs/client';
 import type { Llm } from '@job-pilot/llm/client';
 import type { FileStorage } from '@job-pilot/storage/file-storage';
 import type { Log } from '../log.ts';
+import { expirePostings } from './expire-postings.ts';
+import { ingestDataset } from './ingest-dataset.ts';
 import { parseCv } from './parse-cv.ts';
 import { pollApifyRuns } from './poll-apify-runs.ts';
 import { startSourceRun } from './start-source-run.ts';
@@ -27,5 +29,6 @@ export const registerHandlers = async (
   await queue.work('cv.parse', parseCv(deps), { concurrency });
   await queue.work('source.run', startSourceRun({ ...deps, ...apifyLimits }), { concurrency });
   await queue.work('apify.poll-runs', pollApifyRuns(deps));
-  // apify.ingest-dataset has no handler yet (next task).
+  await queue.work('apify.ingest-dataset', ingestDataset(deps), { concurrency: 1 });
+  await queue.work('ingest.expire', expirePostings(deps));
 };
