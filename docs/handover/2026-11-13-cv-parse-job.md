@@ -33,3 +33,10 @@ The worker now needs `FEATHERLESS_API_KEY` and the `S3_*` storage vars (same as 
 - End to end on local Postgres with the live model: generated PDF → `parsed` in 12.5 s, profile filled correctly, re-run skipped, garbage file → `failed` + E04 copy.
 - Worker lint and typecheck pass.
 - **No automated tests yet** (cut for hackathon time).
+
+## Update: local storage (no S3 needed)
+
+- `STORAGE_DRIVER=local` is now the **default**. Files go to `.cache/storage/` (gitignored); `LOCAL_STORAGE_DIR` overrides it, and relative paths resolve from `apps/api` / `apps/worker`, so both share one folder.
+- `STORAGE_DRIVER=s3` uses the `S3_*` vars as before (they are optional otherwise).
+- **Create storage with `createFileStorageFromEnv(env)` from `@job-pilot/storage/from-env`** (worker already does), and spread `storageEnv` into the api env.
+- In local mode `signedDownloadUrl` returns `/v1/files/<key>?filename=…&disposition=…`. The api needs a small authenticated route that streams `storage.get(key)` for downloads (check that the key starts with `users/<currentUserId>/`).
