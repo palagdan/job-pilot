@@ -11,6 +11,7 @@ import { generateMasterCv } from './generate-master-cv.ts';
 import { ingestDataset } from './ingest-dataset.ts';
 import { parseCv } from './parse-cv.ts';
 import { pollApifyRuns } from './poll-apify-runs.ts';
+import { runDigest } from './run-digest.ts';
 import { sendEmail } from './send-email.ts';
 import { startSourceRun } from './start-source-run.ts';
 
@@ -39,4 +40,5 @@ export const registerHandlers = async (
   await queue.work('ingest.expire', expirePostings(deps));
   await queue.work('email.send', sendEmail({ ...deps, ...email }), { concurrency });
   await queue.work('email.finish-setup-reminders', finishSetupReminders(deps));
+  await queue.work('email.run-digest', runDigest(deps), { concurrency });
 };

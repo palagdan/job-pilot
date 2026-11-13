@@ -13,10 +13,13 @@ import {
 import { createPgBossJobQueue } from './infrastructure/queue/pg-boss-job-queue.ts';
 import { createMemoryRateLimitStore } from './infrastructure/rate-limit/memory-rate-limit-store.ts';
 import { createCvRenderer } from './infrastructure/rendering/cv-render-adapter.ts';
+import { createDrizzleAgentRepository } from './infrastructure/repositories/drizzle-agent-repository.ts';
 import { createDrizzleCvFactsReader } from './infrastructure/repositories/drizzle-cv-facts-reader.ts';
 import { createDrizzleCvFileRepository } from './infrastructure/repositories/drizzle-cv-file-repository.ts';
 import { createDrizzleCvRepository } from './infrastructure/repositories/drizzle-cv-repository.ts';
 import { createDrizzleEmailPreferencesRepository } from './infrastructure/repositories/drizzle-email-preferences-repository.ts';
+import { createDrizzleOpsReader } from './infrastructure/repositories/drizzle-ops-reader.ts';
+import { createDrizzlePipelineRepository } from './infrastructure/repositories/drizzle-pipeline-repository.ts';
 import { createDrizzleProfileRepository } from './infrastructure/repositories/drizzle-profile-repository.ts';
 import { createDrizzleScheduleRepository } from './infrastructure/repositories/drizzle-schedule-repository.ts';
 import { createDrizzleTargetsRepository } from './infrastructure/repositories/drizzle-targets-repository.ts';
@@ -53,6 +56,10 @@ const app = createApp({
   schedules: createDrizzleScheduleRepository(db),
   cvFacts: createDrizzleCvFactsReader(db),
   cvs: createDrizzleCvRepository(db),
+  agent: createDrizzleAgentRepository(db),
+  pipeline: createDrizzlePipelineRepository(db),
+  ops: createDrizzleOpsReader(db),
+  admins: env.ADMIN_EMAILS,
   cvFiles: createDrizzleCvFileRepository(db),
   renderer: createCvRenderer(),
   storage: createFileStorageFromEnv(env),

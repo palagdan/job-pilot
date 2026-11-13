@@ -18,4 +18,5 @@ export interface UserRepository {
   advanceOnboarding(id: string, step: OnboardingStep): Promise<void>;
   /** Sets `onboardingCompletedAt` if not set yet. */
   completeOnboarding(id: string, at: Date): Promise<void>;
+  setTheme(id: string, theme: Theme): Promise<void>;
 }

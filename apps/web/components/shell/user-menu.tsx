@@ -1,34 +1,22 @@
 'use client';
 
-import { useQueryClient } from '@tanstack/react-query';
-import { ChevronsUpDown, LogOut, Pause, Settings, Target } from 'lucide-react';
+import { ChevronsUpDown, LogOut, Pause, Play, Settings, Target } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useAgentControls } from '../../lib/api/use-agent.ts';
 import { useMe } from '../../lib/api/use-me.ts';
+import { useSignOut } from '../../lib/session/use-sign-out.ts';
 import { ConfirmDialog } from '../ui/dialog.tsx';
 import { DropdownMenu, MenuItem, MenuSeparator } from '../ui/dropdown-menu.tsx';
 import { Skeleton } from '../ui/skeleton.tsx';
-import { toast } from '../ui/toast.tsx';
 import styles from './app-shell.module.css';
 
 /** Sidebar bottom: user + menu (spec "User menu": Profile and targets, Settings, Pause agent, Sign out). */
 export function UserMenu() {
   const { data: me } = useMe();
   const router = useRouter();
-  const queryClient = useQueryClient();
-  const [confirmSignOut, setConfirmSignOut] = useState(false);
-
-  const signOut = async () => {
-    // Better Auth requires a JSON content type on POST endpoints.
-    const res = await fetch('/api/auth/sign-out', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' });
-    if (!res.ok) {
-      toast.error('Could not sign out. Try again.');
-      return;
-    }
-    queryClient.clear();
-    router.replace('/login');
-  };
+  const signOut = useSignOut();
+  const agent = useAgentControls();
 
   if (!me) {
     return (
@@ -69,24 +57,22 @@ export function UserMenu() {
         <MenuItem icon={<Settings />} onSelect={() => router.push('/settings')}>
           Settings
         </MenuItem>
-        {/* Pause/resume (C07) lands with Settings in M3. */}
-        <MenuItem icon={<Pause />} disabled disabledReason="Available soon">
-          Pause agent
-        </MenuItem>
+        {me.pausedAt ? (
+          <MenuItem icon={<Play />} onSelect={agent.resume}>
+            Resume agent
+          </MenuItem>
+        ) : (
+          <MenuItem icon={<Pause />} onSelect={agent.requestPause}>
+            Pause agent
+          </MenuItem>
+        )}
         <MenuSeparator />
-        {/* C10 asks for confirmation only when packs are ready to send; the count comes with Pipeline (M4). */}
-        <MenuItem icon={<LogOut />} onSelect={() => setConfirmSignOut(true)}>
+        <MenuItem icon={<LogOut />} onSelect={() => void signOut.request()}>
           Sign out
         </MenuItem>
       </DropdownMenu>
-      <ConfirmDialog
-        open={confirmSignOut}
-        onOpenChange={setConfirmSignOut}
-        title="Sign out?"
-        description="The agent keeps working on its schedule while you are signed out."
-        confirmLabel="Sign out"
-        onConfirm={signOut}
-      />
+      <ConfirmDialog {...signOut.confirm} />
+      <ConfirmDialog {...agent.confirm} />
     </>
   );
 }

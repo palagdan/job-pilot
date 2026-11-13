@@ -1,4 +1,5 @@
-import { QueryClient } from '@tanstack/react-query';
+import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
+import { raiseGlobalError } from '../errors/global-errors.ts';
 import { ApiError } from './api-client.ts';
 
 /** 4xx are final (except 408/429); 5xx and network errors are retried twice. */
@@ -9,8 +10,22 @@ const shouldRetry = (failureCount: number, error: unknown) => {
   return failureCount < 2;
 };
 
+/**
+ * Every query and mutation reports 401 / 429 / 5xx to the global error windows (E03 / E11 / E12).
+ * A failed background refetch of data already on screen stays quiet (no E12 over a working page).
+ */
 export const createQueryClient = () =>
   new QueryClient({
+    queryCache: new QueryCache({
+      onError: (error, query) => {
+        if (query.state.data !== undefined && !(error instanceof ApiError && error.code === 'unauthorized')) return;
+        raiseGlobalError(error, () => void query.fetch());
+      },
+    }),
+    mutationCache: new MutationCache({
+      // "Try again" closes the window; the user repeats the action (their input is still on screen).
+      onError: (error) => void raiseGlobalError(error, () => {}),
+    }),
     defaultOptions: {
       queries: { staleTime: 30_000, retry: shouldRetry, refetchOnWindowFocus: true },
       mutations: { retry: false },
@@ -28,4 +43,5 @@ export const queryKeys = {
   pipeline: (query: unknown) => ['pipeline', query] as const,
   cvs: ['cvs'] as const,
   agentStatus: ['agent-status'] as const,
+  pipelineStats: ['pipeline', 'stats'] as const,
 };

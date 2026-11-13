@@ -4,7 +4,7 @@ import type { CvContent } from '@job-pilot/shared/cv';
 import { messages } from '@job-pilot/shared/limits';
 import { useMutation } from '@tanstack/react-query';
 import { type FormEvent, useEffect, useState } from 'react';
-import { ApiError, callApi } from '../../lib/api/api-client.ts';
+import { callApi } from '../../lib/api/api-client.ts';
 import { Button } from '../ui/button.tsx';
 import { ConfirmDialog } from '../ui/dialog.tsx';
 import { TagInput } from '../ui/tag-input.tsx';
@@ -12,6 +12,7 @@ import { TextArea } from '../ui/text-area.tsx';
 import { TextInput } from '../ui/text-input.tsx';
 import { toast } from '../ui/toast.tsx';
 import styles from './cv-editor.module.css';
+import { notifyError } from '../../lib/errors/notify-error.ts';
 
 type Draft = {
   headline: string;
@@ -73,7 +74,7 @@ export function CvEditor({ cvId, content, onDone }: { cvId: string; content: CvC
       toast('Saved');
       onDone(true);
     },
-    onError: (e) => toast.error(e instanceof ApiError ? e.message : 'Could not save. Check your connection.', { retry: () => save.mutate() }),
+    onError: (e) => notifyError(e, 'Could not save. Check your connection.', { retry: () => save.mutate() }),
   });
 
   const submit = (event: FormEvent) => {

@@ -6,13 +6,14 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { MoreHorizontal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { ApiError, callApi } from '../../lib/api/api-client.ts';
+import { callApi } from '../../lib/api/api-client.ts';
 import { queryKeys } from '../../lib/api/query-client.ts';
 import { Button } from '../ui/button.tsx';
 import { ConfirmDialog } from '../ui/dialog.tsx';
 import { DropdownMenu, MenuItem, MenuSeparator } from '../ui/dropdown-menu.tsx';
 import { toast } from '../ui/toast.tsx';
 import { triggerDownload } from './cv-download.tsx';
+import { notifyError } from '../../lib/errors/notify-error.ts';
 
 /** The confirmed master in use cannot be deleted (spec "CV actions menu"). */
 export const canDelete = (cv: CvSummary) => !(cv.kind === 'master' && cv.status === 'confirmed');
@@ -34,7 +35,7 @@ export function CvActionsMenu({ cv }: { cv: CvSummary }) {
       toast('Writing a new version. This takes about a minute.');
       await queryClient.invalidateQueries({ queryKey: queryKeys.cvs });
     },
-    onError: (e) => toast.error(e instanceof ApiError ? e.message : 'Could not start. Try again.'),
+    onError: (e) => notifyError(e, 'Could not start. Try again.'),
   });
   const remove = useMutation({
     mutationFn: () => callApi('deleteCv', { params: { id: cv.id } }),
@@ -42,7 +43,7 @@ export function CvActionsMenu({ cv }: { cv: CvSummary }) {
       toast('CV deleted');
       await queryClient.invalidateQueries({ queryKey: queryKeys.cvs });
     },
-    onError: (e) => toast.error(e instanceof ApiError ? e.message : 'Could not delete. Try again.'),
+    onError: (e) => notifyError(e, 'Could not delete. Try again.'),
   });
 
   const download = async (format: FileFormat) => {

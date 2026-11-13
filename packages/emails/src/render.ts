@@ -5,6 +5,7 @@ import {
   type FinishSetupReminderData,
   finishSetupReminder,
 } from './templates/finish-setup-reminder.ts';
+import { type RunDigestData, runDigest } from './templates/run-digest.ts';
 import { type WelcomeData, welcome } from './templates/welcome.ts';
 
 export type RenderedEmail = { subject: string; html: string; text: string };
@@ -13,6 +14,7 @@ export type TemplateData = {
   agent_live: AgentLiveData;
   welcome: WelcomeData;
   finish_setup_reminder: FinishSetupReminderData;
+  run_digest: RunDigestData;
 };
 
 /** Plain TS templates (no React Email): Node 24 cannot run .tsx without a build step. */
@@ -28,6 +30,8 @@ export const renderEmail = (
       return finishSetupReminder(data as FinishSetupReminderData, links);
     case 'agent_live':
       return agentLive(data as AgentLiveData, links);
+    case 'run_digest':
+      return runDigest(data as RunDigestData, links);
     default:
       throw new Error(`Email template "${template}" is not implemented yet`);
   }

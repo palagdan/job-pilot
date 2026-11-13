@@ -10,13 +10,13 @@ import { Button } from '../../../components/ui/button.tsx';
 import { Dropzone, type DropzoneState } from '../../../components/ui/dropzone.tsx';
 import { Skeleton, useDelayedFlag } from '../../../components/ui/skeleton.tsx';
 import { TextInput } from '../../../components/ui/text-input.tsx';
-import { toast } from '../../../components/ui/toast.tsx';
 import { ApiError, callApi } from '../../../lib/api/api-client.ts';
 import { queryKeys } from '../../../lib/api/query-client.ts';
 import { uploadCvWithProgress } from '../../../lib/api/upload-cv.ts';
 import { onboardingPath } from '../../../lib/onboarding/steps.ts';
 import styles from '../onboarding.module.css';
 import stepStyles from './upload-step.module.css';
+import { notifyError } from '../../../lib/errors/notify-error.ts';
 
 const pollMs = 1500;
 const isReading = (upload: Upload) => upload.parseStatus !== 'parsed' && upload.parseStatus !== 'failed';
@@ -150,7 +150,7 @@ function LinksForm({
   const save = useMutation({
     mutationFn: (body: { linkedinUrl: string | null; portfolioUrl: string | null }) => callApi('saveOnboardingLinks', { body }),
     onSuccess: onSaved,
-    onError: (error) => toast.error(error instanceof ApiError ? error.message : 'Could not save. Try again.'),
+    onError: (error) => notifyError(error, 'Could not save. Try again.'),
   });
 
   const submit = (event: FormEvent) => {

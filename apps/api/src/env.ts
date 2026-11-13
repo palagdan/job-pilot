@@ -8,5 +8,15 @@ export const env = parseEnv({
   ...authEnv,
   ...storageEnv,
   PORT: z.coerce.number().int().default(3001),
+  /** Comma-separated emails that may open the ops view (/v1/admin/ops). */
+  ADMIN_EMAILS: z
+    .string()
+    .default('')
+    .transform((v) =>
+      v
+        .split(',')
+        .map((e) => e.trim().toLowerCase())
+        .filter(Boolean),
+    ),
 });
 export type Env = typeof env;

@@ -39,8 +39,9 @@ describe('renderEmail', () => {
     expect(mail.html.match(/&#10003;/g)).toHaveLength(1);
   });
 
-  it('throws for templates not implemented yet', () => {
-    expect(() => renderEmail('run_digest', {}, links)).toThrow('not implemented yet');
+  it('throws for unknown templates', () => {
+    // All four templates exist now (run_digest was the last); an unknown name still fails loudly.
+    expect(() => renderEmail('unknown' as never, {}, links)).toThrow('not implemented yet');
   });
 });
 

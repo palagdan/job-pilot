@@ -1,0 +1,9 @@
+.code {
+  margin: 0;
+  padding: var(--space-8) var(--space-10);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  font-family: ui-monospace, monospace;
+  font-size: var(--text-small);
+  user-select: all;
+}

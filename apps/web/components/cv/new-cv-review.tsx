@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { ApiError, callApi } from '../../lib/api/api-client.ts';
+import { callApi } from '../../lib/api/api-client.ts';
 import { queryKeys } from '../../lib/api/query-client.ts';
 import { Button } from '../ui/button.tsx';
 import { ConfirmDialog, Modal } from '../ui/dialog.tsx';
@@ -16,8 +16,7 @@ import { CvDownloadButton, triggerDownload } from './cv-download.tsx';
 import { CvFileLabel } from './cv-file-label.tsx';
 import { CvPreview } from './cv-preview.tsx';
 import styles from './new-cv-review.module.css';
-
-const errorMessage = (error: unknown, fallback: string) => (error instanceof ApiError ? error.message : fallback);
+import { notifyError } from '../../lib/errors/notify-error.ts';
 
 /**
  * 06 New CV — review and confirm (Figma "06 New CV - review and confirm").
@@ -55,12 +54,12 @@ export function NewCvReview() {
   const confirm = useMutation({
     mutationFn: () => callApi('confirmCv', { params: { id: master?.id ?? '' } }),
     onSuccess: () => done('CV confirmed'),
-    onError: (e) => toast.error(errorMessage(e, 'Could not confirm the CV. Try again.')),
+    onError: (e) => notifyError(e, 'Could not confirm the CV. Try again.'),
   });
   const keepOriginal = useMutation({
     mutationFn: () => callApi('keepOriginalCv'),
     onSuccess: () => done('Your original CV is in use'),
-    onError: (e) => toast.error(errorMessage(e, 'Could not switch to your original CV. Try again.')),
+    onError: (e) => notifyError(e, 'Could not switch to your original CV. Try again.'),
   });
   const retry = useMutation({
     mutationFn: () => callApi('regenerateCv', { params: { id: master?.id ?? '' } }),
@@ -68,7 +67,7 @@ export function NewCvReview() {
       setE05Dismissed(false);
       await queryClient.invalidateQueries({ queryKey: queryKeys.cvs });
     },
-    onError: (e) => toast.error(errorMessage(e, 'Could not start again. Try again in a moment.')),
+    onError: (e) => notifyError(e, 'Could not start again. Try again in a moment.'),
   });
 
   const downloadOriginal = async () => {

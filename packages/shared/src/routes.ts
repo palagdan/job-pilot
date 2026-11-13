@@ -20,6 +20,7 @@ import {
   todayQuerySchema,
   todaySchema,
 } from './opportunity.ts';
+import { opsSchema } from './ops.ts';
 import {
   noteInputSchema,
   noteSchema,
@@ -438,6 +439,9 @@ export const routes = {
     body: z.object({ endpoint: z.url() }),
     response: okSchema,
   },
+
+  // ---------- Ops (admins only, `ADMIN_EMAILS`) ----------
+  getOps: { method: 'GET', path: '/v1/admin/ops', owner: 'artem', response: opsSchema },
 
   // ---------- Public ----------
   /** One-click unsubscribe from emails (List-Unsubscribe). */

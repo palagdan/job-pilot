@@ -3,6 +3,7 @@
 import type { Theme } from '@job-pilot/shared/enums';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { type ReactNode, useState } from 'react';
+import { GlobalErrorDialogs } from '../components/errors/global-error-dialogs.tsx';
 import { Toaster } from '../components/ui/toast.tsx';
 import { TooltipProvider } from '../components/ui/tooltip.tsx';
 import { createQueryClient } from '../lib/api/query-client.ts';
@@ -17,6 +18,7 @@ export function Providers({ theme, children }: { theme: Theme; children: ReactNo
         <TooltipProvider>
           {children}
           <Toaster />
+          <GlobalErrorDialogs />
         </TooltipProvider>
       </QueryClientProvider>
     </ThemeProvider>

@@ -2,6 +2,7 @@ import type { Logger } from '@job-pilot/logger/logger';
 import type { FileStorage } from '@job-pilot/storage/file-storage';
 import { Hono } from 'hono';
 import { requestId } from 'hono/request-id';
+import type { AgentRepository } from './application/ports/agent-repository.ts';
 import type { CvFactsReader } from './application/ports/cv-facts-reader.ts';
 import type { CvFileRepository } from './application/ports/cv-file-repository.ts';
 import type { CvRenderer } from './application/ports/cv-renderer.ts';
@@ -9,6 +10,8 @@ import type { CvRepository } from './application/ports/cv-repository.ts';
 import type { DevSessionIssuer } from './application/ports/dev-session-issuer.ts';
 import type { EmailPreferencesRepository } from './application/ports/email-preferences-repository.ts';
 import type { JobQueue } from './application/ports/job-queue.ts';
+import type { OpsReader } from './application/ports/ops-reader.ts';
+import type { PipelineRepository } from './application/ports/pipeline-repository.ts';
 import type { ProfileRepository } from './application/ports/profile-repository.ts';
 import type { RateLimitStore } from './application/ports/rate-limit-store.ts';
 import type { ScheduleRepository } from './application/ports/schedule-repository.ts';
@@ -23,12 +26,15 @@ import { createRateLimit, rateLimits } from './http/middleware/rate-limit.ts';
 import { createRequestLogger } from './http/middleware/request-logger.ts';
 import { createRequireUser } from './http/middleware/require-user.ts';
 import { authBasePath } from './http/paths.ts';
+import { createAdminRoutes } from './http/routes/admin-routes.ts';
+import { createAgentRoutes } from './http/routes/agent-routes.ts';
 import { createCvRoutes } from './http/routes/cv-routes.ts';
 import { createDevRoutes } from './http/routes/dev-routes.ts';
 import { createEmailRoutes } from './http/routes/email-routes.ts';
 import { createFileRoutes } from './http/routes/file-routes.ts';
 import { createMeRoutes } from './http/routes/me-routes.ts';
 import { createOnboardingRoutes } from './http/routes/onboarding-routes.ts';
+import { createPipelineRoutes } from './http/routes/pipeline-routes.ts';
 import { createProfileRoutes } from './http/routes/profile-routes.ts';
 import { createScheduleRoutes } from './http/routes/schedule-routes.ts';
 import { createSuggestionRoutes } from './http/routes/suggestion-routes.ts';
@@ -48,6 +54,11 @@ export type AppDeps = {
   schedules: ScheduleRepository;
   cvFacts: CvFactsReader;
   cvs: CvRepository;
+  agent: AgentRepository;
+  pipeline: PipelineRepository;
+  ops: OpsReader;
+  /** Lower-case emails allowed to see /v1/admin (`ADMIN_EMAILS`). */
+  admins: readonly string[];
   cvFiles: CvFileRepository;
   renderer: CvRenderer;
   storage: FileStorage;
@@ -74,6 +85,9 @@ export const createApp = (deps: AppDeps) => {
     .route('/schedule', createScheduleRoutes(deps))
     .route('/suggestions', createSuggestionRoutes(deps))
     .route('/cvs', createCvRoutes(deps))
+    .route('/agent', createAgentRoutes(deps))
+    .route('/pipeline', createPipelineRoutes(deps))
+    .route('/admin', createAdminRoutes(deps))
     .route('/files', createFileRoutes(deps));
 
   const app = new Hono<AppEnv>()

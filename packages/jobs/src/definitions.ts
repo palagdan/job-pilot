@@ -76,6 +76,14 @@ export const jobs = {
     }),
     options: { retryLimit: 5, retryDelay: 30, retryBackoff: true, expireInSeconds: 120 },
   },
+  /**
+   * Enqueued by the agent run when it finishes (Daniil). Handled by the worker (Artem): sends email 04 only if the run
+   * found something new (dedupe `run_digest:<runId>`).
+   */
+  'email.run-digest': {
+    payload: z.object({ runId: idSchema }),
+    options: { retryLimit: 3, retryDelay: 30, expireInSeconds: 120 },
+  },
   /** Scheduled hourly by the worker (Daniil). Handled by the worker (Daniil). Enqueues `email.send` for stalled sign-ups. */
   'email.finish-setup-reminders': {
     payload: z.object({}),

@@ -14,6 +14,7 @@ import type { SaveFormProps } from './form-props.ts';
 import { ApiError, callApi } from '../../lib/api/api-client.ts';
 import { queryKeys } from '../../lib/api/query-client.ts';
 import formStyles from './targets-form.module.css';
+import { notifyError } from '../../lib/errors/notify-error.ts';
 
 const workFormatLabels: Record<WorkFormat, string> = { remote: 'Remote', hybrid: 'Hybrid', onsite: 'On-site' };
 const workFormatOptions = workFormats.map((value) => ({ value, label: workFormatLabels[value] }));
@@ -103,7 +104,7 @@ export function TargetsForm({
         toast.error(error.message);
         return;
       }
-      toast.error(error instanceof ApiError ? error.message : 'Could not save. Try again.');
+      notifyError(error, 'Could not save. Try again.');
     },
   });
 

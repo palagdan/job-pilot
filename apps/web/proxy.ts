@@ -3,7 +3,7 @@ import { loginUrl, pathnameHeader } from './lib/session/safe-next.ts';
 import { hasSessionCookie } from './lib/session/session-cookie.ts';
 
 /** Pages anyone may open. Everything else needs a session cookie. */
-const publicPaths = ['/login', '/design-system'];
+const publicPaths = ['/login', '/design-system', '/no-access', '/maintenance'];
 
 /**
  * Optimistic auth check (Next 16 "proxy", formerly middleware): only looks for the session cookie, never calls
@@ -12,6 +12,10 @@ const publicPaths = ['/login', '/design-system'];
  */
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
+  // Spec §11 Maintenance: every page shows the maintenance state (api calls are not proxied through here).
+  if (process.env.MAINTENANCE_MODE === 'true' && pathname !== '/maintenance') {
+    return NextResponse.rewrite(new URL('/maintenance', request.url));
+  }
   const isPublic = publicPaths.some((p) => pathname === p || pathname.startsWith(`${p}/`));
   if (isPublic || hasSessionCookie(request.cookies)) {
     // Layouts cannot read the URL; pass it on so `requireUser` can build `/login?next=…`.

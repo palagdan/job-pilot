@@ -37,4 +37,8 @@ export const createDrizzleUserRepository = (db: Db): UserRepository => ({
       .set({ onboardingCompletedAt: at })
       .where(and(eq(user.id, id), isNull(user.onboardingCompletedAt)));
   },
+
+  setTheme: async (id, theme) => {
+    await db.update(user).set({ theme }).where(eq(user.id, id));
+  },
 });

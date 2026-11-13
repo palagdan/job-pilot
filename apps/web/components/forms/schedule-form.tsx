@@ -16,6 +16,7 @@ import type { SaveFormProps } from './form-props.ts';
 import { ApiError, callApi } from '../../lib/api/api-client.ts';
 import { queryKeys } from '../../lib/api/query-client.ts';
 import formStyles from './schedule-form.module.css';
+import { notifyError } from '../../lib/errors/notify-error.ts';
 
 const frequencyLabels: Record<RunFrequency, string> = { daily: 'Daily', every_3_days: 'Every 3 days', weekly: 'Weekly' };
 const frequencyOptions = runFrequencies.map((value) => ({ value, label: frequencyLabels[value] }));
@@ -118,7 +119,7 @@ export function ScheduleForm({
         toast.error(error.message);
         return;
       }
-      toast.error(error instanceof ApiError ? error.message : 'Could not finish setup. Try again.');
+      notifyError(error, 'Could not finish setup. Try again.');
     },
   });
 

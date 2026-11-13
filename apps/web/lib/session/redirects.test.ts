@@ -68,3 +68,16 @@ describe('proxy (optimistic cookie check)', () => {
     expect(run('/today', '__Secure-better-auth.session_token=abc').headers.get('location')).toBeNull();
   });
 });
+
+describe('proxy maintenance mode', () => {
+  it('rewrites every page to /maintenance while MAINTENANCE_MODE=true', () => {
+    process.env.MAINTENANCE_MODE = 'true';
+    try {
+      const res = run('/today', 'better-auth.session_token=abc');
+      expect(res.headers.get('x-middleware-rewrite')).toBe('http://localhost:3000/maintenance');
+      expect(run('/maintenance').headers.get('x-middleware-rewrite')).toBeNull();
+    } finally {
+      delete process.env.MAINTENANCE_MODE;
+    }
+  });
+});
