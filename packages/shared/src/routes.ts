@@ -42,6 +42,7 @@ import {
   suggestionsSchema,
   targetsPatchSchema,
   targetsSchema,
+  targetsViewSchema,
 } from './targets.ts';
 import { uploadSchema } from './upload.ts';
 import { meSchema, updateSettingsInputSchema } from './user.ts';
@@ -125,20 +126,20 @@ export const routes = {
     body: profilePatchSchema,
     response: profileSchema,
   },
-  getTargets: { method: 'GET', path: '/v1/targets', owner: 'artem', response: targetsSchema },
+  getTargets: { method: 'GET', path: '/v1/targets', owner: 'artem', response: targetsViewSchema },
   putTargets: {
     method: 'PUT',
     path: '/v1/targets',
     owner: 'artem',
     body: targetsSchema,
-    response: targetsSchema,
+    response: targetsViewSchema,
   },
   patchTargets: {
     method: 'PATCH',
     path: '/v1/targets',
     owner: 'artem',
     body: targetsPatchSchema,
-    response: targetsSchema,
+    response: targetsViewSchema,
   },
   getSuggestions: {
     method: 'GET',

@@ -14,4 +14,8 @@ export type User = {
 
 export interface UserRepository {
   findById(id: string): Promise<User | null>;
+  /** Moves the onboarding step forward to `step`; never backwards. */
+  advanceOnboarding(id: string, step: OnboardingStep): Promise<void>;
+  /** Sets `onboardingCompletedAt` if not set yet. */
+  completeOnboarding(id: string, at: Date): Promise<void>;
 }

@@ -1,20 +1,9 @@
 import { zValidator } from '@hono/zod-validator';
 import type { Context, ValidationTargets } from 'hono';
 import type { z } from 'zod';
+import { fieldErrors } from '../application/shared/zod-errors.ts';
 import type { AppEnv } from './app-env.ts';
 import { apiError } from './errors.ts';
-
-type Issue = { path: readonly PropertyKey[]; message: string };
-
-/** zod issues → `{ "field.path": "message" }` (first message per field), matching the spec's inline errors. */
-export const fieldErrors = ({ issues }: { issues: readonly Issue[] }): Record<string, string> => {
-  const fields: Record<string, string> = {};
-  for (const issue of issues) {
-    const key = issue.path.map(String).join('.') || '_';
-    fields[key] ??= issue.message;
-  }
-  return fields;
-};
 
 /**
  * Request validation with the shared schemas: `validate('json', profileInputSchema)`.

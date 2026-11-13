@@ -18,6 +18,20 @@ export const targetsSchema = z
   });
 export type Targets = z.infer<typeof targetsSchema>;
 
+/**
+ * Targets as returned by the api. Looser than `targetsSchema` (the input rules): before step 3 is saved the api
+ * returns the spec defaults, which have no roles or locations yet.
+ */
+export const targetsViewSchema = z.object({
+  roles: z.array(z.string()),
+  locations: z.array(z.string()),
+  workFormats: z.array(z.enum(workFormats)),
+  exclusions: z.array(z.string()),
+  findJobs: z.boolean(),
+  findEvents: z.boolean(),
+});
+export type TargetsView = z.infer<typeof targetsViewSchema>;
+
 export const targetsDefaults = {
   roles: [],
   locations: [],

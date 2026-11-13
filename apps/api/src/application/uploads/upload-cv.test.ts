@@ -38,7 +38,10 @@ const setup = () => {
   const deps = {
     uploads,
     storage,
-    jobs: { enqueueCvParse: async (id: string) => void enqueued.push(id) },
+    jobs: {
+      enqueueCvParse: async (id: string) => void enqueued.push(id),
+      enqueueGenerateMasterCv: async () => {},
+    },
     log: silentLogger,
     newId: () => `00000000-0000-4000-8000-00000000000${++n}`,
   };

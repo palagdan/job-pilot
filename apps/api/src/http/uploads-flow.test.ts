@@ -1,74 +1,22 @@
-import { mkdtemp, rm } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { createDb } from '@job-pilot/db/client';
-import { runMigrations } from '@job-pilot/db/migrator';
-import { user } from '@job-pilot/db/schema/auth';
-import { silentLogger } from '@job-pilot/logger/logger';
 import { apiErrorSchema } from '@job-pilot/shared/errors';
 import { messages } from '@job-pilot/shared/limits';
 import { uploadSchema } from '@job-pilot/shared/upload';
-import { createLocalFileStorage } from '@job-pilot/storage/local-file-storage';
-import { betterAuth } from 'better-auth';
-import { testUtils } from 'better-auth/plugins';
-import { inArray } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { createApp } from '../app.ts';
-import { createAuthOptions, createSessionReader } from '../infrastructure/auth/better-auth.ts';
-import { createMemoryRateLimitStore } from '../infrastructure/rate-limit/memory-rate-limit-store.ts';
-import { createDrizzleUploadRepository } from '../infrastructure/repositories/drizzle-upload-repository.ts';
-import { createDrizzleUserRepository } from '../infrastructure/repositories/drizzle-user-repository.ts';
 import { fakePdf, textPretendingToBePdf } from '../test/fixtures.ts';
-import { authBasePath } from './paths.ts';
+import { createTestApp, testDatabaseUrl } from '../test/test-app.ts';
 
-/** Integration: real Postgres + Better Auth sessions + local-disk storage; the job queue is a recorder. */
-const url = process.env.TEST_DATABASE_URL;
-
-describe.skipIf(!url)('uploads (integration)', () => {
-  const { db, close } = createDb(url ?? 'postgres://unused', { max: 2 });
-  const env = {
-    BETTER_AUTH_SECRET: 'test-secret-test-secret-test-secret-123',
-    WEB_URL: 'http://localhost:3000',
-    GOOGLE_CLIENT_ID: undefined,
-    GOOGLE_CLIENT_SECRET: undefined,
-  };
-  const auth = betterAuth({
-    ...createAuthOptions({ db, env, basePath: authBasePath }),
-    plugins: [testUtils()],
-  });
-  const enqueued: string[] = [];
-  const emails = [`up-a-${Date.now()}@example.com`, `up-b-${Date.now()}@example.com`];
-  let dir: string;
-  let app: ReturnType<typeof createApp>;
+/** Integration: real Postgres + Better Auth sessions + local-disk storage; the job queue records calls. */
+describe.skipIf(!testDatabaseUrl)('uploads (integration)', () => {
+  const t = createTestApp();
   let alice: Headers;
   let bob: Headers;
 
   beforeAll(async () => {
-    await runMigrations(url as string);
-    dir = await mkdtemp(join(tmpdir(), 'jp-uploads-'));
-    app = createApp({
-      log: silentLogger,
-      rateLimitStore: createMemoryRateLimitStore(),
-      authHandler: auth.handler,
-      sessions: createSessionReader(auth),
-      users: createDrizzleUserRepository(db),
-      uploads: createDrizzleUploadRepository(db),
-      storage: createLocalFileStorage(dir),
-      jobs: { enqueueCvParse: async (id) => void enqueued.push(id) },
-    });
-    const test = (await auth.$context).test;
-    const [a, b] = await Promise.all(
-      emails.map((email) => test.saveUser(test.createUser({ email, name: email }))),
-    );
-    alice = (await test.login({ userId: (a as { id: string }).id })).headers;
-    bob = (await test.login({ userId: (b as { id: string }).id })).headers;
+    await t.setup();
+    alice = (await t.signIn()).headers;
+    bob = (await t.signIn()).headers;
   });
-
-  afterAll(async () => {
-    await db.delete(user).where(inArray(user.email, emails)); // cascades to uploads
-    await close();
-    await rm(dir, { recursive: true, force: true });
-  });
+  afterAll(() => t.teardown());
 
   const post = (headers: Headers, bytes: Uint8Array, name = 'My CV.pdf', query = '') => {
     const form = new FormData();
@@ -76,7 +24,7 @@ describe.skipIf(!url)('uploads (integration)', () => {
       'file',
       new File([bytes as Uint8Array<ArrayBuffer>], name, { type: 'application/pdf' }),
     );
-    return app.request(`/v1/uploads/cv${query}`, { method: 'POST', headers, body: form });
+    return t.app.request(`/v1/uploads/cv${query}`, { method: 'POST', headers, body: form });
   };
 
   let firstId: string;
@@ -86,14 +34,14 @@ describe.skipIf(!url)('uploads (integration)', () => {
     expect(res.status).toBe(201);
     const body = uploadSchema.parse(await res.json());
     expect(body).toMatchObject({ filename: 'My CV.pdf', parseStatus: 'pending' });
-    expect(enqueued).toContain(body.id);
+    expect(t.jobs.parse).toContain(body.id);
     firstId = body.id;
   });
 
   it('GET /v1/uploads/:id returns the status to its owner only', async () => {
-    expect((await app.request(`/v1/uploads/${firstId}`, { headers: alice })).status).toBe(200);
-    expect((await app.request(`/v1/uploads/${firstId}`, { headers: bob })).status).toBe(404);
-    expect((await app.request(`/v1/uploads/not-a-uuid`, { headers: alice })).status).toBe(400);
+    expect((await t.app.request(`/v1/uploads/${firstId}`, { headers: alice })).status).toBe(200);
+    expect((await t.app.request(`/v1/uploads/${firstId}`, { headers: bob })).status).toBe(404);
+    expect((await t.app.request(`/v1/uploads/not-a-uuid`, { headers: alice })).status).toBe(400);
   });
 
   it('second CV without replace → 409; with ?replace=true → 201', async () => {
@@ -120,19 +68,19 @@ describe.skipIf(!url)('uploads (integration)', () => {
   });
 
   it('download link (local mode) serves the original to its owner, never to others', async () => {
-    const res = await app.request(`/v1/uploads/${firstId}/download`, { headers: alice });
+    const res = await t.app.request(`/v1/uploads/${firstId}/download`, { headers: alice });
     const { url: link, filename } = (await res.json()) as { url: string; filename: string };
     expect(filename).toBe('My CV.pdf');
     expect(link.startsWith('/v1/files/')).toBe(true);
 
-    const file = await app.request(link, { headers: alice });
+    const file = await t.app.request(link, { headers: alice });
     expect(file.status).toBe(200);
     expect(file.headers.get('content-type')).toBe('application/pdf');
     expect(file.headers.get('content-disposition')).toContain('My%20CV.pdf');
     expect(new Uint8Array(await file.arrayBuffer())).toEqual(fakePdf());
 
-    expect((await app.request(link, { headers: bob })).status).toBe(404);
-    expect((await app.request('/v1/files/users/../etc/passwd', { headers: alice })).status).toBe(
+    expect((await t.app.request(link, { headers: bob })).status).toBe(404);
+    expect((await t.app.request('/v1/files/users/../etc/passwd', { headers: alice })).status).toBe(
       404,
     );
   });

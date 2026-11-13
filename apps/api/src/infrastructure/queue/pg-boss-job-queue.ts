@@ -16,5 +16,8 @@ export const createPgBossJobQueue = (
     enqueueCvParse: async (uploadId) => {
       await queue.send('cv.parse', { uploadId });
     },
+    enqueueGenerateMasterCv: async (userId, uploadId) => {
+      await queue.send('cv.generate-master', { userId, uploadId });
+    },
   };
 };

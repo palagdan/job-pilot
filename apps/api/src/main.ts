@@ -12,6 +12,9 @@ import {
 } from './infrastructure/auth/better-auth.ts';
 import { createPgBossJobQueue } from './infrastructure/queue/pg-boss-job-queue.ts';
 import { createMemoryRateLimitStore } from './infrastructure/rate-limit/memory-rate-limit-store.ts';
+import { createDrizzleProfileRepository } from './infrastructure/repositories/drizzle-profile-repository.ts';
+import { createDrizzleScheduleRepository } from './infrastructure/repositories/drizzle-schedule-repository.ts';
+import { createDrizzleTargetsRepository } from './infrastructure/repositories/drizzle-targets-repository.ts';
 import { createDrizzleUploadRepository } from './infrastructure/repositories/drizzle-upload-repository.ts';
 import { createDrizzleUserRepository } from './infrastructure/repositories/drizzle-user-repository.ts';
 
@@ -29,6 +32,9 @@ const app = createApp({
   sessions: createSessionReader(auth),
   users: createDrizzleUserRepository(db),
   uploads: createDrizzleUploadRepository(db),
+  profiles: createDrizzleProfileRepository(db),
+  targets: createDrizzleTargetsRepository(db),
+  schedules: createDrizzleScheduleRepository(db),
   storage: createFileStorageFromEnv(env),
   jobs,
   // Development only: POST /api/dev/sign-in signs in the seeded demo user without Google.

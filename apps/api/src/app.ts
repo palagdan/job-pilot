@@ -4,8 +4,11 @@ import { Hono } from 'hono';
 import { requestId } from 'hono/request-id';
 import type { DevSessionIssuer } from './application/ports/dev-session-issuer.ts';
 import type { JobQueue } from './application/ports/job-queue.ts';
+import type { ProfileRepository } from './application/ports/profile-repository.ts';
 import type { RateLimitStore } from './application/ports/rate-limit-store.ts';
+import type { ScheduleRepository } from './application/ports/schedule-repository.ts';
 import type { SessionReader } from './application/ports/session-reader.ts';
+import type { TargetsRepository } from './application/ports/targets-repository.ts';
 import type { UploadRepository } from './application/ports/upload-repository.ts';
 import type { UserRepository } from './application/ports/user-repository.ts';
 import type { AppEnv } from './http/app-env.ts';
@@ -18,6 +21,10 @@ import { authBasePath } from './http/paths.ts';
 import { createDevRoutes } from './http/routes/dev-routes.ts';
 import { createFileRoutes } from './http/routes/file-routes.ts';
 import { createMeRoutes } from './http/routes/me-routes.ts';
+import { createOnboardingRoutes } from './http/routes/onboarding-routes.ts';
+import { createProfileRoutes } from './http/routes/profile-routes.ts';
+import { createScheduleRoutes } from './http/routes/schedule-routes.ts';
+import { createTargetsRoutes } from './http/routes/targets-routes.ts';
 import { createUploadRoutes } from './http/routes/upload-routes.ts';
 
 export type AppDeps = {
@@ -28,8 +35,13 @@ export type AppDeps = {
   rateLimitStore: RateLimitStore;
   users: UserRepository;
   uploads: UploadRepository;
+  profiles: ProfileRepository;
+  targets: TargetsRepository;
+  schedules: ScheduleRepository;
   storage: FileStorage;
   jobs: JobQueue;
+  /** Clock (tests pin it; defaults to the system clock). */
+  now?: () => Date;
   /** Development only: enables `POST /api/dev/sign-in`. Leave undefined in production. */
   devSessions?: DevSessionIssuer;
 };
@@ -42,6 +54,10 @@ export const createApp = (deps: AppDeps) => {
     .use(requireUser)
     .route('/me', createMeRoutes(deps))
     .route('/uploads', createUploadRoutes(deps))
+    .route('/onboarding', createOnboardingRoutes(deps))
+    .route('/profile', createProfileRoutes(deps))
+    .route('/targets', createTargetsRoutes(deps))
+    .route('/schedule', createScheduleRoutes(deps))
     .route('/files', createFileRoutes(deps));
 
   const app = new Hono<AppEnv>()
