@@ -1,0 +1,188 @@
+[
+  {
+    "eventId": "evt-s1XXfeK8agrRyUS",
+    "eventUrl": "https://luma.com/0n4nt21i",
+    "name": "THE MINERS × OATLY MORNING RAVE",
+    "description": "What's happening?\n\nDJ set by Sam Gittis throughout the event.\n\nFree recipe lookbooks to take home and recreate your favourite drinks.\n\nSpecialty coffee, good music & few surprises!\n\n🚨First 100 seasonal drinks are FREE!\n\nBring your friends, come early, and spend your Saturday with us!",
+    "startAt": "2026-11-14T10:00:00.000Z",
+    "endAt": "2026-11-14T13:00:00.000Z",
+    "timezone": "Europe/Prague",
+    "coverUrl": "https://images.lumacdn.com/uploads/pr/7d338b5e-075e-4ef4-9c71-77a457047b63.png",
+    "socialImage": "https://images.lumacdn.com/event-social/9w/cc499587-6bcc-4075-a5c9-694805431fe9.png",
+    "eventType": "in_person",
+    "categoryNames": [],
+    "location": {
+      "name": "The Miners Coffee Florentinum",
+      "address": "The Miners Coffee Florentinum, Na Florenci 2116/15, 110 00 Praha 1-Nové Město, Czechia",
+      "neighborhood": "New Town",
+      "city": "Hlavní město Praha",
+      "region": "Hlavní město Praha",
+      "country": "Czechia",
+      "latitude": 50.0888012,
+      "longitude": 14.4356315,
+      "isVirtual": false,
+      "virtualProvider": null
+    },
+    "organizer": {
+      "name": "The Miners Coffee",
+      "slug": "theminers",
+      "profileUrl": "https://luma.com/user/theminers",
+      "avatarUrl": "https://images.lumacdn.com/avatars/10/0327a40d-9d76-40db-98c6-9ae62eead498.jpg",
+      "bio": null,
+      "socialHandles": "[removed]"
+    },
+    "hosts": "[removed]",
+    "featuredGuests": "[removed]",
+    "ticketing": {
+      "isFree": true,
+      "isSoldOut": false,
+      "requiresApproval": false,
+      "minPrice": 0,
+      "maxPrice": 0,
+      "currency": null,
+      "spotsRemaining": null,
+      "guestCount": 280,
+      "isNearCapacity": false
+    },
+    "ticketTypes": [
+      {
+        "name": "Standard",
+        "price": 0,
+        "currency": null,
+        "available": true,
+        "total": null
+      }
+    ],
+    "registrationQuestions": [],
+    "guestCount": 280,
+    "locale": "en",
+    "detailsFetched": true,
+    "sourceUrl": "https://luma.com/discover/prague",
+    "sourceQuery": null,
+    "scrapedAt": "2026-11-13T13:57:49.643200+00:00"
+  },
+  {
+    "eventId": "evt-kou3eZvsULErZL4",
+    "eventUrl": "https://luma.com/phowf8fh",
+    "name": "Afro Foundation • dance class",
+    "description": "Ahoj! Vítej na naší movement session. Afro Foundation je pohybová praxe se dvěma částmi: začínáme pohybem – žádná choreografie, jen naladění se na vlastní tělo, dech a hudbu.Poté přejdeme ke groovům a krokům vycházejícím z populárních afrických tanečních stylů, kterým se budeme učit v kontextu dané kultury, ze které vychází.Hlavně se ale u toho všeho budeme bavit!\n\nÚroveň: Začátečníci až mírně pokročilíMísto konání: TYRŠ - bývalé Divadlo Kampa (růžová budova)Termíny:22.10.5.11.15.11.29.11.13.12.Hi! Welcome to our movement session. Afro Foundation is a movement practice with two parts: we open with just moving - no choreo, just tuning into your body, breath, and the music.Then we move into guided grooves and steps drawn from popular African dance styles, learning the philosophy, culture and feeling behind the movement, not just the steps.Level: Beginner/intermediate Venue: TYRŠ (pink building, ex \"Divadlo Kampa\")Dates:22.10.5.11.15.11.29.11.13.12.Can't wait to dance with you. xx",
+    "startAt": "2026-11-15T17:00:00.000Z",
+    "endAt": "2026-11-15T18:30:00.000Z",
+    "timezone": "Europe/Prague",
+    "coverUrl": "https://images.lumacdn.com/uploads/n5/cd8e94eb-39e8-40e4-a837-b56d1508fce5.jpg",
+    "socialImage": "https://images.lumacdn.com/event-social/jx/758d49c0-f930-45b3-a0f2-0fdb51a39510.png",
+    "eventType": "in_person",
+    "categoryNames": ["Fitness"],
+    "location": {
+      "name": "Nosticova 634",
+      "address": "Nosticova 634, Malá Strana, 118 00 Praha-Praha 1, Czechia",
+      "neighborhood": "Praha 1",
+      "city": "Hlavní město Praha",
+      "region": "Hlavní město Praha",
+      "country": "Czechia",
+      "latitude": 50.0845371,
+      "longitude": 14.4064383,
+      "isVirtual": false,
+      "virtualProvider": null
+    },
+    "organizer": {
+      "name": "Angela Nwagbo",
+      "slug": null,
+      "profileUrl": null,
+      "avatarUrl": "https://images.lumacdn.com/uploads/ir/03835294-1412-4b65-9698-10b54e229b7b.jpg",
+      "bio": null,
+      "socialHandles": "[removed]"
+    },
+    "hosts": "[removed]",
+    "featuredGuests": "[removed]",
+    "ticketing": {
+      "isFree": false,
+      "isSoldOut": false,
+      "requiresApproval": false,
+      "minPrice": 450,
+      "maxPrice": 450,
+      "currency": "CZK",
+      "spotsRemaining": 10,
+      "guestCount": 5,
+      "isNearCapacity": false
+    },
+    "ticketTypes": [
+      {
+        "name": "Standard",
+        "price": 450,
+        "currency": "CZK",
+        "available": true,
+        "total": null
+      }
+    ],
+    "registrationQuestions": [],
+    "guestCount": 5,
+    "locale": "cs",
+    "detailsFetched": true,
+    "sourceUrl": "https://luma.com/discover/prague",
+    "sourceQuery": null,
+    "scrapedAt": "2026-11-13T13:57:49.643270+00:00"
+  },
+  {
+    "eventId": "evt-QE8Zwt316lrDGGu",
+    "eventUrl": "https://luma.com/2bm3fjmw",
+    "name": "294 statečných — 18. 11. 2026 | Divadelní představení",
+    "description": "Amatérské divadlo studentů 4. ročníku Waldorfského lycea v Praze.\n\nHra 294 statečných je historické drama s prvky černého humoru, grotesky a absurdna. Děj se odehrává pod nacistickou okupací v protektorátu Čechy a Morava a vrací se k událostem spojeným s atentátem na Reinharda Heydricha a k příběhům lidí, kteří se ocitli v jejich bezprostřední blízkosti.",
+    "startAt": "2026-11-18T18:00:00.000Z",
+    "endAt": "2026-11-18T21:00:00.000Z",
+    "timezone": "Europe/Prague",
+    "coverUrl": "https://images.lumacdn.com/uploads/m1/25ed99e7-fe60-4119-a0f0-1947ca88b1bd.png",
+    "socialImage": "https://images.lumacdn.com/event-social/ry/80d4689d-20fb-4bc1-8fe5-248c102ad739.png",
+    "eventType": "in_person",
+    "categoryNames": ["Arts & Culture"],
+    "location": {
+      "name": "K Sokolovně 201/8",
+      "address": "K Sokolovně 201/8, 104 00 Praha 22-Uhříněves, Czechia",
+      "neighborhood": "Praha 22",
+      "city": "Hlavní město Praha",
+      "region": "Hlavní město Praha",
+      "country": "Czechia",
+      "latitude": 50.028816299999995,
+      "longitude": 14.605993199999999,
+      "isVirtual": false,
+      "virtualProvider": null
+    },
+    "organizer": {
+      "name": "294 statečných rezervace",
+      "slug": null,
+      "profileUrl": null,
+      "avatarUrl": "https://cdn.lu.ma/avatars-default/avatar_38.png",
+      "bio": null,
+      "socialHandles": "[removed]"
+    },
+    "hosts": "[removed]",
+    "featuredGuests": "[removed]",
+    "ticketing": {
+      "isFree": true,
+      "isSoldOut": false,
+      "requiresApproval": false,
+      "minPrice": 0,
+      "maxPrice": 0,
+      "currency": null,
+      "spotsRemaining": 74,
+      "guestCount": 81,
+      "isNearCapacity": false
+    },
+    "ticketTypes": [
+      {
+        "name": "Standard",
+        "price": 0,
+        "currency": null,
+        "available": true,
+        "total": null
+      }
+    ],
+    "registrationQuestions": [],
+    "guestCount": 81,
+    "locale": "cs",
+    "detailsFetched": true,
+    "sourceUrl": "https://luma.com/discover/prague",
+    "sourceQuery": null,
+    "scrapedAt": "2026-11-13T13:57:49.643290+00:00"
+  }
+]

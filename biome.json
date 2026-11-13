@@ -6,7 +6,7 @@
       "!**/dist",
       "!**/migrations",
       "!apps/web",
-      "!**/.turbo"
+      "!**/.turbo", "!**/.cache"
     ]
   },
   "formatter": {

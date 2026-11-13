@@ -51,6 +51,11 @@ export const jobs = {
     payload: z.object({ sourceRunId: idSchema }),
     options: { retryLimit: 3, retryDelay: 60, retryBackoff: true, expireInSeconds: 900 },
   },
+  /** Scheduled daily 03:00 Europe/Prague by the worker (Daniil). Handled by the worker (Daniil). */
+  'ingest.expire': {
+    payload: z.object({}),
+    options: { retryLimit: 1, expireInSeconds: 300 },
+  },
   /** Enqueued by the api Pursue endpoint (Artem). Handled by the worker (Daniil). */
   'pack.prepare': {
     payload: z.object({ pipelineItemId: idSchema }),
