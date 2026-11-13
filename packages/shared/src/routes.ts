@@ -37,6 +37,7 @@ import {
   profileSchema,
 } from './profile.ts';
 import { pushSubscriptionInputSchema, vapidKeySchema } from './push.ts';
+import { reviewListSchema, reviewSchema } from './review.ts';
 import { scheduleInputSchema, scheduleSchema } from './schedule.ts';
 import {
   suggestionsQuerySchema,
@@ -236,6 +237,20 @@ export const routes = {
   },
 
   // ---------- Review (pack) ----------
+  /** Items waiting for review (`ready_to_send`), newest first — prev/next navigation. Added with 08 Review. */
+  listReview: {
+    method: 'GET',
+    path: '/v1/review',
+    owner: 'daniil',
+    response: reviewListSchema,
+  },
+  /** One call for the Review screen: item + posting/event details + drafts + special CV. Added with 08 Review. */
+  getReview: {
+    method: 'GET',
+    path: '/v1/pipeline/:id/review',
+    owner: 'daniil',
+    response: reviewSchema,
+  },
   getPipelineItem: {
     method: 'GET',
     path: '/v1/pipeline/:id',

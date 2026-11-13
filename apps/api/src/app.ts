@@ -15,6 +15,7 @@ import type { OpsReader } from './application/ports/ops-reader.ts';
 import type { PipelineRepository } from './application/ports/pipeline-repository.ts';
 import type { ProfileRepository } from './application/ports/profile-repository.ts';
 import type { RateLimitStore } from './application/ports/rate-limit-store.ts';
+import type { ReviewRepository } from './application/ports/review-repository.ts';
 import type { ScheduleRepository } from './application/ports/schedule-repository.ts';
 import type { SessionReader } from './application/ports/session-reader.ts';
 import type { TargetsRepository } from './application/ports/targets-repository.ts';
@@ -39,6 +40,11 @@ import { createOnboardingRoutes } from './http/routes/onboarding-routes.ts';
 import { createOpportunityRoutes } from './http/routes/opportunity-routes.ts';
 import { createPipelineRoutes } from './http/routes/pipeline-routes.ts';
 import { createProfileRoutes } from './http/routes/profile-routes.ts';
+import {
+  createDraftRoutes,
+  createReviewItemRoutes,
+  createReviewListRoutes,
+} from './http/routes/review-routes.ts';
 import { createScheduleRoutes } from './http/routes/schedule-routes.ts';
 import { createSuggestionRoutes } from './http/routes/suggestion-routes.ts';
 import { createTargetsRoutes } from './http/routes/targets-routes.ts';
@@ -70,6 +76,7 @@ export type AppDeps = {
   jobs: JobQueue;
   agentJobs: AgentJobQueue;
   today: TodayRepository;
+  review: ReviewRepository;
   agentRuns: AgentRunRepository;
   /** Clock (tests pin it; defaults to the system clock). */
   now?: () => Date;
@@ -98,6 +105,9 @@ export const createApp = (deps: AppDeps) => {
     .route('/opportunities', createOpportunityRoutes(deps))
     .route('/undo', createUndoRoutes(deps))
     .route('/pipeline', createPipelineRoutes(deps))
+    .route('/pipeline', createReviewItemRoutes(deps))
+    .route('/review', createReviewListRoutes(deps))
+    .route('/drafts', createDraftRoutes(deps))
     .route('/admin', createAdminRoutes(deps))
     .route('/agent', createAgentRoutes({ ...deps, runs: deps.agentRuns }));
 

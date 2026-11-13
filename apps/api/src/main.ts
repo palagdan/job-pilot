@@ -22,6 +22,7 @@ import { createDrizzleEmailPreferencesRepository } from './infrastructure/reposi
 import { createDrizzleOpsReader } from './infrastructure/repositories/drizzle-ops-reader.ts';
 import { createDrizzlePipelineRepository } from './infrastructure/repositories/drizzle-pipeline-repository.ts';
 import { createDrizzleProfileRepository } from './infrastructure/repositories/drizzle-profile-repository.ts';
+import { createDrizzleReviewRepository } from './infrastructure/repositories/drizzle-review-repository.ts';
 import { createDrizzleScheduleRepository } from './infrastructure/repositories/drizzle-schedule-repository.ts';
 import { createDrizzleTargetsRepository } from './infrastructure/repositories/drizzle-targets-repository.ts';
 import { createDrizzleTodayRepository } from './infrastructure/repositories/drizzle-today-repository.ts';
@@ -68,6 +69,7 @@ const app = createApp({
   jobs,
   agentJobs: jobs,
   today: createDrizzleTodayRepository(db),
+  review: createDrizzleReviewRepository(db),
   agentRuns: createDrizzleAgentRunRepository(db),
   email: {
     preferences: createDrizzleEmailPreferencesRepository(db),
