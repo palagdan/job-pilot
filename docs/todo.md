@@ -126,9 +126,9 @@ Roadmap per person:
 - [ ] [Daniil] Pack preparation job on Pursue: Direct → special CV + cover text + form answers (why company, salary, notice); Event → registration steps + prep notes; failure → Failed + E06
 - [ ] [Daniil] Draft endpoints (get/edit with limits/versions), "I sent it" / "I registered" (+undo, mark as not sent), `.ics` generation
 - [ ] [Daniil] 08 Review: Direct steps (download CV, copy/copy all, open page + E07, I sent it C01), Event steps (open, add to calendar, I registered), edit drafts with C08 guard, navigation between items, empty state
-- [ ] [Artem] Pipeline endpoints: list with filters/sort, stats, row actions (change route, replied, interview, offer, rejected, add note, stop pursuing C06), notes
-- [ ] [Artem] 10 Pipeline: stats row, table, filters + sort, row menu, empty state
-- [ ] [Artem] Special CVs on 09 CVs page (statuses, compare with master)
+- [x] [Artem] Pipeline endpoints: list with filters/sort, stats, row actions (change route, replied, interview, offer, rejected, add note, stop pursuing C06), notes
+- [x] [Artem] 10 Pipeline: stats row, table, filters + sort, row menu, empty state
+- [x] [Artem] Special CVs on 09 CVs page (statuses, compare with master)
 - 🔗 Sync: in the browser: Pursue → Review → I sent it → item in Pipeline with next follow-up
 
 ## M5 — Follow-ups, chat, push (week 6)

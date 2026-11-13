@@ -38,6 +38,7 @@ export const toCvSummary = (r: CvRecord): CvSummary => ({
   status: r.status,
   fileBaseName: fileBaseNameOf(r),
   basedOnCvId: r.basedOnCvId,
+  basedOnVersion: r.basedOnVersion,
   pipelineItemId: r.pipelineItemId,
   changes: r.changes,
   pageCount: r.pageCount,

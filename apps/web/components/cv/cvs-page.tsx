@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { callApi } from '../../lib/api/api-client.ts';
 import { queryKeys } from '../../lib/api/query-client.ts';
+import { reviewPath } from '../pipeline/pipeline-labels.ts';
 import { PageHeader } from '../shell/page-header.tsx';
 import { Banner } from '../ui/banner.tsx';
 import { Button } from '../ui/button.tsx';
@@ -23,18 +24,48 @@ const shortDate = (iso: string | null) =>
 
 const changesLabel = (n: number) => (n === 1 ? '1 change' : `${n} changes`);
 
-/** Special CV status line (Figma 09: "New - based on Master v1 - 4 changes", "Sent 12 Nov"). */
-const specialMeta = (cv: CvSummary, masterVersion: number | undefined) =>
-  [
-    masterVersion ? `Based on Master v${masterVersion}` : 'Based on your master CV',
+/** Special CV status line (Figma 09: "New - based on Master v1 - 4 changes", "Based on Master v1 - 3 changes"). */
+const specialMeta = (cv: CvSummary) => {
+  if (cv.status === 'generating') return 'Being written for this application';
+  if (cv.status === 'failed') return 'Could not be written - open the application to try again';
+  const basedOn = cv.basedOnVersion ? `based on Master v${cv.basedOnVersion}` : 'based on your master CV';
+  return [
+    cv.status === 'ready_to_send' ? `New - ${basedOn}` : basedOn.replace(/^b/, 'B'),
     cv.changes.length ? changesLabel(cv.changes.length) : null,
   ]
     .filter(Boolean)
     .join(' - ');
+};
+
+/** Buttons of a special CV row: Review while it waits to be sent (Figma primary), View after. */
+function SpecialActions({ cv }: { cv: CvSummary }) {
+  const router = useRouter();
+  if (cv.status === 'generating') return null;
+  const review = cv.pipelineItemId ? reviewPath(cv.pipelineItemId) : null;
+  if (cv.status === 'failed') {
+    return review ? <Button size="sm" onClick={() => router.push(review)}>Open</Button> : null;
+  }
+  return (
+    <>
+      <Link href={`/cvs/${cv.id}/compare`} className={styles.link}>
+        Compare
+      </Link>
+      {cv.status === 'ready_to_send' && review ? (
+        <Button size="sm" variant="primary" onClick={() => router.push(review)}>
+          Review
+        </Button>
+      ) : (
+        <Button size="sm" onClick={() => router.push(`/cvs/${cv.id}`)}>
+          View
+        </Button>
+      )}
+      <CvActionsMenu cv={cv} />
+    </>
+  );
+}
 
 /** 09 CVs — master CV, original upload, special CVs for applications. */
 export function CvsPage() {
-  const router = useRouter();
   const list = useQuery({
     queryKey: queryKeys.cvs,
     queryFn: ({ signal }) => callApi('listCvs', { signal }),
@@ -118,7 +149,7 @@ export function CvsPage() {
                 <h2 id="special-title">Special CVs for applications</h2>
                 <p className={styles.muted}>A separate file for each application, built from the master CV</p>
               </div>
-              {list.data.special.length > 0 && <Badge tone="neutral">{list.data.special.length} files</Badge>}
+              {list.data.special.length > 0 && <Badge tone="neutral">{list.data.special.length === 1 ? '1 file' : `${list.data.special.length} files`}</Badge>}
             </div>
             {list.data.special.length === 0 ? (
               <EmptyState title="No special CVs yet" description="A separate CV is written for every application you pursue." />
@@ -128,7 +159,7 @@ export function CvsPage() {
                   <li key={cv.id} className={styles.fileRow}>
                     <CvFileLabel
                       name={`${cv.fileBaseName}.pdf`}
-                      meta={specialMeta(cv, master?.version)}
+                      meta={specialMeta(cv)}
                       badges={
                         cv.status === 'sent' ? (
                           <Badge>Sent {shortDate(cv.sentAt)}</Badge>
@@ -138,10 +169,7 @@ export function CvsPage() {
                       }
                     />
                     <div className={styles.fileActions}>
-                      <Button size="sm" onClick={() => router.push(`/cvs/${cv.id}`)}>
-                        View
-                      </Button>
-                      <CvActionsMenu cv={cv} />
+                      <SpecialActions cv={cv} />
                     </div>
                   </li>
                 ))}

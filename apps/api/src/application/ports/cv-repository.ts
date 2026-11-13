@@ -11,6 +11,7 @@ export type CvRecord = {
   content: CvContent | null;
   changes: string[];
   basedOnCvId: string | null;
+  basedOnVersion: number | null;
   uploadId: string | null;
   pipelineItemId: string | null;
   pageCount: number | null;

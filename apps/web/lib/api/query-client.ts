@@ -40,7 +40,10 @@ export const queryKeys = {
   targets: ['targets'] as const,
   schedule: ['schedule'] as const,
   today: (type?: string) => ['today', type ?? 'all'] as const,
-  pipeline: (query: unknown) => ['pipeline', query] as const,
+  /** Prefix of every pipeline query (list pages, stats, notes): invalidate after any row action. */
+  pipelineAll: ['pipeline'] as const,
+  pipeline: (query: unknown) => ['pipeline', 'list', query] as const,
+  pipelineNotes: (id: string) => ['pipeline', 'notes', id] as const,
   cvs: ['cvs'] as const,
   agentStatus: ['agent-status'] as const,
   pipelineStats: ['pipeline', 'stats'] as const,

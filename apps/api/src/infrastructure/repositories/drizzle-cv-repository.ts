@@ -7,7 +7,10 @@ import { profile } from '@job-pilot/db/schema/profile';
 import { eventListing, jobPosting } from '@job-pilot/db/schema/sources';
 import { ownedBy } from '@job-pilot/db/scoping';
 import { and, desc, eq, max, ne } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/pg-core';
 import type { CvRecord, CvRepository } from '../../application/ports/cv-repository.ts';
+
+const basedOn = alias(cv, 'based_on');
 
 const select = (db: Db) =>
   db
@@ -19,9 +22,11 @@ const select = (db: Db) =>
       jobTitle: jobPosting.title,
       eventTitle: eventListing.title,
       eventOrganizer: eventListing.organizer,
+      basedOnVersion: basedOn.version,
     })
     .from(cv)
     .innerJoin(user, eq(user.id, cv.userId))
+    .leftJoin(basedOn, eq(basedOn.id, cv.basedOnCvId))
     .leftJoin(profile, eq(profile.userId, cv.userId))
     .leftJoin(pipelineItem, eq(pipelineItem.id, cv.pipelineItemId))
     .leftJoin(opportunity, eq(opportunity.id, pipelineItem.opportunityId))
@@ -40,6 +45,7 @@ const toRecord = (r: Row): CvRecord => ({
   content: r.cv.content,
   changes: r.cv.changes,
   basedOnCvId: r.cv.basedOnCvId,
+  basedOnVersion: r.basedOnVersion,
   uploadId: r.cv.uploadId,
   pipelineItemId: r.cv.pipelineItemId,
   pageCount: r.cv.pageCount,

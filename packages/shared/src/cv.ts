@@ -53,6 +53,8 @@ export const cvSummarySchema = z.object({
   /** "User_Name_CV_JobPilot_v1.pdf" / "CV - Company - Role.pdf" (without extension). */
   fileBaseName: z.string(),
   basedOnCvId: idSchema.nullable(),
+  /** Version of the master a special CV was written from ("Based on Master v1"). */
+  basedOnVersion: z.number().int().nullable(),
   /** Special CVs only. */
   pipelineItemId: idSchema.nullable(),
   /** "Headline rewritten for your target roles", ... */
