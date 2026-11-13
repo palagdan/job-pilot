@@ -38,6 +38,7 @@ describe.skipIf(!url)('email unsubscribe (integration)', () => {
       profiles: {} as never,
       targets: {} as never,
       schedules: {} as never,
+      cvFacts: {} as never,
       storage: {} as never,
       jobs: {} as never,
       email: { preferences: createDrizzleEmailPreferencesRepository(db), secret },

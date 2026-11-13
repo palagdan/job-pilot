@@ -12,6 +12,7 @@ import {
 } from './infrastructure/auth/better-auth.ts';
 import { createPgBossJobQueue } from './infrastructure/queue/pg-boss-job-queue.ts';
 import { createMemoryRateLimitStore } from './infrastructure/rate-limit/memory-rate-limit-store.ts';
+import { createDrizzleCvFactsReader } from './infrastructure/repositories/drizzle-cv-facts-reader.ts';
 import { createDrizzleEmailPreferencesRepository } from './infrastructure/repositories/drizzle-email-preferences-repository.ts';
 import { createDrizzleProfileRepository } from './infrastructure/repositories/drizzle-profile-repository.ts';
 import { createDrizzleScheduleRepository } from './infrastructure/repositories/drizzle-schedule-repository.ts';
@@ -47,6 +48,7 @@ const app = createApp({
   profiles: createDrizzleProfileRepository(db),
   targets: createDrizzleTargetsRepository(db),
   schedules: createDrizzleScheduleRepository(db),
+  cvFacts: createDrizzleCvFactsReader(db),
   storage: createFileStorageFromEnv(env),
   jobs,
   email: {

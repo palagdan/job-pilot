@@ -2,6 +2,7 @@ import type { Logger } from '@job-pilot/logger/logger';
 import type { FileStorage } from '@job-pilot/storage/file-storage';
 import { Hono } from 'hono';
 import { requestId } from 'hono/request-id';
+import type { CvFactsReader } from './application/ports/cv-facts-reader.ts';
 import type { DevSessionIssuer } from './application/ports/dev-session-issuer.ts';
 import type { EmailPreferencesRepository } from './application/ports/email-preferences-repository.ts';
 import type { JobQueue } from './application/ports/job-queue.ts';
@@ -26,6 +27,7 @@ import { createMeRoutes } from './http/routes/me-routes.ts';
 import { createOnboardingRoutes } from './http/routes/onboarding-routes.ts';
 import { createProfileRoutes } from './http/routes/profile-routes.ts';
 import { createScheduleRoutes } from './http/routes/schedule-routes.ts';
+import { createSuggestionRoutes } from './http/routes/suggestion-routes.ts';
 import { createTargetsRoutes } from './http/routes/targets-routes.ts';
 import { createUploadRoutes } from './http/routes/upload-routes.ts';
 
@@ -40,6 +42,7 @@ export type AppDeps = {
   profiles: ProfileRepository;
   targets: TargetsRepository;
   schedules: ScheduleRepository;
+  cvFacts: CvFactsReader;
   storage: FileStorage;
   jobs: JobQueue;
   /** Clock (tests pin it; defaults to the system clock). */
@@ -62,6 +65,7 @@ export const createApp = (deps: AppDeps) => {
     .route('/profile', createProfileRoutes(deps))
     .route('/targets', createTargetsRoutes(deps))
     .route('/schedule', createScheduleRoutes(deps))
+    .route('/suggestions', createSuggestionRoutes(deps))
     .route('/files', createFileRoutes(deps));
 
   const app = new Hono<AppEnv>()
