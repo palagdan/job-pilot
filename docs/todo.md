@@ -96,7 +96,7 @@ Roadmap per person:
 
 ## M2 — CVs & ingestion quality (week 3)
 
-- [ ] [Artem] CV structured JSON schema; renderers PDF (React-PDF, one-column ATS-friendly) + DOCX (`docx`), cached in `cv_file`, file naming per spec
+- [x] [Artem] CV structured JSON schema; renderers PDF (React-PDF, one-column ATS-friendly) + DOCX (`docx`), cached in `cv_file`, file naming per spec
 - [ ] [Artem] CV endpoints: get, confirm (C02), keep original (C03), edit text, delete (C05 rules), compare/diff, download, replace upload (C04)
 - [ ] [Artem] 06 New CV review (preview, What changed, original, download, confirm / keep original)
 - [ ] [Artem] 09 CVs page (master card, special CV list, actions menu, compare view, E08 fallback to DOCX)

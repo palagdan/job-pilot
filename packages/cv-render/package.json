@@ -1,0 +1,29 @@
+{
+  "name": "@job-pilot/cv-render",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "lint": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@expo-google-fonts/inter": "^0.4.2",
+    "@job-pilot/shared": "workspace:*",
+    "@react-pdf/renderer": "^4.9.0",
+    "docx": "^9.15.3",
+    "react": "^19.3.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.7",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "mammoth": "^1.13.0",
+    "typescript": "^7.0.2",
+    "unpdf": "^2.1.0",
+    "vitest": "^5.1.0"
+  }
+}
