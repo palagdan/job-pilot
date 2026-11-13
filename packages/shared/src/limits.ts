@@ -33,6 +33,7 @@ export const messages = {
   cvTooLarge: 'This file is larger than 5 MB.',
   cvWrongType: 'Only PDF and DOCX files are supported.',
   cvUnreadable: 'We could not read this file. Try a text-based PDF or DOCX.',
+  masterCvFailed: 'We could not write your CV. Use your original CV or try again.',
   linkedinUrl: 'Enter a linkedin.com profile link.',
   portfolioUrl: 'Enter a valid link, for example https://github.com/name.',
   fullNameRequired: 'Enter your name.',

@@ -43,3 +43,60 @@ describe('renderEmail', () => {
     expect(() => renderEmail('run_digest', {}, links)).toThrow('not implemented yet');
   });
 });
+
+describe('agent_live', () => {
+  const data = {
+    firstName: 'Jan',
+    roles: ['Senior Full-stack Developer', 'Tech Lead'],
+    locations: ['Praha', 'Remote EU'],
+    workFormats: ['remote', 'hybrid'],
+    findJobs: true,
+    findEvents: true,
+    frequency: 'daily',
+    runHour: 8,
+    dayOfWeek: null,
+    notifyEmail: true,
+    notifyPush: false,
+  };
+
+  it('renders subject, link and summary', () => {
+    const mail = renderEmail('agent_live', data, links);
+    expect(mail.subject).toBe('Your JobPilot agent is live');
+    expect(mail.html).toContain('Hi Jan,');
+    expect(mail.html).toContain('Your CV is ready to review');
+    expect(mail.html).toContain('Review your new CV');
+    expect(mail.html).toContain('href="https://app.example.com/cvs/new"');
+    expect(mail.text).toContain('Review your new CV: https://app.example.com/cvs/new');
+    expect(mail.text).toContain(
+      'Looking for: Senior Full-stack Developer, Tech Lead (jobs and events)',
+    );
+    expect(mail.text).toContain('Where: Praha, Remote EU, remote, hybrid');
+    expect(mail.text).toContain('Runs: Daily at 08:00');
+    expect(mail.text).toContain('Notifies by: Email');
+  });
+
+  it('formats frequency, kinds and notifications', () => {
+    const text = (extra: object) => renderEmail('agent_live', { ...data, ...extra }, links).text;
+    expect(text({ frequency: 'every_3_days', runHour: 18 })).toContain(
+      'Runs: Every 3 days at 18:00',
+    );
+    expect(text({ frequency: 'weekly', dayOfWeek: 1, runHour: 6 })).toContain(
+      'Runs: Weekly on Monday at 06:00',
+    );
+    expect(text({ findEvents: false })).toContain('(jobs)');
+    expect(text({ findJobs: false })).toContain('(events)');
+    expect(text({ notifyPush: true })).toContain('Notifies by: Email and push');
+    expect(text({ notifyEmail: false, notifyPush: true })).toContain('Notifies by: Push');
+  });
+
+  it('escapes user values', () => {
+    const mail = renderEmail(
+      'agent_live',
+      { ...data, firstName: '<b>x</b>', roles: ['<script>alert(1)</script>'] },
+      links,
+    );
+    expect(mail.html).not.toContain('<script>');
+    expect(mail.html).not.toContain('<b>x');
+    expect(mail.html).toContain('&lt;script&gt;');
+  });
+});

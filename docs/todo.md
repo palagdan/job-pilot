@@ -101,7 +101,7 @@ Roadmap per person:
 - [ ] [Artem] 06 New CV review (preview, What changed, original, download, confirm / keep original)
 - [ ] [Artem] 09 CVs page (master card, special CV list, actions menu, compare view, E08 fallback to DOCX)
 - [ ] [Artem] 11 Profile and targets page (per-section save, "added from chat — Undo", next run)
-- [ ] [Daniil] Master CV generation job: rewrite from profile, "What changed", Generating → Needs review, regenerate, failure E05; triggers "Agent is live" email (03)
+- [x] [Daniil] Master CV generation job: rewrite from profile, "What changed", Generating → Needs review, regenerate, failure E05; triggers "Agent is live" email (03)
 - [x] [Daniil] Dedupe (canonical URL + company + title hash), language detection, location normalization (city → CZ region), remote flag, `first_seen/last_seen`, expiry (not seen in N runs → expired)
 - [x] [Daniil] Per-source mapper unit tests with saved dataset fixtures
 - 🔗 Sync: onboarding ends on 06 with a real generated CV; job/event tables fill from Apify daily
