@@ -18,6 +18,7 @@ export const cvStatusEnum = pgEnum('cv_status', e.cvStatuses);
 export const fileFormatEnum = pgEnum('file_format', e.fileFormats);
 export const opportunityTypeEnum = pgEnum('opportunity_type', e.opportunityTypes);
 export const sourceRunStatusEnum = pgEnum('source_run_status', e.sourceRunStatuses);
+export const sourceProviderEnum = pgEnum('source_provider', e.sourceProviders);
 export const runTriggerEnum = pgEnum('run_trigger', e.runTriggers);
 export const runStatusEnum = pgEnum('run_status', e.runStatuses);
 export const routeEnum = pgEnum('route', e.routes);
