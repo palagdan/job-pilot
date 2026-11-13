@@ -17,6 +17,7 @@ import {
   createSessionReader,
 } from '../infrastructure/auth/better-auth.ts';
 import { createMemoryRateLimitStore } from '../infrastructure/rate-limit/memory-rate-limit-store.ts';
+import { createDrizzleCvFactsReader } from '../infrastructure/repositories/drizzle-cv-facts-reader.ts';
 import { createDrizzleProfileRepository } from '../infrastructure/repositories/drizzle-profile-repository.ts';
 import { createDrizzleScheduleRepository } from '../infrastructure/repositories/drizzle-schedule-repository.ts';
 import { createDrizzleTargetsRepository } from '../infrastructure/repositories/drizzle-targets-repository.ts';
@@ -61,6 +62,7 @@ export const createTestApp = (overrides: Partial<AppDeps> = {}) => {
     profiles: createDrizzleProfileRepository(db),
     targets: createDrizzleTargetsRepository(db),
     schedules: createDrizzleScheduleRepository(db),
+    cvFacts: createDrizzleCvFactsReader(db),
     storage: createLocalFileStorage(dir),
     jobs: {
       enqueueCvParse: async (uploadId) => void jobs.parse.push(uploadId),

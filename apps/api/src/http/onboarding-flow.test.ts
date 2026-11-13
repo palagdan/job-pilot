@@ -196,4 +196,47 @@ describe.skipIf(!testDatabaseUrl)('onboarding (integration)', () => {
     expect(now.onboardingStep).toBe('schedule');
     expect(now.onboardingCompletedAt).not.toBeNull();
   });
+
+  it('suggestions use the parsed CV first, then the catalog', async () => {
+    await t.db
+      .update(upload)
+      .set({
+        parsedContent: {
+          header: {
+            fullName: 'X',
+            headline: 'Growth Marketing Lead',
+            location: 'Brno',
+            email: null,
+            phone: null,
+            links: [],
+          },
+          summary: '',
+          experience: [
+            {
+              company: 'A',
+              title: 'Head of Paid Social',
+              location: 'Prague',
+              start: null,
+              end: null,
+              bullets: [],
+            },
+          ],
+          education: [],
+          skills: ['Meta Ads'],
+          languages: [],
+          projects: [],
+        },
+      })
+      .where(eq(upload.id, uploadId));
+    const get = async (kind: string, q: string) =>
+      (
+        (await (
+          await call('GET', `/v1/suggestions?kind=${kind}&q=${encodeURIComponent(q)}`)
+        ).json()) as { items: string[] }
+      ).items;
+    expect((await get('roles', 'head'))[0]).toBe('Head of Paid Social');
+    expect(await get('locations', 'brn')).toEqual(['Brno']);
+    expect((await get('skills', 'meta'))[0]).toBe('Meta Ads');
+    expect((await call('GET', '/v1/suggestions?kind=nope')).status).toBe(400);
+  });
 });

@@ -53,6 +53,7 @@ export const targetsPatchSchema = z.object({
 export type TargetsPatch = z.infer<typeof targetsPatchSchema>;
 
 export const suggestionKinds = ['roles', 'locations', 'skills'] as const;
+export type Suggestion = (typeof suggestionKinds)[number];
 export const suggestionsQuerySchema = z.object({
   kind: z.enum(suggestionKinds),
   q: z.string().trim().max(limits.tag.max).default(''),
