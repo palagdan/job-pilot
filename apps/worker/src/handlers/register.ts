@@ -12,6 +12,7 @@ import { generateMasterCv } from './generate-master-cv.ts';
 import { ingestDataset } from './ingest-dataset.ts';
 import { parseCv } from './parse-cv.ts';
 import { pollApifyRuns } from './poll-apify-runs.ts';
+import { preparePack } from './prepare-pack.ts';
 import { sendEmail } from './send-email.ts';
 import { startSourceRun } from './start-source-run.ts';
 
@@ -40,6 +41,7 @@ export const registerHandlers = async (
     agentRunHandler({ ...deps, maxCandidates: deps.agentMaxCandidates }),
     { concurrency },
   );
+  await queue.work('pack.prepare', preparePack(deps), { concurrency });
   await queue.work('source.run', startSourceRun({ ...deps, ...apifyLimits }), { concurrency });
   await queue.work('apify.poll-runs', pollApifyRuns(deps));
   await queue.work('apify.ingest-dataset', ingestDataset(deps), { concurrency: 1 });

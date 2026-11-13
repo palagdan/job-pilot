@@ -50,4 +50,5 @@ export const messages = {
   noNotificationsHint: 'You will only see updates in the app.',
   chatTooLong: 'Message is too long (max 2 000 characters).',
   draftEmpty: 'The message cannot be empty.',
+  packFailed: 'We could not prepare this application. Skip it for now or try again.',
 } as const;
