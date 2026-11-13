@@ -78,7 +78,6 @@
 
   /* --- Layout --- */
   --layout-sidebar-width: 240px;
-  --layout-chat-width: 320px;
   --layout-content-padding: 32px;
 
   /* --- Interaction (spec §4 "Component states") --- */

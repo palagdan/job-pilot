@@ -1,6 +1,6 @@
 .shell {
   display: grid;
-  grid-template-columns: var(--layout-sidebar-width) minmax(0, 1fr) var(--layout-chat-width);
+  grid-template-columns: var(--layout-sidebar-width) minmax(0, 1fr);
   height: 100dvh;
   background: var(--color-surface);
 }
@@ -155,51 +155,3 @@ button.user[data-state="open"] {
   gap: var(--space-8);
 }
 
-/* ---------- Chat panel ---------- */
-.chat {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-12);
-  min-height: 0;
-  padding: var(--space-24) var(--space-20);
-  background: var(--color-bg);
-  border-left: 1px solid var(--color-line);
-  overflow-y: auto;
-}
-
-.chatHeader {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.chatHeader p {
-  font-size: var(--text-small);
-  color: var(--color-muted);
-}
-
-.chatEmpty {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  justify-content: center;
-  gap: var(--space-4);
-  text-align: center;
-  color: var(--color-muted);
-}
-
-.chatEmptyTitle {
-  color: var(--color-ink);
-  font-weight: var(--weight-medium);
-}
-
-/* Narrow screens: hide the chat column first, then the sidebar (mobile is out of v1; this only avoids breaking). */
-@media (max-width: 1100px) {
-  .shell {
-    grid-template-columns: var(--layout-sidebar-width) minmax(0, 1fr);
-  }
-
-  .chat {
-    display: none;
-  }
-}
