@@ -89,7 +89,7 @@ Roadmap per person:
 - [ ] [Artem] Step 2 Confirm profile (incl. salary, notice, languages), validation copy from spec §5
 - [ ] [Artem] Step 3 Targets (roles, locations incl. "Remote EU"/"Remote worldwide", work format, exclusions, Jobs/Events toggles); Step 4 Schedule (frequency, run time, timezone, email/push toggles)
 - [ ] [Artem] Email infra (Resend, `email_log` dedupe, List-Unsubscribe, shared layout); Welcome (01) and Finish-setup reminder (02, +24 h, once)
-- [ ] [Daniil] CV parse job: LLM → profile draft; parse status endpoint (used by Step 1/2)
+- [x] [Daniil] CV parse job: LLM → profile draft; parse status endpoint (used by Step 1/2)
 - [ ] [Daniil] Apify client service: start actor runs with input; webhook `POST /webhooks/apify` (signed secret) → enqueue `ingest-dataset`; fallback poller
 - [ ] [Daniil] Global ingestion (not per user): cron per source (e.g. jobs every 6 h, events daily) with Czech-wide queries → per-source mapper → `job_posting` / `event_listing`
 - 🔗 Sync: in the browser: sign in → upload CV → profile pre-filled → finish onboarding
