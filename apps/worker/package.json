@@ -15,6 +15,7 @@
     "@job-pilot/apify": "workspace:*",
     "@job-pilot/config": "workspace:*",
     "@job-pilot/db": "workspace:*",
+    "@job-pilot/emails": "workspace:*",
     "@job-pilot/jobs": "workspace:*",
     "@job-pilot/llm": "workspace:*",
     "@job-pilot/logger": "workspace:*",

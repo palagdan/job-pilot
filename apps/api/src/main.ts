@@ -12,6 +12,7 @@ import {
 } from './infrastructure/auth/better-auth.ts';
 import { createPgBossJobQueue } from './infrastructure/queue/pg-boss-job-queue.ts';
 import { createMemoryRateLimitStore } from './infrastructure/rate-limit/memory-rate-limit-store.ts';
+import { createDrizzleEmailPreferencesRepository } from './infrastructure/repositories/drizzle-email-preferences-repository.ts';
 import { createDrizzleProfileRepository } from './infrastructure/repositories/drizzle-profile-repository.ts';
 import { createDrizzleScheduleRepository } from './infrastructure/repositories/drizzle-schedule-repository.ts';
 import { createDrizzleTargetsRepository } from './infrastructure/repositories/drizzle-targets-repository.ts';
@@ -21,9 +22,20 @@ import { createDrizzleUserRepository } from './infrastructure/repositories/drizz
 // Composition root: the only place that knows concrete adapters.
 const log = createLogger({ name: 'api', level: env.LOG_LEVEL });
 const { db, close } = createDb(env.DATABASE_URL);
-const auth = createAuth({ db, env, basePath: authBasePath });
 const jobs = createPgBossJobQueue(env.DATABASE_URL);
 await jobs.start();
+const auth = createAuth({
+  db,
+  env,
+  basePath: authBasePath,
+  onUserCreated: async ({ id }) => {
+    try {
+      await jobs.enqueueWelcomeEmail(id);
+    } catch (error) {
+      log.error('welcome email enqueue failed', { userId: id, error: String(error) });
+    }
+  },
+});
 
 const app = createApp({
   log,
@@ -37,6 +49,10 @@ const app = createApp({
   schedules: createDrizzleScheduleRepository(db),
   storage: createFileStorageFromEnv(env),
   jobs,
+  email: {
+    preferences: createDrizzleEmailPreferencesRepository(db),
+    secret: env.BETTER_AUTH_SECRET,
+  },
   // Development only: POST /api/dev/sign-in signs in the seeded demo user without Google.
   ...(env.NODE_ENV === 'development'
     ? { devSessions: createDevSessionIssuer({ db, env, basePath: authBasePath }) }

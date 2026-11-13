@@ -3,6 +3,7 @@ import type { FileStorage } from '@job-pilot/storage/file-storage';
 import { Hono } from 'hono';
 import { requestId } from 'hono/request-id';
 import type { DevSessionIssuer } from './application/ports/dev-session-issuer.ts';
+import type { EmailPreferencesRepository } from './application/ports/email-preferences-repository.ts';
 import type { JobQueue } from './application/ports/job-queue.ts';
 import type { ProfileRepository } from './application/ports/profile-repository.ts';
 import type { RateLimitStore } from './application/ports/rate-limit-store.ts';
@@ -19,6 +20,7 @@ import { createRequestLogger } from './http/middleware/request-logger.ts';
 import { createRequireUser } from './http/middleware/require-user.ts';
 import { authBasePath } from './http/paths.ts';
 import { createDevRoutes } from './http/routes/dev-routes.ts';
+import { createEmailRoutes } from './http/routes/email-routes.ts';
 import { createFileRoutes } from './http/routes/file-routes.ts';
 import { createMeRoutes } from './http/routes/me-routes.ts';
 import { createOnboardingRoutes } from './http/routes/onboarding-routes.ts';
@@ -44,6 +46,8 @@ export type AppDeps = {
   now?: () => Date;
   /** Development only: enables `POST /api/dev/sign-in`. Leave undefined in production. */
   devSessions?: DevSessionIssuer;
+  /** Public one-click unsubscribe (`/v1/email/unsubscribe`). Omitted → the route is not mounted. */
+  email?: { preferences: EmailPreferencesRepository; secret: string };
 };
 
 /** Builds the Hono app from its dependencies. Wiring happens in `main.ts`; tests pass fakes or test instances. */
@@ -65,9 +69,14 @@ export const createApp = (deps: AppDeps) => {
     .use(createRequestLogger(deps.log, { skipPaths: ['/health'] }))
     .use(createRateLimit(deps.rateLimitStore, rateLimits.global))
     .get('/health', (c) => c.json({ status: 'ok' as const }))
-    .on(['GET', 'POST'], `${authBasePath}/*`, (c) => deps.authHandler(c.req.raw))
-    .route('/v1', v1);
+    .on(['GET', 'POST'], `${authBasePath}/*`, (c) => deps.authHandler(c.req.raw));
 
+  // Public: registered before `/v1`, whose middleware requires a session.
+  if (deps.email) {
+    app.use('/v1/email/*', createRateLimit(deps.rateLimitStore, rateLimits.unsubscribe));
+    app.route('/v1/email', createEmailRoutes(deps.email));
+  }
+  app.route('/v1', v1);
   if (deps.devSessions) app.route('/api/dev', createDevRoutes(deps.devSessions));
 
   return app

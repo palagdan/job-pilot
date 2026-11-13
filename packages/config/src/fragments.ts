@@ -68,3 +68,18 @@ export const apifyEnv = {
   /** Hard spend cap per run in USD (Apify `maxTotalChargeUsd`). */
   APIFY_MAX_CHARGE_USD: z.coerce.number().positive().default(1),
 };
+
+/**
+ * Email. Without RESEND_API_KEY emails are written as .html files to EMAIL_PREVIEW_DIR instead of sent.
+ * Unsubscribe tokens are signed with BETTER_AUTH_SECRET (no separate secret to manage).
+ */
+export const emailEnv = {
+  RESEND_API_KEY: optionalString,
+  EMAIL_FROM: z.string().min(1).default('JobPilot <hello@jobpilot.local>'),
+  /** Relative paths resolve from the app directory (apps/worker), so the repo-root .cache/emails is shared. */
+  EMAIL_PREVIEW_DIR: z.string().min(1).default('../../.cache/emails'),
+  WEB_URL: authEnv.WEB_URL,
+  /** Public origin of the api, used in the List-Unsubscribe link (`${API_URL}/v1/email/unsubscribe`). */
+  API_URL: z.url().default('http://localhost:3001'),
+  BETTER_AUTH_SECRET: authEnv.BETTER_AUTH_SECRET,
+};

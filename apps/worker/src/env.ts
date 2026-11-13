@@ -1,5 +1,12 @@
 import { parseEnv } from '@job-pilot/config/env';
-import { apifyEnv, baseEnv, databaseEnv, llmEnv, storageEnv } from '@job-pilot/config/fragments';
+import {
+  apifyEnv,
+  baseEnv,
+  databaseEnv,
+  emailEnv,
+  llmEnv,
+  storageEnv,
+} from '@job-pilot/config/fragments';
 import { z } from 'zod';
 
 export const env = parseEnv({
@@ -8,5 +15,6 @@ export const env = parseEnv({
   ...llmEnv,
   ...storageEnv,
   ...apifyEnv,
+  ...emailEnv,
   WORKER_CONCURRENCY: z.coerce.number().int().min(1).default(4),
 });

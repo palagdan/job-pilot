@@ -5,3 +5,9 @@ export interface JobQueue {
   /** cv.generate-master: write the master CV from the confirmed profile (after onboarding). */
   enqueueGenerateMasterCv(userId: string, uploadId: string): Promise<void>;
 }
+
+/** Email jobs the api enqueues (email.send, handled by the worker). */
+export interface EmailJobQueue {
+  /** Welcome email (01), once per user: deduplicated by `welcome:<userId>` in the worker. */
+  enqueueWelcomeEmail(userId: string): Promise<void>;
+}
