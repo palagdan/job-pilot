@@ -54,9 +54,24 @@ export const createJobQueue = ({ connectionString, schema = 'pgboss' }: JobQueue
       name: N,
       cron: string,
       payload: JobInput<N>,
-      { tz }: { tz: string },
+      { tz, key }: { tz: string; key?: string },
     ) {
-      await boss.schedule(name, cron, jobs[name].payload.parse(payload), { tz });
+      await boss.schedule(
+        name,
+        cron,
+        jobs[name].payload.parse(payload),
+        key ? { tz, key } : { tz },
+      );
+    },
+
+    /** Removes a schedule created with `schedule(..., { key })`. */
+    async unschedule(name: JobName, key?: string) {
+      await boss.unschedule(name, key);
+    },
+
+    /** Keys of the schedules that exist for a queue (`''` is the default, unkeyed one). */
+    async scheduleKeys(name: JobName) {
+      return (await boss.getSchedules(name)).map((s) => s.key);
     },
 
     stop(options?: { graceful?: boolean; timeout?: number }) {
