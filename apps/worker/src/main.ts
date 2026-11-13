@@ -29,6 +29,7 @@ await registerHandlers(
     llm,
     apify,
     log,
+    agentMaxCandidates: env.AGENT_MAX_CANDIDATES,
     apifyLimits: { maxItems: env.APIFY_MAX_ITEMS, maxChargeUsd: env.APIFY_MAX_CHARGE_USD },
     email: {
       sender: createEmailSenderFromEnv(env, (message) => log.info(message)),

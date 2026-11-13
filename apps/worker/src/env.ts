@@ -16,5 +16,6 @@ export const env = parseEnv({
   ...storageEnv,
   ...apifyEnv,
   ...emailEnv,
+  AGENT_MAX_CANDIDATES: z.coerce.number().int().min(1).max(200).default(25),
   WORKER_CONCURRENCY: z.coerce.number().int().min(1).default(4),
 });

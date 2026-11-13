@@ -111,8 +111,8 @@ Roadmap per person:
 
 - [ ] [Daniil] Scheduler cron: users due, not paused, onboarding done, master CV confirmed → enqueue `agent-run`; one run per user; manual "Run now"
 - [ ] [Daniil] Run steps with progress (reading postings → checking boards & events → ranking → digest), progress endpoint (SSE or polling); >10 min warning; failure state
-- [ ] [Daniil] Candidate prefilter in SQL (roles via Postgres full-text/trigram, locations, work format, exclusions, not already shown) — Featherless has no embeddings; cap N per run
-- [ ] [Daniil] LLM ranking: fit %, why, gap note, suggested route (direct/event) + reason; uses skip-reason history; per-run caps
+- [x] [Daniil] Candidate prefilter in SQL (roles via Postgres full-text/trigram, locations, work format, exclusions, not already shown) — Featherless has no embeddings; cap N per run
+- [x] [Daniil] LLM ranking: fit %, why, gap note, suggested route (direct/event) + reason; uses skip-reason history; per-run caps
 - [ ] [Daniil] Today endpoints: list with counts by type, pursue, skip (+reason, undo), dismiss expired, change route
 - [ ] [Daniil] 07 Today: header counts, banners (new CV, follow-ups due, run failed, paused, offline), filter chips All/Jobs/Events, opportunity card, Pursue/Skip/Undo/Change route, expired state, empty states incl. "Confirm your CV first", run-in-progress panel
 - [ ] [Artem] Run digest email (04) only when something new
