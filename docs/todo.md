@@ -87,7 +87,8 @@ Roadmap per person:
 - [x] [Artem] Suggestions endpoints: roles (static + LLM from CV), locations (static CZ + EU list), skills
 - [x] [Artem] Onboarding stepper + resumable progress; Step 1 Upload (done by Daniil) (dropzone states, replace, LinkedIn/portfolio URL validation, Continue disabled until parsed)
 - [x] [Artem] Step 2 Confirm profile (done by Daniil) (incl. salary, notice, languages), validation copy from spec §5
-- [x] [Artem] Step 3 Targets (done by Daniil) (roles, locations incl. "Remote EU"/"Remote worldwide", work format, exclusions, Jobs/Events toggles); Step 4 Schedule (frequency, run time, timezone, email/push toggles)
+- [x] [Artem] Step 3 Targets (done by Daniil) (roles, locations incl. "Remote EU"/"Remote worldwide", work format, exclusions, Jobs/Events toggles)
+- [x] [Artem] Step 4 Schedule (done by Daniil) (frequency, run time, timezone, email/push toggles)
 - [x] [Artem] Email infra (done by Daniil, see docs/handover/2026-11-13-email-infra.md) (Resend, `email_log` dedupe, List-Unsubscribe, shared layout); Welcome (01) and Finish-setup reminder (02, +24 h, once)
 - [x] [Daniil] CV parse job: LLM → profile draft; parse status endpoint (used by Step 1/2)
 - [x] [Daniil] Apify client service (webhook deferred, poller instead): start actor runs with input; webhook `POST /webhooks/apify` (signed secret) → enqueue `ingest-dataset`; fallback poller
