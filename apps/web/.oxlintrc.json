@@ -26,7 +26,8 @@
       "warn",
       {
         "allow": [
-          "**/*.css"
+          "**/*.css",
+          "server-only"
         ]
       }
     ]

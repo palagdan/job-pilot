@@ -81,7 +81,7 @@ Roadmap per person:
 
 ## M1 — Sign-in & onboarding (week 2)
 
-- [ ] [Artem] 01 Login (Continue with Google, E01); route guards (signed out → login; onboarding unfinished → current step)
+- [x] [Artem] 01 Login (Continue with Google, E01); route guards (signed out → login; onboarding unfinished → current step)
 - [ ] [Artem] Upload endpoint: type sniffing, ≤5 MB, store original; text extraction (unpdf, mammoth); unreadable → E04
 - [ ] [Artem] Onboarding/profile/targets/schedule endpoints; `onboarding_step`; compute `next_run_at` (TZ/DST safe)
 - [ ] [Artem] Suggestions endpoints: roles (static + LLM from CV), locations (static CZ + EU list), skills

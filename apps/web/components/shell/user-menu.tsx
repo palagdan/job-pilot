@@ -20,13 +20,14 @@ export function UserMenu() {
   const [confirmSignOut, setConfirmSignOut] = useState(false);
 
   const signOut = async () => {
-    const res = await fetch('/api/auth/sign-out', { method: 'POST' });
+    // Better Auth requires a JSON content type on POST endpoints.
+    const res = await fetch('/api/auth/sign-out', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' });
     if (!res.ok) {
       toast.error('Could not sign out. Try again.');
       return;
     }
     queryClient.clear();
-    router.refresh();
+    router.replace('/login');
   };
 
   if (!me) {
