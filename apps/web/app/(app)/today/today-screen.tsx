@@ -34,6 +34,8 @@ const stepLabels: Record<string, string> = {
 
 const todayLabel = new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
 
+const eventTime = new Intl.DateTimeFormat('en-GB', { weekday: 'short', hour: '2-digit', minute: '2-digit' });
+
 function RunProgress({ run }: { run: AgentRun }) {
   return (
     <section className={styles.run} aria-live="polite">
@@ -283,6 +285,16 @@ export function TodayScreen() {
         }
         actions={data && data.items.length > 0 ? runButton : undefined}
       />
+      {data && data.followUpsDue.count > 0 && data.followUpsDue.firstPipelineItemId && (
+        <Banner tone="warning" title={`${data.followUpsDue.count} follow-up${data.followUpsDue.count === 1 ? '' : 's'} due`} action={{ label: 'Open in Review', href: `/review/${data.followUpsDue.firstPipelineItemId}` }}>
+          These applications have had no reply yet. Your agent drafted the messages.
+        </Banner>
+      )}
+      {data?.eventsTomorrow.map((e) => (
+        <Banner key={e.pipelineItemId} tone="info" title={`Event tomorrow: ${e.title}`} action={{ label: 'See prep notes', href: `/review/${e.pipelineItemId}` }}>
+          Starts {eventTime.format(new Date(e.startsAt))}.
+        </Banner>
+      ))}
       {currentRun && <RunProgress run={currentRun} />}
       {!currentRun && lastRun?.status === 'failed' && (
         <Banner tone="danger" title="The last run did not finish" action={{ label: 'Run again', onClick: run }}>

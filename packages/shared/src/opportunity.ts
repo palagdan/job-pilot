@@ -66,6 +66,16 @@ export const todaySchema = z.object({
   items: z.array(opportunitySchema),
   counts: z.object({ all: z.number().int(), job: z.number().int(), event: z.number().int() }),
   readyToSendCount: z.number().int(),
+  /** Banner "N follow-ups due": pending follow-ups of sent applications that are due now. */
+  followUpsDue: z.object({
+    count: z.number().int(),
+    /** Pipeline item to open in Review (the one most overdue). */
+    firstPipelineItemId: z.string().nullable(),
+  }),
+  /** Banner "Event tomorrow": registered events starting within the next 24 h, soonest first. */
+  eventsTomorrow: z.array(
+    z.object({ pipelineItemId: z.string(), title: z.string(), startsAt: dateTimeSchema }),
+  ),
 });
 export type Today = z.infer<typeof todaySchema>;
 

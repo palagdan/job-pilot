@@ -2,7 +2,7 @@ import type { Draft } from '@job-pilot/shared/draft';
 import { AppError } from '@job-pilot/shared/errors';
 import { limits } from '@job-pilot/shared/limits';
 import type { PipelineItem } from '@job-pilot/shared/pipeline';
-import type { Review, ReviewList } from '@job-pilot/shared/review';
+import type { FollowUp, Review, ReviewList } from '@job-pilot/shared/review';
 import { toCvSummary } from '../cvs/cv-use-cases.ts';
 import type { CvRepository } from '../ports/cv-repository.ts';
 import type {
@@ -18,6 +18,8 @@ const clock = (deps: { now?: () => Date }) => (deps.now ?? (() => new Date()))()
 
 /** First follow-up is due this long after sending (spec §5 / §8.5). */
 export const FIRST_FOLLOW_UP_DAYS = 5;
+/** Second follow-up is due this long after the first was sent. */
+export const SECOND_FOLLOW_UP_DAYS = 7;
 
 const day = (d: Date) =>
   d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
@@ -82,7 +84,19 @@ export async function getDrafts(
 /** GET /v1/pipeline/:id/review */
 export async function getReview(deps: ReviewDeps, userId: string, id: string): Promise<Review> {
   const found = await findOrThrow(deps, userId, id);
-  const drafts = await deps.review.listDrafts(userId, id);
+  const allDrafts = await deps.review.listDrafts(userId, id);
+  const drafts = allDrafts.filter((d) => d.kind !== 'follow_up');
+  const followUps: FollowUp[] = (await deps.review.listFollowUps(userId, id)).map((f) => {
+    const text = allDrafts.find((d) => d.id === f.draftId);
+    return {
+      id: f.id,
+      sequence: f.sequence,
+      dueAt: f.dueAt.toISOString(),
+      status: f.status,
+      completedAt: f.completedAt?.toISOString() ?? null,
+      draft: text ? toDraftDto(text) : null,
+    };
+  });
   const specialCv = found.specialCvId ? await deps.cvs.findOwned(found.specialCvId, userId) : null;
   return {
     item: toPipelineDto(found),
@@ -98,6 +112,7 @@ export async function getReview(deps: ReviewDeps, userId: string, id: string): P
       online: found.event.online,
     },
     drafts: drafts.map(toDraftDto),
+    followUps,
     specialCv: specialCv ? toCvSummary(specialCv) : null,
   };
 }
@@ -166,6 +181,27 @@ const mark = async (
 /** POST /v1/pipeline/:id/sent — Direct jobs: Sent + follow-up #1 in 5 days. */
 export const markSent = (deps: Pick<ReviewDeps, 'review' | 'now'>, userId: string, id: string) =>
   mark(deps, userId, id, 'sent');
+
+/** POST /v1/follow-ups/:id/done — the user sent the follow-up; #1 schedules #2 in 7 days. Undoable for 10 s. */
+export async function completeFollowUp(
+  deps: Pick<ReviewDeps, 'review' | 'now'>,
+  userId: string,
+  id: string,
+) {
+  const now = clock(deps);
+  const res = await deps.review.completeFollowUp({
+    userId,
+    id,
+    now,
+    nextDueAt: new Date(now.getTime() + SECOND_FOLLOW_UP_DAYS * 86_400_000),
+    undoableUntil: new Date(now.getTime() + limits.undoWindowMs),
+  });
+  if (!res.ok) {
+    if (res.reason === 'not_found') throw new AppError('not_found', 'Follow-up not found.');
+    throw new AppError('conflict', 'This follow-up is already handled.');
+  }
+  return { undoToken: res.activityId, nextFollowUpAt: res.nextFollowUpAt?.toISOString() ?? null };
+}
 
 /** POST /v1/pipeline/:id/registered — Events: Registered, no follow-up. */
 export const markRegistered = (

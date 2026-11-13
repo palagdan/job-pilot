@@ -21,6 +21,7 @@ import { ApiError, callApi } from '../../../lib/api/api-client.ts';
 import { notifyError } from '../../../lib/errors/notify-error.ts';
 import { copyText } from './copy-text.ts';
 import { DraftCard } from './draft-card.tsx';
+import { FollowUpsSection } from './follow-ups-section.tsx';
 import styles from './review.module.css';
 import { reviewKeys, useReview, useReviewList } from './use-review.ts';
 
@@ -99,7 +100,15 @@ export function ReviewItem({ id }: { id: string }) {
   const refresh = () => Promise.all([queryClient.invalidateQueries({ queryKey: reviewKeys.all }), queryClient.invalidateQueries({ queryKey: ['today'] }), queryClient.invalidateQueries({ queryKey: ['pipeline'] })]);
 
   const patchDraft = (saved: Draft) =>
-    queryClient.setQueryData<Review>(reviewKeys.item(id), (old) => old && { ...old, drafts: old.drafts.map((d) => (d.id === saved.id ? saved : d)) });
+    queryClient.setQueryData<Review>(
+      reviewKeys.item(id),
+      (old) =>
+        old && {
+          ...old,
+          drafts: old.drafts.map((d) => (d.id === saved.id ? saved : d)),
+          followUps: old.followUps.map((f) => (f.draft?.id === saved.id ? { ...f, draft: saved } : f)),
+        },
+    );
 
   const undo = useMutation({
     mutationFn: (token: string) => callApi('undo', { body: { undoToken: token } }),
@@ -181,7 +190,7 @@ export function ReviewItem({ id }: { id: string }) {
     );
   }
 
-  const { item, drafts, specialCv } = data;
+  const { item, drafts, specialCv, followUps } = data;
   const items = list.data?.items ?? [];
   const index = items.findIndex((i) => i.id === id);
   const prev = index > 0 ? items[index - 1] : undefined;
@@ -257,6 +266,11 @@ export function ReviewItem({ id }: { id: string }) {
     <>
       {header}
 
+      {item.status === 'no_reply' && (
+        <Banner tone="warning" title="No reply">
+          Two follow-ups went unanswered. Try another route, for example a direct message to the hiring manager or a recruiter.
+        </Banner>
+      )}
       {done && (
         <Banner tone="info" title={item.status === 'sent' ? `Sent on ${doneAt ? shortDate.format(new Date(doneAt)) : ''}` : `Registered on ${doneAt ? shortDate.format(new Date(doneAt)) : ''}`}>
           {item.nextFollowUpAt ? `We will remind you to follow up on ${shortDate.format(new Date(item.nextFollowUpAt))}.` : 'Nothing more to do here.'}
@@ -318,6 +332,10 @@ export function ReviewItem({ id }: { id: string }) {
                 Open Pipeline
               </Button>
             </div>
+          )}
+
+          {!isEvent && (
+            <FollowUpsSection item={item} followUps={followUps} onDirtyChange={onDirtyChange} onSaved={patchDraft} onReload={() => review.refetch()} onChanged={refresh} onUndo={(token) => undo.mutate(token)} />
           )}
 
           <h2 className={styles.sectionTitle}>{isEvent ? 'Preparation notes' : 'Your texts'}</h2>

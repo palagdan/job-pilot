@@ -61,7 +61,7 @@ export const jobs = {
     payload: z.object({ pipelineItemId: idSchema }),
     options: { retryLimit: 2, retryDelay: 30, expireInSeconds: 600 },
   },
-  /** Scheduled daily by the worker (Daniil). Handled by the worker (Daniil). */
+  /** Scheduled hourly by the worker (Daniil). Handled by the worker (Daniil). */
   'follow-up.check': {
     payload: z.object({}),
     options: { retryLimit: 1, expireInSeconds: 300 },

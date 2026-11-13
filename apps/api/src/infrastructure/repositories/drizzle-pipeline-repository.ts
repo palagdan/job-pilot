@@ -203,65 +203,6 @@ export const createDrizzlePipelineRepository = (db: Db): PipelineRepository => (
       return true;
     }),
 
-  findFollowUp: async (userId, id) => {
-    const [row] = await db
-      .select({
-        id: followUp.id,
-        pipelineItemId: followUp.pipelineItemId,
-        sequence: followUp.sequence,
-        status: followUp.status,
-        itemStatus: pipelineItem.status,
-      })
-      .from(followUp)
-      .innerJoin(pipelineItem, eq(pipelineItem.id, followUp.pipelineItemId))
-      .where(ownedBy(pipelineItem, userId, eq(followUp.id, id)));
-    return row ?? null;
-  },
-
-  completeFollowUp: (userId, id, change) =>
-    db.transaction(async (tx) => {
-      const [done] = await tx
-        .update(followUp)
-        .set({ status: 'done', completedAt: change.now })
-        .where(
-          and(
-            eq(followUp.id, id),
-            eq(followUp.status, 'pending'),
-            sql`exists (select 1 from ${pipelineItem} where ${pipelineItem.id} = ${followUp.pipelineItemId} and ${pipelineItem.userId} = ${userId})`,
-          ),
-        )
-        .returning({ itemId: followUp.pipelineItemId, sequence: followUp.sequence });
-      if (!done) return false;
-
-      if (change.nextSequence !== null && change.nextDueAt) {
-        await tx.insert(followUp).values({
-          pipelineItemId: done.itemId,
-          sequence: change.nextSequence,
-          dueAt: change.nextDueAt,
-        });
-      }
-      const [next] = await tx
-        .select({ dueAt: followUp.dueAt })
-        .from(followUp)
-        .where(and(eq(followUp.pipelineItemId, done.itemId), eq(followUp.status, 'pending')))
-        .orderBy(asc(followUp.dueAt))
-        .limit(1);
-      await tx
-        .update(pipelineItem)
-        .set({ nextFollowUpAt: next?.dueAt ?? null })
-        .where(eq(pipelineItem.id, done.itemId));
-      await tx.insert(activity).values({
-        userId,
-        actor: 'user',
-        entity: 'follow_up',
-        entityId: id,
-        action: 'follow_up.done',
-        before: { status: 'pending' },
-        after: { status: 'done', nextDueAt: change.nextDueAt?.toISOString() ?? null },
-      });
-      return true;
-    }),
-
   listNotes: async (pipelineItemId) =>
     db
       .select({ id: note.id, body: note.body, createdAt: note.createdAt })

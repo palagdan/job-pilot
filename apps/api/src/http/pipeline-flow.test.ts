@@ -390,7 +390,7 @@ describe.skipIf(!testDatabaseUrl)('pipeline (integration)', () => {
 
     expect((await req(alice.headers, 'POST', `/v1/follow-ups/${fuId}/done`)).status).toBe(404);
     expect((await req(bob.headers, 'POST', `/v1/follow-ups/${fuId}/done`)).status).toBe(200);
-    expect((await req(bob.headers, 'POST', `/v1/follow-ups/${fuId}/done`)).status).toBe(200); // idempotent
+    expect((await req(bob.headers, 'POST', `/v1/follow-ups/${fuId}/done`)).status).toBe(409); // already handled
 
     const after = await item(await req(bob.headers, 'GET', `/v1/pipeline/${id}`));
     expect(after.followUp).toMatchObject({

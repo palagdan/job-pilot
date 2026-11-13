@@ -36,7 +36,6 @@ import { createCvRoutes } from './http/routes/cv-routes.ts';
 import { createDevRoutes } from './http/routes/dev-routes.ts';
 import { createEmailRoutes } from './http/routes/email-routes.ts';
 import { createFileRoutes } from './http/routes/file-routes.ts';
-import { createFollowUpRoutes } from './http/routes/follow-up-routes.ts';
 import { createMeRoutes } from './http/routes/me-routes.ts';
 import { createOnboardingRoutes } from './http/routes/onboarding-routes.ts';
 import { createOpportunityRoutes } from './http/routes/opportunity-routes.ts';
@@ -45,6 +44,7 @@ import { createProfileRoutes } from './http/routes/profile-routes.ts';
 import { createPushRoutes } from './http/routes/push-routes.ts';
 import {
   createDraftRoutes,
+  createFollowUpRoutes,
   createReviewItemRoutes,
   createReviewListRoutes,
 } from './http/routes/review-routes.ts';
@@ -111,11 +111,11 @@ export const createApp = (deps: AppDeps) => {
     .route('/opportunities', createOpportunityRoutes(deps))
     .route('/undo', createUndoRoutes(deps))
     .route('/pipeline', createPipelineRoutes(deps))
-    .route('/follow-ups', createFollowUpRoutes(deps))
     .route('/push', createPushRoutes({ ...deps, vapidPublicKey: deps.vapidPublicKey }))
     .route('/pipeline', createReviewItemRoutes(deps))
     .route('/review', createReviewListRoutes(deps))
     .route('/drafts', createDraftRoutes(deps))
+    .route('/follow-ups', createFollowUpRoutes(deps))
     .route('/admin', createAdminRoutes(deps))
     .route('/agent', createAgentRoutes({ ...deps, runs: deps.agentRuns }));
 

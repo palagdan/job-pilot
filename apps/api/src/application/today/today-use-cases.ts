@@ -17,6 +17,9 @@ const clock = (deps: { now?: () => Date }) => (deps.now ?? (() => new Date()))()
 /** Cards below this fit are not worth the user's attention (the agent keeps them for its own feedback). */
 export const MIN_FIT_ON_TODAY = 40;
 
+/** "Event tomorrow" banner: registered events starting within this window. */
+export const EVENT_BANNER_WINDOW_MS = 24 * 60 * 60 * 1000;
+
 /** Posting gone (job expired / event cancelled or already started), or already flagged by the agent. */
 const isExpired = (r: OpportunityRecord, now: Date): boolean => {
   if (r.feedStatus === 'expired') return true;
@@ -121,9 +124,11 @@ export async function getToday(
   type?: OpportunityType,
 ): Promise<Today> {
   const now = clock(deps);
-  const [records, readyToSendCount] = await Promise.all([
+  const [records, readyToSendCount, followUpsDue, events] = await Promise.all([
     deps.today.listFeed(userId, MIN_FIT_ON_TODAY),
     deps.today.readyToSendCount(userId),
+    deps.today.followUpsDue(userId, now),
+    deps.today.eventsStartingBetween(userId, now, new Date(now.getTime() + EVENT_BANNER_WINDOW_MS)),
   ]);
   const dtos = records.map((r) => toDto(r, now));
   const live = (d: Opportunity) => d.feedStatus !== 'expired';
@@ -136,6 +141,8 @@ export async function getToday(
       event: dtos.filter((d) => d.type === 'event').length,
     },
     readyToSendCount,
+    followUpsDue,
+    eventsTomorrow: events.map((e) => ({ ...e, startsAt: e.startsAt.toISOString() })),
   };
 }
 

@@ -251,29 +251,3 @@ export async function addNote(deps: PipelineDeps, userId: string, id: string, bo
   await findOrThrow(deps, userId, id);
   return toNote(await deps.pipeline.addNote(id, body));
 }
-
-/** Spec: up to two follow-ups; the 2nd is due 7 days after the 1st is sent. After that the agent marks No reply. */
-export const MAX_FOLLOW_UPS = 2;
-export const NEXT_FOLLOW_UP_DAYS = 7;
-
-/**
- * POST /v1/follow-ups/:id/done — "Mark follow-up as sent" (the user sent it themselves). Schedules the next one
- * while the application is still waiting for a reply. Idempotent for a follow-up already done.
- */
-export async function completeFollowUp(deps: PipelineDeps, userId: string, id: string) {
-  const found = await deps.pipeline.findFollowUp(userId, id);
-  if (!found) throw new AppError('not_found', 'Follow-up not found.');
-  if (found.status === 'done') return { ok: true as const };
-  if (found.status === 'cancelled') throw new AppError('conflict', 'This follow-up was cancelled.');
-
-  const now = clock(deps);
-  const more = found.sequence < MAX_FOLLOW_UPS && found.itemStatus === 'sent';
-  const ok = await deps.pipeline.completeFollowUp(userId, id, {
-    now,
-    nextSequence: more ? found.sequence + 1 : null,
-    nextDueAt: more ? new Date(now.getTime() + NEXT_FOLLOW_UP_DAYS * 86_400_000) : null,
-  });
-  if (!ok)
-    throw new AppError('conflict', 'This follow-up changed meanwhile. Reload and try again.');
-  return { ok: true as const };
-}
