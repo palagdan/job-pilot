@@ -3,6 +3,7 @@ import { runMigrations } from '@job-pilot/db/migrator';
 import { user } from '@job-pilot/db/schema/auth';
 import { silentLogger } from '@job-pilot/logger/logger';
 import { meSchema } from '@job-pilot/shared/user';
+import { createMemoryFileStorage } from '@job-pilot/storage/memory-file-storage';
 import { betterAuth } from 'better-auth';
 import { testUtils } from 'better-auth/plugins';
 import { eq } from 'drizzle-orm';
@@ -14,6 +15,7 @@ import {
   createSessionReader,
 } from '../infrastructure/auth/better-auth.ts';
 import { createMemoryRateLimitStore } from '../infrastructure/rate-limit/memory-rate-limit-store.ts';
+import { createDrizzleUploadRepository } from '../infrastructure/repositories/drizzle-upload-repository.ts';
 import { createDrizzleUserRepository } from '../infrastructure/repositories/drizzle-user-repository.ts';
 import { authBasePath } from './paths.ts';
 
@@ -33,6 +35,12 @@ describe.skipIf(!url)('auth flow (integration)', () => {
     GOOGLE_CLIENT_ID: undefined,
     GOOGLE_CLIENT_SECRET: undefined,
   };
+  // Uploads are covered in uploads-flow.test.ts; here they only need to exist.
+  const uploadDeps = {
+    uploads: createDrizzleUploadRepository(db),
+    storage: createMemoryFileStorage(),
+    jobs: { enqueueCvParse: async () => {} },
+  };
   const auth = betterAuth({
     ...createAuthOptions({ db, env, basePath: authBasePath }),
     plugins: [testUtils()],
@@ -43,6 +51,7 @@ describe.skipIf(!url)('auth flow (integration)', () => {
     authHandler: auth.handler,
     sessions: createSessionReader(auth),
     users: createDrizzleUserRepository(db),
+    ...uploadDeps,
     devSessions: createDevSessionIssuer({ db, env, basePath: authBasePath }),
   });
   let headers: Headers;
@@ -137,6 +146,7 @@ describe.skipIf(!url)('auth flow (integration)', () => {
       authHandler: auth.handler,
       sessions: createSessionReader(auth),
       users: createDrizzleUserRepository(db),
+      ...uploadDeps,
     });
     const res = await prodLike.request('/api/dev/sign-in', { method: 'POST' });
     expect(res.status).toBe(404);

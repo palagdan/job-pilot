@@ -1,9 +1,12 @@
 import type { Logger } from '@job-pilot/logger/logger';
+import type { FileStorage } from '@job-pilot/storage/file-storage';
 import { Hono } from 'hono';
 import { requestId } from 'hono/request-id';
 import type { DevSessionIssuer } from './application/ports/dev-session-issuer.ts';
+import type { JobQueue } from './application/ports/job-queue.ts';
 import type { RateLimitStore } from './application/ports/rate-limit-store.ts';
 import type { SessionReader } from './application/ports/session-reader.ts';
+import type { UploadRepository } from './application/ports/upload-repository.ts';
 import type { UserRepository } from './application/ports/user-repository.ts';
 import type { AppEnv } from './http/app-env.ts';
 import { createErrorHandler } from './http/error-handler.ts';
@@ -13,7 +16,9 @@ import { createRequestLogger } from './http/middleware/request-logger.ts';
 import { createRequireUser } from './http/middleware/require-user.ts';
 import { authBasePath } from './http/paths.ts';
 import { createDevRoutes } from './http/routes/dev-routes.ts';
+import { createFileRoutes } from './http/routes/file-routes.ts';
 import { createMeRoutes } from './http/routes/me-routes.ts';
+import { createUploadRoutes } from './http/routes/upload-routes.ts';
 
 export type AppDeps = {
   log: Logger;
@@ -22,6 +27,9 @@ export type AppDeps = {
   sessions: SessionReader;
   rateLimitStore: RateLimitStore;
   users: UserRepository;
+  uploads: UploadRepository;
+  storage: FileStorage;
+  jobs: JobQueue;
   /** Development only: enables `POST /api/dev/sign-in`. Leave undefined in production. */
   devSessions?: DevSessionIssuer;
 };
@@ -30,7 +38,11 @@ export type AppDeps = {
 export const createApp = (deps: AppDeps) => {
   const requireUser = createRequireUser(deps.sessions);
 
-  const v1 = new Hono<AppEnv>().use(requireUser).route('/me', createMeRoutes(deps));
+  const v1 = new Hono<AppEnv>()
+    .use(requireUser)
+    .route('/me', createMeRoutes(deps))
+    .route('/uploads', createUploadRoutes(deps))
+    .route('/files', createFileRoutes(deps));
 
   const app = new Hono<AppEnv>()
     .use(requestId())

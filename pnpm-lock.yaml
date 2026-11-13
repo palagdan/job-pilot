@@ -32,6 +32,9 @@ importers:
       '@job-pilot/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@job-pilot/jobs':
+        specifier: workspace:*
+        version: link:../../packages/jobs
       '@job-pilot/logger':
         specifier: workspace:*
         version: link:../../packages/logger

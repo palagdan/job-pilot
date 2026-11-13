@@ -16,6 +16,7 @@
     "@hono/zod-validator": "^0.9.1",
     "@job-pilot/config": "workspace:*",
     "@job-pilot/db": "workspace:*",
+    "@job-pilot/jobs": "workspace:*",
     "@job-pilot/logger": "workspace:*",
     "@job-pilot/shared": "workspace:*",
     "@job-pilot/storage": "workspace:*",
