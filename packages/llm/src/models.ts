@@ -11,14 +11,16 @@ export type ModelConfig = {
 
 const small = { model: 'Qwen/Qwen3-14B', units: 1, thinking: false };
 const medium = { model: 'Qwen/Qwen3-32B', units: 2, thinking: false };
+// Not a Qwen3 chat template, so we don't send enable_thinking.
+const large = { model: 'deepseek-ai/DeepSeek-V3.2', units: 4, thinking: true };
 
-/** First guesses, to be finalised by the model spike. */
+/** Chosen by the model spike (2026-11-13), see docs/llm.md. Keep to 3 models: Featherless rate-limits model switching. */
 export const defaultModels: Record<LlmTask, ModelConfig> = {
   parse_cv: { ...small, maxTokens: 4000, temperature: 0 },
   suggest: { ...small, maxTokens: 500, temperature: 0.3 },
-  rank: { ...small, maxTokens: 2000, temperature: 0.1 },
-  write_cv: { ...medium, maxTokens: 4000, temperature: 0.5 },
-  write_drafts: { ...medium, maxTokens: 2000, temperature: 0.5 },
+  rank: { ...medium, maxTokens: 2000, temperature: 0.1 },
+  write_cv: { ...large, maxTokens: 4000, temperature: 0.5 },
+  write_drafts: { ...large, maxTokens: 2000, temperature: 0.5 },
   chat: { ...medium, maxTokens: 1500, temperature: 0.5 },
 };
 
