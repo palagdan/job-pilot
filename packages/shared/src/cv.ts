@@ -84,8 +84,17 @@ export const editCvInputSchema = z.object({ content: cvContentSchema });
 export const downloadQuerySchema = z.object({
   format: z.enum(fileFormats).default('pdf'),
 });
-/** Short-lived signed URL; the browser downloads directly from storage. */
-export const downloadSchema = z.object({ url: z.url(), filename: z.string() });
+/**
+ * Short-lived download link: a signed storage URL (S3/R2), or a same-origin api path in local storage mode
+ * (`/v1/files/…`, served by the api for the signed-in owner only).
+ */
+export const downloadSchema = z.object({
+  url: z.union([
+    z.url(),
+    z.string().regex(/^\/v1\/files\//, 'Must be an absolute URL or a /v1/files/ path'),
+  ]),
+  filename: z.string(),
+});
 
 export const cvCompareSchema = z.object({
   base: cvSchema,

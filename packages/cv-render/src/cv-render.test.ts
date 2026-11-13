@@ -1,8 +1,8 @@
+import { cvFileBaseName, cvFileName } from '@job-pilot/shared/cv-file-name';
 import mammoth from 'mammoth';
 import { extractText } from 'unpdf';
 import { describe, expect, it } from 'vitest';
 import { cvContentHash } from './content-hash.ts';
-import { cvFileBaseName, cvFileName } from './file-name.ts';
 import { fixtureCv } from './fixture-cv.ts';
 import { formatPeriod } from './format.ts';
 import { renderCvDocx } from './render-docx.ts';

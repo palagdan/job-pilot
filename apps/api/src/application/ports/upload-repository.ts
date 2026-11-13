@@ -1,3 +1,4 @@
+import type { CvContent } from '@job-pilot/shared/cv';
 import type { ParseStatus } from '@job-pilot/shared/enums';
 
 export type UploadRecord = {
@@ -10,6 +11,8 @@ export type UploadRecord = {
   pageCount: number | null;
   parseStatus: ParseStatus;
   parseError: string | null;
+  /** Structured CV from the worker's cv.parse job (null until parsed). */
+  parsedContent: CvContent | null;
   replacedAt: Date | null;
   createdAt: Date;
 };

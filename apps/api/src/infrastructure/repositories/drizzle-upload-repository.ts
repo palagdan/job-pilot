@@ -14,6 +14,7 @@ const columns = {
   pageCount: upload.pageCount,
   parseStatus: upload.parseStatus,
   parseError: upload.parseError,
+  parsedContent: upload.parsedContent,
   replacedAt: upload.replacedAt,
   createdAt: upload.createdAt,
 };

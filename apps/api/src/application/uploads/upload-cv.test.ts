@@ -25,6 +25,7 @@ const setup = () => {
         pageCount: null,
         parseStatus: 'pending',
         parseError: null,
+        parsedContent: null,
         replacedAt: null,
         createdAt: new Date(),
       };

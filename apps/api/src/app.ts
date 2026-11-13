@@ -3,6 +3,9 @@ import type { FileStorage } from '@job-pilot/storage/file-storage';
 import { Hono } from 'hono';
 import { requestId } from 'hono/request-id';
 import type { CvFactsReader } from './application/ports/cv-facts-reader.ts';
+import type { CvFileRepository } from './application/ports/cv-file-repository.ts';
+import type { CvRenderer } from './application/ports/cv-renderer.ts';
+import type { CvRepository } from './application/ports/cv-repository.ts';
 import type { DevSessionIssuer } from './application/ports/dev-session-issuer.ts';
 import type { EmailPreferencesRepository } from './application/ports/email-preferences-repository.ts';
 import type { JobQueue } from './application/ports/job-queue.ts';
@@ -20,6 +23,7 @@ import { createRateLimit, rateLimits } from './http/middleware/rate-limit.ts';
 import { createRequestLogger } from './http/middleware/request-logger.ts';
 import { createRequireUser } from './http/middleware/require-user.ts';
 import { authBasePath } from './http/paths.ts';
+import { createCvRoutes } from './http/routes/cv-routes.ts';
 import { createDevRoutes } from './http/routes/dev-routes.ts';
 import { createEmailRoutes } from './http/routes/email-routes.ts';
 import { createFileRoutes } from './http/routes/file-routes.ts';
@@ -43,6 +47,9 @@ export type AppDeps = {
   targets: TargetsRepository;
   schedules: ScheduleRepository;
   cvFacts: CvFactsReader;
+  cvs: CvRepository;
+  cvFiles: CvFileRepository;
+  renderer: CvRenderer;
   storage: FileStorage;
   jobs: JobQueue;
   /** Clock (tests pin it; defaults to the system clock). */
@@ -66,6 +73,7 @@ export const createApp = (deps: AppDeps) => {
     .route('/targets', createTargetsRoutes(deps))
     .route('/schedule', createScheduleRoutes(deps))
     .route('/suggestions', createSuggestionRoutes(deps))
+    .route('/cvs', createCvRoutes(deps))
     .route('/files', createFileRoutes(deps));
 
   const app = new Hono<AppEnv>()
