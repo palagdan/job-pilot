@@ -1,7 +1,13 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.6.7/schema.json",
   "files": {
-    "includes": ["**", "!dist"]
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/migrations",
+      "!apps/web",
+      "!**/.turbo"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -23,7 +29,9 @@
         "useFilenamingConvention": {
           "level": "error",
           "options": {
-            "filenameCases": ["kebab-case"],
+            "filenameCases": [
+              "kebab-case"
+            ],
             "requireAscii": true
           }
         }
@@ -39,5 +47,6 @@
         "organizeImports": "on"
       }
     }
-  }
+  },
+  "root": true
 }
