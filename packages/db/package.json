@@ -4,13 +4,17 @@
   "type": "module",
   "exports": {
     "./client": "./src/client.ts",
+    "./migrator": "./src/migrator.ts",
     "./schema/*": "./src/schema/*.ts"
   },
   "scripts": {
     "lint": "biome check .",
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
+    "db:migrate": "node --env-file-if-exists=../../.env src/scripts/migrate.ts",
+    "db:migrate:test": "node --env-file-if-exists=../../.env src/scripts/migrate.ts --test",
+    "db:seed": "node --env-file-if-exists=../../.env src/scripts/seed.ts",
+    "db:reset": "node --env-file-if-exists=../../.env src/scripts/reset.ts",
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {

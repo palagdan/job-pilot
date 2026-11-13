@@ -9,7 +9,15 @@
     "dev": "turbo run dev",
     "build": "turbo run build",
     "lint": "turbo run lint",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "turbo run typecheck",
+    "infra:up": "docker compose up -d --wait postgres storage mailpit && docker compose run --rm storage-init",
+    "infra:down": "docker compose down",
+    "infra:reset": "docker compose down -v && pnpm infra:up",
+    "db:generate": "pnpm --filter @job-pilot/db db:generate",
+    "db:migrate": "pnpm --filter @job-pilot/db db:migrate",
+    "db:seed": "pnpm --filter @job-pilot/db db:seed",
+    "db:reset": "pnpm --filter @job-pilot/db db:reset && pnpm db:seed",
+    "db:studio": "pnpm --filter @job-pilot/db db:studio"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.7",
