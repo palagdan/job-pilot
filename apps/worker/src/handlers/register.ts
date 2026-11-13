@@ -7,6 +7,7 @@ import type { FileStorage } from '@job-pilot/storage/file-storage';
 import type { Log } from '../log.ts';
 import { expirePostings } from './expire-postings.ts';
 import { finishSetupReminders } from './finish-setup-reminders.ts';
+import { generateMasterCv } from './generate-master-cv.ts';
 import { ingestDataset } from './ingest-dataset.ts';
 import { parseCv } from './parse-cv.ts';
 import { pollApifyRuns } from './poll-apify-runs.ts';
@@ -31,6 +32,7 @@ export const registerHandlers = async (
 ) => {
   const { queue, apifyLimits, email } = deps;
   await queue.work('cv.parse', parseCv(deps), { concurrency });
+  await queue.work('cv.generate-master', generateMasterCv(deps), { concurrency });
   await queue.work('source.run', startSourceRun({ ...deps, ...apifyLimits }), { concurrency });
   await queue.work('apify.poll-runs', pollApifyRuns(deps));
   await queue.work('apify.ingest-dataset', ingestDataset(deps), { concurrency: 1 });
