@@ -40,3 +40,8 @@ coverage/
 # OS
 .DS_Store
 Thumbs.db
+
+# Turborepo / Next.js
+.turbo/
+.next/
+next-env.d.ts
