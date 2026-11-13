@@ -133,8 +133,8 @@ Roadmap per person:
 
 ## M5 — Follow-ups, chat, push (week 6)
 
-- [ ] [Daniil] Follow-up job: due follow-ups, drafted follow-up text, `no_reply` after 2nd; event prep notes the day before
-- [ ] [Daniil] Follow-up banners on Today and actions in Review
+- [x] [Daniil] Follow-up job: due follow-ups, drafted follow-up text, `no_reply` after 2nd; event prep notes the day before
+- [x] [Daniil] Follow-up banners on Today and actions in Review
 - [ ] [Daniil] Chat endpoint with streaming, screen context, tools: update targets, edit draft, change route, explain ranking, draft follow-up — all reversible via `activity`, no sending tools
 - [ ] [Daniil] Chat panel: thread, streaming, suggestion chips per screen, tool-change chips with Undo, limits
 - [ ] [Artem] Web Push: VAPID, service worker, subscriptions, permission flow + errors, send when a pack is ready

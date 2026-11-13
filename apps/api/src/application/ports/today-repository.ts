@@ -80,6 +80,17 @@ export interface TodayRepository {
   listFeed(userId: string, minFit: number): Promise<OpportunityRecord[]>;
   findOwned(userId: string, id: string): Promise<OpportunityRecord | null>;
   readyToSendCount(userId: string): Promise<number>;
+  /** Pending follow-ups due by `now` on `sent` items: how many, and the item with the oldest one. */
+  followUpsDue(
+    userId: string,
+    now: Date,
+  ): Promise<{ count: number; firstPipelineItemId: string | null }>;
+  /** Registered events starting in (now, until], soonest first. */
+  eventsStartingBetween(
+    userId: string,
+    now: Date,
+    until: Date,
+  ): Promise<{ pipelineItemId: string; title: string; startsAt: Date }[]>;
   setRoute(userId: string, id: string, route: Route, routeReason: string | null): Promise<void>;
   /** feedStatus new → skipped + activity, in one transaction. Adds the company to exclusions for `company_excluded`. */
   skip(input: {

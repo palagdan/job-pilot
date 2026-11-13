@@ -42,6 +42,7 @@ import { createPipelineRoutes } from './http/routes/pipeline-routes.ts';
 import { createProfileRoutes } from './http/routes/profile-routes.ts';
 import {
   createDraftRoutes,
+  createFollowUpRoutes,
   createReviewItemRoutes,
   createReviewListRoutes,
 } from './http/routes/review-routes.ts';
@@ -108,6 +109,7 @@ export const createApp = (deps: AppDeps) => {
     .route('/pipeline', createReviewItemRoutes(deps))
     .route('/review', createReviewListRoutes(deps))
     .route('/drafts', createDraftRoutes(deps))
+    .route('/follow-ups', createFollowUpRoutes(deps))
     .route('/admin', createAdminRoutes(deps))
     .route('/agent', createAgentRoutes({ ...deps, runs: deps.agentRuns }));
 

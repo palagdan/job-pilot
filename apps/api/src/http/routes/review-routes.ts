@@ -3,6 +3,7 @@ import { routeParams } from '@job-pilot/shared/routes';
 import { contentDisposition } from '@job-pilot/storage/file-storage';
 import { Hono } from 'hono';
 import {
+  completeFollowUp,
   eventIcs,
   getDrafts,
   getReview,
@@ -55,4 +56,10 @@ export const createDraftRoutes = (deps: ReviewDeps) =>
     validate('json', updateDraftInputSchema),
     async (c) =>
       c.json(await updateDraft(deps, c.var.user.id, c.req.valid('param').id, c.req.valid('json'))),
+  );
+
+/** POST /v1/follow-ups/:id/done */
+export const createFollowUpRoutes = (deps: ReviewDeps) =>
+  new Hono<AppEnv>().post('/:id/done', validate('param', routeParams.id), async (c) =>
+    c.json(await completeFollowUp(deps, c.var.user.id, c.req.valid('param').id)),
   );
