@@ -23,10 +23,13 @@ export const createAuthOptions = ({
   db,
   env,
   basePath,
+  onUserCreated,
 }: {
   db: Db;
   env: AuthEnv;
   basePath: string;
+  /** Runs after a new user is created (first sign-in). Failures are swallowed so sign-in never breaks. */
+  onUserCreated?: (user: { id: string }) => Promise<void>;
 }) => {
   const google =
     env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
@@ -50,6 +53,19 @@ export const createAuthOptions = ({
       schema: { user, session, account, verification },
     }),
     advanced: { database: { generateId: 'uuid' } },
+    databaseHooks: {
+      user: {
+        create: {
+          after: async (created: { id: string }) => {
+            try {
+              await onUserCreated?.({ id: created.id });
+            } catch {
+              // the callback logs its own failures; sign-in must not depend on it
+            }
+          },
+        },
+      },
+    },
     emailAndPassword: { enabled: false },
     socialProviders: google ?? {},
     session: {

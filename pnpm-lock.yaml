@@ -32,6 +32,9 @@ importers:
       '@job-pilot/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@job-pilot/emails':
+        specifier: workspace:*
+        version: link:../../packages/emails
       '@job-pilot/jobs':
         specifier: workspace:*
         version: link:../../packages/jobs
@@ -136,6 +139,9 @@ importers:
       '@job-pilot/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@job-pilot/emails':
+        specifier: workspace:*
+        version: link:../../packages/emails
       '@job-pilot/jobs':
         specifier: workspace:*
         version: link:../../packages/jobs
@@ -245,6 +251,25 @@ importers:
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
+
+  packages/emails:
+    dependencies:
+      '@job-pilot/shared':
+        specifier: workspace:*
+        version: link:../shared
+    devDependencies:
+      '@biomejs/biome':
+        specifier: ^2.6.7
+        version: 2.6.7
+      '@types/node':
+        specifier: ^26.6.6
+        version: 26.6.6
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: ^5.1.0
+        version: 5.1.0(@opentelemetry/api@1.10.0)(@types/node@26.6.6)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(tsx@4.23.15))
 
   packages/jobs:
     dependencies:

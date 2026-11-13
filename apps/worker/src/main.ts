@@ -1,5 +1,6 @@
 import { createApifyClient } from '@job-pilot/apify/client';
 import { createDb } from '@job-pilot/db/client';
+import { createEmailSenderFromEnv } from '@job-pilot/emails/sender';
 import { createJobQueue } from '@job-pilot/jobs/client';
 import { jobs } from '@job-pilot/jobs/definitions';
 import { createLlmFromEnv } from '@job-pilot/llm/from-env';
@@ -29,6 +30,12 @@ await registerHandlers(
     apify,
     log,
     apifyLimits: { maxItems: env.APIFY_MAX_ITEMS, maxChargeUsd: env.APIFY_MAX_CHARGE_USD },
+    email: {
+      sender: createEmailSenderFromEnv(env, (message) => log.info(message)),
+      webUrl: env.WEB_URL,
+      apiUrl: env.API_URL,
+      unsubscribeSecret: env.BETTER_AUTH_SECRET,
+    },
   },
   { concurrency: env.WORKER_CONCURRENCY },
 );

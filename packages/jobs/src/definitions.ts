@@ -76,6 +76,11 @@ export const jobs = {
     }),
     options: { retryLimit: 5, retryDelay: 30, retryBackoff: true, expireInSeconds: 120 },
   },
+  /** Scheduled hourly by the worker (Daniil). Handled by the worker (Daniil). Enqueues `email.send` for stalled sign-ups. */
+  'email.finish-setup-reminders': {
+    payload: z.object({}),
+    options: { retryLimit: 1, expireInSeconds: 300 },
+  },
 } as const satisfies Record<string, JobDefinition>;
 
 export type JobName = keyof typeof jobs;

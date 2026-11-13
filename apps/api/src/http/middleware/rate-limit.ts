@@ -56,6 +56,8 @@ export const rateLimits = {
   upload: { name: 'upload', max: 10, windowMs: 10 * 60_000, by: 'user' },
   /** Chat messages (M5). */
   chat: { name: 'chat', max: 30, windowMs: 60_000, by: 'user' },
+  /** Public one-click unsubscribe, per IP. */
+  unsubscribe: { name: 'unsubscribe', max: 20, windowMs: 60_000, by: 'ip' },
   /** "Run now" (M3). */
   runNow: { name: 'run-now', max: 5, windowMs: 60 * 60_000, by: 'user' },
 } as const satisfies Record<string, RateLimitRule>;

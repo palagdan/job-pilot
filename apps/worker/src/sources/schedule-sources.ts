@@ -34,5 +34,6 @@ export const scheduleSources = async ({
 
   await queue.schedule('apify.poll-runs', '* * * * *', {}, { tz: TZ });
   await queue.schedule('ingest.expire', '0 3 * * *', {}, { tz: TZ });
+  await queue.schedule('email.finish-setup-reminders', '0 * * * *', {}, { tz: TZ });
   log.info('sources scheduled', { count: sources.length });
 };
