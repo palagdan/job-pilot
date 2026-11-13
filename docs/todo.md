@@ -91,7 +91,7 @@ Roadmap per person:
 - [ ] [Artem] Email infra (Resend, `email_log` dedupe, List-Unsubscribe, shared layout); Welcome (01) and Finish-setup reminder (02, +24 h, once)
 - [x] [Daniil] CV parse job: LLM → profile draft; parse status endpoint (used by Step 1/2)
 - [x] [Daniil] Apify client service (webhook deferred, poller instead): start actor runs with input; webhook `POST /webhooks/apify` (signed secret) → enqueue `ingest-dataset`; fallback poller
-- [ ] [Daniil] Global ingestion (not per user): cron per source (e.g. jobs every 6 h, events daily) with Czech-wide queries → per-source mapper → `job_posting` / `event_listing`
+- [x] [Daniil] Global ingestion (not per user): cron per source (e.g. jobs every 6 h, events daily) with Czech-wide queries → per-source mapper → `job_posting` / `event_listing`
 - 🔗 Sync: in the browser: sign in → upload CV → profile pre-filled → finish onboarding
 
 ## M2 — CVs & ingestion quality (week 3)
@@ -102,8 +102,8 @@ Roadmap per person:
 - [ ] [Artem] 09 CVs page (master card, special CV list, actions menu, compare view, E08 fallback to DOCX)
 - [ ] [Artem] 11 Profile and targets page (per-section save, "added from chat — Undo", next run)
 - [ ] [Daniil] Master CV generation job: rewrite from profile, "What changed", Generating → Needs review, regenerate, failure E05; triggers "Agent is live" email (03)
-- [ ] [Daniil] Dedupe (canonical URL + company + title hash), language detection, location normalization (city → CZ region), remote flag, `first_seen/last_seen`, expiry (not seen in N runs → expired)
-- [ ] [Daniil] Per-source mapper unit tests with saved dataset fixtures
+- [x] [Daniil] Dedupe (canonical URL + company + title hash), language detection, location normalization (city → CZ region), remote flag, `first_seen/last_seen`, expiry (not seen in N runs → expired)
+- [x] [Daniil] Per-source mapper unit tests with saved dataset fixtures
 - 🔗 Sync: onboarding ends on 06 with a real generated CV; job/event tables fill from Apify daily
 
 ## M3 — Runs & Today (week 4)

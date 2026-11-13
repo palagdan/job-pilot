@@ -1,0 +1,215 @@
+[
+  {
+    "key": "a83efbc17a0400a3",
+    "url": "https://cz.indeed.com/viewjob?jk=a83efbc17a0400a3",
+    "title": ".NET Developer",
+    "jobUrl": "https://www.blocshop.io/careers-netdeveloper",
+    "refNum": "netdeveloper",
+    "datePublished": "2026-11-12T06:00:00.000Z",
+    "dateOnIndeed": "2026-11-12T16:30:59.620Z",
+    "expired": false,
+    "expirationDate": null,
+    "isRepost": null,
+    "isLatestPost": null,
+    "isPlacement": null,
+    "isUrgentHire": false,
+    "isHighVolumeHiring": false,
+    "language": "en",
+    "location": {
+      "countryName": "Česká republika",
+      "countryCode": "CZ",
+      "admin1Code": "A",
+      "admin2Code": "AAAAAB",
+      "admin3Code": "",
+      "admin4Code": "",
+      "city": "Praha",
+      "postalCode": "",
+      "streetAddress": "",
+      "latitude": 50.085163,
+      "longitude": 14.417583
+    },
+    "employer": {
+      "name": "Blocshop",
+      "companyPageUrl": "https://cz.indeed.com/cmp/Blocshop",
+      "briefDescription": "",
+      "address": "",
+      "industry": "",
+      "employeesCount": "",
+      "revenue": "",
+      "ceoName": "[removed]",
+      "ceoPhotoUrl": "",
+      "corporateWebsite": "",
+      "logoUrl": "",
+      "headerImageUrl": "",
+      "ratingsCount": 1,
+      "ratingsValue": 5
+    },
+    "parentEmployer": {
+      "name": "",
+      "companyPageUrl": ""
+    },
+    "attributes": {},
+    "employerAttributes": {},
+    "jobTypes": {},
+    "benefits": {},
+    "socialInsurance": {},
+    "occupations": {
+      "2FRSA": "Full Stack vývojáři",
+      "5NN53": "Profese v oblasti vývoje softwaru",
+      "EHPW9": "Technologické profese",
+      "HJSX6": "Profese v oblasti vývoje softwaru a architektury"
+    },
+    "baseSalary": {
+      "min": null,
+      "max": null,
+      "unitOfWork": null,
+      "currencyCode": null
+    },
+    "description": {
+      "text": "We are looking for someone with a passion for new technology and industry trends to join an internal SaaS project using the latest Microsoft technologies. The project is based on .NET Core, Angular, Azure services, and other modern technologies and development practices.\nWork at Blocshop\n\nThe work-life at Blocshop is not only about the number of lines of code, or production deployment.\n\nWe are huge coffee lovers so we tried to count the hectoliters of coffee we have drank since 2012.\n\nAre you a developer & coffee lover, too? You might consider joining us.\n\nWhat will you do?\n\nTaking part in web application development using .NET Technology Stack\nAdhering to Agile development principles and SCRUM practices\nAssisting with effort estimations during Planning meetings\nAssist in software architecture decisions and review team members’ code\nImplementing modules using the full stack, from DB to front end, while following the architectural patterns set out and agreed to by the team\nCollaborating with development teams located in Brno and Tbilisi, Georgia\n\nWhat you need to be a part of the Blocshop team?\n\n3+ years of professional experience with .NET Stack\nPreferred, but not required some experience with any Javascript framework (Angular, React, Vue.js, etc.)\nYou have an understanding of such concepts as Microservices Architecture, DDD, CQRS, and TDD\nYou are familiar with building CI/CD pipelines\nYou have some experience with Azure services\nYou communicate easily in English\n\nEven if you don't meet all of the above but are ready to take on this challenge, go ahead and apply anyway. We love your spirit!\n\nWhat will you get from working at Blocshop?\n\nFast interview process: short intro talk with our recruiter, technical interview\nAn international team of motivated professionals with a passion for learning new technologies\nThe working schedule is flexible. Get work done when and where you're most productive!\n20 vacation days + extra vacation during the Christmas holidays\nYearly performance-based bonuses\nCompetitive compensation and regular reviews\nHigh-end laptops\nInvestment in the ongoing professional development\nAccess to sports facilities around the Czech Republic and workout sessions with a personal trainer\nCentrally located office with all kinds of refreshments and a great nap room\nTeam buildings and hackathons\nOur four stage recruitment process\n\n01\n\nIntro call\n\nOn a short 15-minute introduction call with our recruiter, you will discover the opportunities we have at the moment that match your skill set the best.\n\n02\n\nTechnical interview\n\nProfessional interview with blocshop's lead architect. This is the important part. We want top software engineers on our team so this is your time to shine. Show us your expertise!\n\n03\n\nMeet the manager\n\nIf you are a junior developer we might ask you to meet the owner of blocshop or one of the hiring managers. This also involves a fun test that every one of our employees enjoyed taking. For senior professionals, we often skip this step.\n\n04\n\nOffer\n\nWe make you an offer. You accept it.",
+      "html": "<div><p>We are looking for someone with a passion for new technology and industry trends to join an internal SaaS project using the latest Microsoft technologies. The project is based on .NET Core, Angular, Azure services, and other modern technologies and development practices.</p></div>\n<br><p></p><div><div><div><div><div><p>Work at Blocshop</p>\n<div><p>The work-life at Blocshop is not only about the number of lines of code, or production deployment.</p>\n<p>We are huge coffee lovers so we tried to count the hectoliters of coffee we have drank since 2012.</p>\n<p>Are you a developer &amp; coffee lover, too? You might consider joining us.</p>\n</div></div></div><div></div><div><div><p>What will you do?</p>\n<div><ul><li>Taking part in web application development using .NET Technology Stack</li>\n<li>Adhering to Agile development principles and SCRUM practices</li>\n<li>Assisting with effort estimations during Planning meetings</li>\n<li>Assist in software architecture decisions and review team members&rsquo; code</li>\n<li>Implementing modules using the full stack, from DB to front end, while following the architectural patterns set out and agreed to by the team</li>\n<li>Collaborating with development teams located in Brno and Tbilisi, Georgia</li>\n</ul></div></div></div><div></div><div><div><p>What you need to be a part of the Blocshop team?</p>\n<div><ul><li>3+ years of professional experience with .NET Stack</li>\n<li>Preferred, but not required some experience with any Javascript framework (Angular, React, Vue.js, etc.)</li>\n<li>You have an understanding of such concepts as Microservices Architecture, DDD, CQRS, and TDD</li>\n<li>You are familiar with building CI/CD pipelines</li>\n<li>You have some experience with Azure services</li>\n<li>You communicate easily in English\n<br>\n<br>\nEven if you don't meet all of the above but are ready to take on this challenge, go ahead and apply anyway. We love your spirit!</li>\n</ul></div></div></div><div></div><div><div><p>What will you get from working at Blocshop?</p>\n<div><ul><li>Fast interview process: short intro talk with our recruiter, technical interview</li>\n<li>An international team of motivated professionals with a passion for learning new technologies</li>\n<li>The working schedule is flexible. Get work done when and where you're most productive!</li>\n<li>20 vacation days + extra vacation during the Christmas holidays</li>\n<li>Yearly performance-based bonuses</li>\n<li>Competitive compensation and regular reviews</li>\n<li>High-end laptops</li>\n<li>Investment in the ongoing professional development</li>\n<li>Access to sports facilities around the Czech Republic and workout sessions with a personal trainer</li>\n<li>Centrally located office with all kinds of refreshments and a great nap room</li>\n<li>Team buildings and hackathons</li></ul></div></div></div></div></div></div>\n<br><div><div><div><p>Our four stage recruitment process</p>\n</div></div><div><div><div><div><div><p>01</p>\n</div><div><div><p>Intro call</p>\n</div></div><div><div><p>On a short 15-minute introduction call with our recruiter, you will discover the opportunities we have at the moment that match your skill set the best.</p>\n</div></div></div><div><div><p>02</p>\n</div><div><div><p>Technical interview</p>\n</div></div><div><div><p>Professional interview with blocshop's lead architect. This is the important part. We want top software engineers on our team so this is your time to shine. Show us your expertise!</p>\n</div></div></div><div><div><p>03</p>\n</div><div><div><p>Meet the manager</p>\n</div></div><div><div><p>If you are a junior developer we might ask you to meet the owner of blocshop or one of the hiring managers. This also involves a fun test that every one of our employees enjoyed taking. For senior professionals, we often skip this step.</p>\n</div></div></div><div><div><p>04</p>\n</div><div><div><div><div><p>Offer</p>\n</div></div></div><div><div><p>We make you an offer. You accept it.</p></div></div></div></div></div></div></div></div><div></div>"
+    }
+  },
+  {
+    "key": "ef99eb2f75bc60be",
+    "url": "https://cz.indeed.com/viewjob?jk=ef99eb2f75bc60be",
+    "title": "AI Developer",
+    "jobUrl": "https://www.blocshop.io/careers-ai-developer",
+    "refNum": "ai-developer",
+    "datePublished": "2026-11-12T06:00:00.000Z",
+    "dateOnIndeed": "2026-11-12T16:30:59.652Z",
+    "expired": false,
+    "expirationDate": null,
+    "isRepost": null,
+    "isLatestPost": null,
+    "isPlacement": null,
+    "isUrgentHire": false,
+    "isHighVolumeHiring": false,
+    "language": "en",
+    "location": {
+      "countryName": "Česká republika",
+      "countryCode": "CZ",
+      "admin1Code": "A",
+      "admin2Code": "AAAAAB",
+      "admin3Code": "",
+      "admin4Code": "",
+      "city": "Praha",
+      "postalCode": "",
+      "streetAddress": "",
+      "latitude": 50.085163,
+      "longitude": 14.417583
+    },
+    "employer": {
+      "name": "Blocshop",
+      "companyPageUrl": "https://cz.indeed.com/cmp/Blocshop",
+      "briefDescription": "",
+      "address": "",
+      "industry": "",
+      "employeesCount": "",
+      "revenue": "",
+      "ceoName": "[removed]",
+      "ceoPhotoUrl": "",
+      "corporateWebsite": "",
+      "logoUrl": "",
+      "headerImageUrl": "",
+      "ratingsCount": 1,
+      "ratingsValue": 5
+    },
+    "parentEmployer": {
+      "name": "",
+      "companyPageUrl": ""
+    },
+    "attributes": {},
+    "employerAttributes": {},
+    "jobTypes": {},
+    "benefits": {},
+    "socialInsurance": {},
+    "occupations": {
+      "2FRSA": "Full Stack vývojáři",
+      "5NN53": "Profese v oblasti vývoje softwaru",
+      "EHPW9": "Technologické profese",
+      "HJSX6": "Profese v oblasti vývoje softwaru a architektury"
+    },
+    "baseSalary": {
+      "min": null,
+      "max": null,
+      "unitOfWork": null,
+      "currencyCode": null
+    },
+    "description": {
+      "text": "We are looking for experienced AI developers to join our AI web app projects.\nWork at Blocshop\n\nAt Blocshop, we believe that work-life is more than just lines of code and production deployments.\n\nWe're passionate about innovation, collaboration, and of course, coffee\n\nAre you ready to continue your career as an AI Developer? Join us!\n\nWhat will you do?\n\nDevelop web applications leveraging AI Models and APIs like ChatGPT and Llama2\nFine-tune existing AI models to optimize performance\nIntegrate AI solutions into web applications\nCollaborate with cross-functional teams to design and implement\ninnovative AI-driven features\nStay updated with the latest advancements in AI technology and\nbest practices\n\nWhat you need to be a part of the Blocshop team?\n\n3+ years of professional experience in software development\nExperience working with AI Models and APIs (e.g., ChatGPT, Llama2)\nProficiency in fine-tuning AI models\nStrong understanding of web application development\nGood knowledge of JavaScript/TypeScript\nExperience with a mainstream back-end stack (e.g., C#, node.js,\nPython)\nExcellent communication skills in English\nExperience with training AI models is a plus, but not required\n\nEven if you don't meet all of the above but are ready to take on this challenge, go ahead and apply anyway. We love your spirit!\n\nWhat will you get from working at Blocshop?\n\nFast interview process: short intro talk with our recruiter, technical interview\nAn international team of motivated professionals with a passion for learning new technologies\nFlexible working schedule: Get work done when and where you're most productive!\n20 vacation days, excluding public holidays\nYearly performance-based bonuses\nCompetitive compensation and regular reviews\nHigh-end laptops\nInvestment in ongoing professional development\nAccess to sports facilities around the Czech Republic and workout sessions with a personal trainer\nCentrally located office with all kinds of refreshments and a great nap room\nTeam buildings and hackathons\nOur four stage recruitment process\n\n01\n\nIntro call\n\nOn a short 15-minute introduction call with our recruiter, you will discover the opportunities we have at the moment that match your skill set the best.\n\n02\n\nTechnical interview\n\nProfessional interview with blocshop's lead architect. This is the important part. We want top software engineers on our team so this is your time to shine. Show us your expertise!\n\n03\n\nMeet the manager\n\nIf you are a junior developer we might ask you to meet the owner of blocshop or one of the hiring managers. This also involves a fun test that every one of our employees enjoyed taking. For senior professionals, we often skip this step.\n\n04\n\nOffer\n\nWe make you an offer. You accept it.",
+      "html": "<div><p>We are looking for experienced AI developers to join our AI web app projects.</p></div>\n<br><p></p><div><div><div><div><div><p>Work at Blocshop</p>\n<div><p>At Blocshop, we believe that work-life is more than just lines of code and production deployments.</p>\n<p>We're passionate about innovation, collaboration, and of course, coffee</p>\n<p>Are you ready to continue your career as an AI Developer? Join us!</p>\n</div></div></div><div></div><div><div><p>What will you do?</p>\n<div><ul><li>Develop web applications leveraging AI Models and APIs like ChatGPT and Llama2</li>\n<li>Fine-tune existing AI models to optimize performance</li>\n<li>Integrate AI solutions into web applications</li>\n<li>Collaborate with cross-functional teams to design and implement</li>\n<li>innovative AI-driven features</li>\n<li>Stay updated with the latest advancements in AI technology and</li>\n<li>best practices</li>\n</ul></div></div></div><div></div><div><div><p>What you need to be a part of the Blocshop team?</p>\n<div><ul><li>3+ years of professional experience in software development</li>\n<li>Experience working with AI Models and APIs (e.g., ChatGPT, Llama2)</li>\n<li>Proficiency in fine-tuning AI models</li>\n<li>Strong understanding of web application development</li>\n<li>Good knowledge of JavaScript/TypeScript</li>\n<li>Experience with a mainstream back-end stack (e.g., C#, node.js,</li>\n<li>Python)</li>\n<li>Excellent communication skills in English</li>\n<li>Experience with training AI models is a plus, but not required</li><br>\n</ul><p><br>\nEven if you don't meet all of the above but are ready to take on this challenge, go ahead and apply anyway. We love your spirit!\n</p></div></div></div><div></div><div><div><p>What will you get from working at Blocshop?</p>\n<div><ul><li>Fast interview process: short intro talk with our recruiter, technical interview</li>\n<li>An international team of motivated professionals with a passion for learning new technologies</li>\n<li>Flexible working schedule: Get work done when and where you're most productive!</li>\n<li>20 vacation days, excluding public holidays</li>\n<li>Yearly performance-based bonuses</li>\n<li>Competitive compensation and regular reviews</li>\n<li>High-end laptops</li>\n<li>Investment in ongoing professional development</li>\n<li>Access to sports facilities around the Czech Republic and workout sessions with a personal trainer</li>\n<li>Centrally located office with all kinds of refreshments and a great nap room</li>\n<li>Team buildings and hackathons</li></ul></div></div></div></div></div></div>\n<br><div><div><div><p>Our four stage recruitment process</p>\n</div></div><div><div><div><div><div><p>01</p>\n</div><div><div><p>Intro call</p>\n</div></div><div><div><p>On a short 15-minute introduction call with our recruiter, you will discover the opportunities we have at the moment that match your skill set the best.</p>\n</div></div></div><div><div><p>02</p>\n</div><div><div><p>Technical interview</p>\n</div></div><div><div><p>Professional interview with blocshop's lead architect. This is the important part. We want top software engineers on our team so this is your time to shine. Show us your expertise!</p>\n</div></div></div><div><div><p>03</p>\n</div><div><div><p>Meet the manager</p>\n</div></div><div><div><p>If you are a junior developer we might ask you to meet the owner of blocshop or one of the hiring managers. This also involves a fun test that every one of our employees enjoyed taking. For senior professionals, we often skip this step.</p>\n</div></div></div><div><div><p>04</p>\n</div><div><div><div><div><p>Offer</p>\n</div></div><div><p>We make you an offer. You accept it.</p></div></div></div></div></div></div></div></div><div></div>"
+    }
+  },
+  {
+    "key": "f0e2ca4f99fea150",
+    "url": "https://cz.indeed.com/viewjob?jk=f0e2ca4f99fea150",
+    "title": "Angular Developer",
+    "jobUrl": "https://www.blocshop.io/careers-angular-developer",
+    "refNum": "angular-developer",
+    "datePublished": "2026-11-12T06:00:00.000Z",
+    "dateOnIndeed": "2026-11-12T16:30:59.798Z",
+    "expired": false,
+    "expirationDate": null,
+    "isRepost": null,
+    "isLatestPost": null,
+    "isPlacement": null,
+    "isUrgentHire": false,
+    "isHighVolumeHiring": false,
+    "language": "en",
+    "location": {
+      "countryName": "Česká republika",
+      "countryCode": "CZ",
+      "admin1Code": "A",
+      "admin2Code": "AAAAAB",
+      "admin3Code": "",
+      "admin4Code": "",
+      "city": "Praha",
+      "postalCode": "",
+      "streetAddress": "",
+      "latitude": 50.085163,
+      "longitude": 14.417583
+    },
+    "employer": {
+      "name": "Blocshop",
+      "companyPageUrl": "https://cz.indeed.com/cmp/Blocshop",
+      "briefDescription": "",
+      "address": "",
+      "industry": "",
+      "employeesCount": "",
+      "revenue": "",
+      "ceoName": "[removed]",
+      "ceoPhotoUrl": "",
+      "corporateWebsite": "",
+      "logoUrl": "",
+      "headerImageUrl": "",
+      "ratingsCount": 1,
+      "ratingsValue": 5
+    },
+    "parentEmployer": {
+      "name": "",
+      "companyPageUrl": ""
+    },
+    "attributes": {},
+    "employerAttributes": {},
+    "jobTypes": {},
+    "benefits": {},
+    "socialInsurance": {},
+    "occupations": {
+      "5NN53": "Profese v oblasti vývoje softwaru",
+      "EHPW9": "Technologické profese",
+      "HJSX6": "Profese v oblasti vývoje softwaru a architektury",
+      "ZW3TH": "Front-end vývojáři"
+    },
+    "baseSalary": {
+      "min": null,
+      "max": null,
+      "unitOfWork": null,
+      "currencyCode": null
+    },
+    "description": {
+      "text": "We are looking for experienced developers to join an ongoing project using Angular for a European client\nWork at Blocshop\n\nThe work-life at Blocshop is not only about the number of lines of code, or production deployment.\n\nWe are huge coffee lovers so we tried to count the hectoliters of coffee we have drank since 2012.\n\nAre you a developer & coffee lover, too? You might consider joining us.\n\nWhat will you do?\n\nTaking part in web application development using Angular\nAdhering to Agile development principles and SCRUM practices\nAssisting with effort estimations during Planning meetings\nAssist in software architecture decisions and review team members’ code\nImplementing front-end modules using modern technologies\nCollaborating with development teams in our other locations\n\nWhat you need to be a part of the Blocshop team?\n\n3+ years of professional experience with JavaScript/TypeScript\n1+ years of professional experience with Angular\nGood knowledge of HTML5 and CSS\nYou have a good understanding of design patterns and unit testing\nYou communicate easily in English\n\nEven if you don't meet all of the above but are ready to take on this challenge, go ahead and apply anyway. We love your spirit!\n\nWhat will you get from working at Blocshop?\n\nFast interview process: short intro talk with our recruiter, technical interview\nAn international team of motivated professionals with a passion for learning new technologies\nThe working schedule is flexible. Get work done when and where you're most productive!\n20 vacation days, excluding public holidays\nYearly performance-based bonuses\nCompetitive compensation and regular reviews\nHigh-end laptops\nInvestment in the ongoing professional development\nAccess to sports facilities around the Czech Republic and workout sessions with a personal trainer\nCentrally located office with all kinds of refreshments and a great nap room\nTeam buildings and hackathons\nOur four stage recruitment process\n\n01\n\nIntro call\n\nOn a short 15-minute introduction call with our recruiter, you will discover the opportunities we have at the moment that match your skill set the best.\n\n02\n\nTechnical interview\n\nProfessional interview with blocshop's lead architect. This is the important part. We want top software engineers on our team so this is your time to shine. Show us your expertise!\n\n03\n\nMeet the manager\n\nIf you are a junior developer we might ask you to meet the owner of blocshop or one of the hiring managers. This also involves a fun test that every one of our employees enjoyed taking. For senior professionals, we often skip this step.\n\n04\n\nOffer\n\nWe make you an offer. You accept it.",
+      "html": "<div><p>We are looking for experienced developers to join an ongoing project using Angular for a European client</p></div>\n<br><p></p><div><div><div><div><div><p>Work at Blocshop</p>\n<div><p>The work-life at Blocshop is not only about the number of lines of code, or production deployment.</p>\n<p>We are huge coffee lovers so we tried to count the hectoliters of coffee we have drank since 2012.</p>\n<p>Are you a developer &amp; coffee lover, too? You might consider joining us.</p>\n</div></div></div><div></div><div><div><p>What will you do?</p>\n<div><ul><li>Taking part in web application development using Angular</li>\n<li>Adhering to Agile development principles and SCRUM practices</li>\n<li>Assisting with effort estimations during Planning meetings</li>\n<li>Assist in software architecture decisions and review team members&rsquo; code</li>\n<li>Implementing front-end modules using modern technologies</li>\n<li>Collaborating with development teams in our other locations</li>\n</ul></div></div></div><div></div><div><div><p>What you need to be a part of the Blocshop team?</p>\n<div><ul><li>3+ years of professional experience with JavaScript/TypeScript</li>\n<li>1+ years of professional experience with Angular</li>\n<li>Good knowledge of HTML5 and CSS</li>\n<li>You have a good understanding of design patterns and unit testing</li>\n<li>You communicate easily in English\n<br>\n<br>\nEven if you don't meet all of the above but are ready to take on this challenge, go ahead and apply anyway. We love your spirit!</li>\n</ul></div></div></div><div></div><div><div><p>What will you get from working at Blocshop?</p>\n<div><ul><li>Fast interview process: short intro talk with our recruiter, technical interview</li>\n<li>An international team of motivated professionals with a passion for learning new technologies</li>\n<li>The working schedule is flexible. Get work done when and where you're most productive!</li>\n<li>20 vacation days, excluding public holidays</li>\n<li>Yearly performance-based bonuses</li>\n<li>Competitive compensation and regular reviews</li>\n<li>High-end laptops</li>\n<li>Investment in the ongoing professional development</li>\n<li>Access to sports facilities around the Czech Republic and workout sessions with a personal trainer</li>\n<li>Centrally located office with all kinds of refreshments and a great nap room</li>\n<li>Team buildings and hackathons</li></ul></div></div></div></div></div></div>\n<br><div><div><div><p>Our four stage recruitment process</p>\n</div></div><div><div><div><div><div><p>01</p>\n</div><div><div><p>Intro call</p>\n</div></div><div><div><p>On a short 15-minute introduction call with our recruiter, you will discover the opportunities we have at the moment that match your skill set the best.</p>\n</div></div></div><div><div><p>02</p>\n</div><div><div><p>Technical interview</p>\n</div></div><div><div><p>Professional interview with blocshop's lead architect. This is the important part. We want top software engineers on our team so this is your time to shine. Show us your expertise!</p>\n</div></div></div><div><div><p>03</p>\n</div><div><div><p>Meet the manager</p>\n</div></div><div><div><p>If you are a junior developer we might ask you to meet the owner of blocshop or one of the hiring managers. This also involves a fun test that every one of our employees enjoyed taking. For senior professionals, we often skip this step.</p>\n</div></div></div><div><div><p>04</p>\n</div><div><div><div><div><p>Offer</p>\n</div></div></div><div><div><p>We make you an offer. You accept it.</p></div></div></div></div></div></div></div></div><div></div>"
+    }
+  }
+]
