@@ -5,6 +5,7 @@ import { Stepper } from '../../../components/ui/stepper.tsx';
 import { onboardingPath, stepFromSlug, stepIndex, stepLabels } from '../../../lib/onboarding/steps.ts';
 import { requireUser } from '../../../lib/session/get-session-user.ts';
 import styles from '../onboarding.module.css';
+import { ConfirmProfileStep } from './confirm-profile-step.tsx';
 import { UploadStep } from './upload-step.tsx';
 
 export const metadata: Metadata = { title: 'Set up your JobPilot — JobPilot' };
@@ -25,6 +26,8 @@ export default async function OnboardingStepPage({ params }: { params: Promise<{
       <Stepper steps={onboardingSteps.map((s) => stepLabels[s])} current={stepIndex(step)} />
       {step === 'upload' ? (
         <UploadStep />
+      ) : step === 'confirm_profile' ? (
+        <ConfirmProfileStep />
       ) : (
         <section className={styles.card}>
           <h2 className={styles.cardTitle}>{stepLabels[step]}</h2>
