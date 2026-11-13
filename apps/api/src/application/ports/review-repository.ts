@@ -29,6 +29,19 @@ export type DraftRecord = {
   updatedAt: Date;
 };
 
+export type FollowUpRecord = {
+  id: string;
+  sequence: number;
+  dueAt: Date;
+  status: 'pending' | 'done' | 'cancelled';
+  completedAt: Date | null;
+  draftId: string | null;
+};
+
+export type CompleteFollowUpResult =
+  | { ok: true; activityId: string; nextFollowUpAt: Date | null }
+  | { ok: false; reason: 'not_found' | 'wrong_state' };
+
 export type MarkResult =
   | { ok: true; activityId: string; nextFollowUpAt: Date | null }
   | { ok: false; reason: 'not_found' | 'wrong_state' };
@@ -59,6 +72,19 @@ export interface ReviewRepository {
     followUpDueAt: Date | null;
     undoableUntil: Date;
   }): Promise<MarkResult>;
+  /** Follow-ups of one item, by sequence. */
+  listFollowUps(userId: string, itemId: string): Promise<FollowUpRecord[]>;
+  /**
+   * Pending follow-up of a `sent` item → `done` + activity (undoable). Sequence 1 also creates #2 due at
+   * `nextDueAt`; `nextFollowUpAt` of the item follows the next pending follow-up.
+   */
+  completeFollowUp(input: {
+    userId: string;
+    id: string;
+    now: Date;
+    nextDueAt: Date;
+    undoableUntil: Date;
+  }): Promise<CompleteFollowUpResult>;
   /** `sent` / `registered` → `ready_to_send`; pending follow-ups cancelled. Returns the new status or a failure. */
   markNotSent(
     userId: string,

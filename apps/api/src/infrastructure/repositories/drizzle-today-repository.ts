@@ -6,7 +6,7 @@ import { targets } from '@job-pilot/db/schema/profile';
 import { eventListing, jobPosting, source } from '@job-pilot/db/schema/sources';
 import { ownedBy } from '@job-pilot/db/scoping';
 import { limits } from '@job-pilot/shared/limits';
-import { and, count, desc, eq, gte, inArray, isNull, sql } from 'drizzle-orm';
+import { and, asc, count, desc, eq, gt, gte, inArray, isNull, lte, sql } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
 import type {
   OpportunityRecord,
@@ -163,6 +163,48 @@ export const createDrizzleTodayRepository = (db: Db): TodayRepository => ({
       .from(pipelineItem)
       .where(ownedBy(pipelineItem, userId, eq(pipelineItem.status, 'ready_to_send')));
     return row?.n ?? 0;
+  },
+
+  followUpsDue: async (userId, now) => {
+    const rows = await db
+      .select({ itemId: followUp.pipelineItemId })
+      .from(followUp)
+      .innerJoin(pipelineItem, eq(pipelineItem.id, followUp.pipelineItemId))
+      .where(
+        ownedBy(
+          pipelineItem,
+          userId,
+          eq(pipelineItem.status, 'sent'),
+          eq(followUp.status, 'pending'),
+          lte(followUp.dueAt, now),
+        ),
+      )
+      .orderBy(asc(followUp.dueAt));
+    const items = new Set(rows.map((r) => r.itemId));
+    return { count: items.size, firstPipelineItemId: rows[0]?.itemId ?? null };
+  },
+
+  eventsStartingBetween: async (userId, now, until) => {
+    const rows = await db
+      .select({
+        pipelineItemId: pipelineItem.id,
+        title: eventListing.title,
+        startsAt: eventListing.startsAt,
+      })
+      .from(pipelineItem)
+      .innerJoin(opportunity, eq(opportunity.id, pipelineItem.opportunityId))
+      .innerJoin(eventListing, eq(eventListing.id, opportunity.eventListingId))
+      .where(
+        ownedBy(
+          pipelineItem,
+          userId,
+          eq(pipelineItem.status, 'registered'),
+          gt(eventListing.startsAt, now),
+          lte(eventListing.startsAt, until),
+        ),
+      )
+      .orderBy(asc(eventListing.startsAt));
+    return rows;
   },
 
   setRoute: async (userId, id, route, routeReason) => {
@@ -357,6 +399,38 @@ export const createDrizzleTodayRepository = (db: Db): TodayRepository => ({
             nextFollowUpAt: date(before.nextFollowUpAt),
           })
           .where(eq(pipelineItem.id, act.entityId));
+        await tx
+          .update(activity)
+          .set({ undoneAt: now })
+          .where(and(eq(activity.id, act.id), isNull(activity.undoneAt)));
+        return 'undone';
+      }
+      if (act.action === 'follow_up.complete') {
+        const before = act.before as { nextFollowUpAt: string | null };
+        const after = act.after as { nextFollowUpId: string | null };
+        const [fu] = await tx
+          .select({ f: followUp, item: pipelineItem })
+          .from(followUp)
+          .innerJoin(pipelineItem, eq(pipelineItem.id, followUp.pipelineItemId))
+          .where(ownedBy(pipelineItem, userId, eq(followUp.id, act.entityId)))
+          .for('update');
+        if (fu?.f.status !== 'done' || fu.item.status !== 'sent') return 'changed';
+        if (after.nextFollowUpId) {
+          // #2 already acted on (or cancelled) → the item moved on; do not undo.
+          const removed = await tx
+            .delete(followUp)
+            .where(and(eq(followUp.id, after.nextFollowUpId), eq(followUp.status, 'pending')))
+            .returning({ id: followUp.id });
+          if (removed.length === 0) return 'changed';
+        }
+        await tx
+          .update(followUp)
+          .set({ status: 'pending', completedAt: null })
+          .where(eq(followUp.id, act.entityId));
+        await tx
+          .update(pipelineItem)
+          .set({ nextFollowUpAt: before.nextFollowUpAt ? new Date(before.nextFollowUpAt) : null })
+          .where(eq(pipelineItem.id, fu.item.id));
         await tx
           .update(activity)
           .set({ undoneAt: now })

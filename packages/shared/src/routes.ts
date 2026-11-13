@@ -37,7 +37,7 @@ import {
   profileSchema,
 } from './profile.ts';
 import { pushSubscriptionInputSchema, vapidKeySchema } from './push.ts';
-import { reviewListSchema, reviewSchema } from './review.ts';
+import { completeFollowUpResultSchema, reviewListSchema, reviewSchema } from './review.ts';
 import { scheduleInputSchema, scheduleSchema } from './schedule.ts';
 import {
   suggestionsQuerySchema,
@@ -304,11 +304,12 @@ export const routes = {
     owner: 'daniil',
     response: 'file',
   },
+  /** "I sent the follow-up": done, follow-up #2 in 7 days (after #1), undo for 10 s. */
   completeFollowUp: {
     method: 'POST',
     path: '/v1/follow-ups/:id/done',
     owner: 'daniil',
-    response: okSchema,
+    response: completeFollowUpResultSchema,
   },
 
   // ---------- Pipeline ----------

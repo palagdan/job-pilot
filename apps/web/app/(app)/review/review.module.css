@@ -237,3 +237,10 @@
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+.followUp {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  list-style: none;
+}

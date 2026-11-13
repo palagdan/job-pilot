@@ -6,6 +6,7 @@ import type { Llm } from '@job-pilot/llm/client';
 import type { FileStorage } from '@job-pilot/storage/file-storage';
 import type { Log } from '../log.ts';
 import { agentRunHandler } from './agent-run.ts';
+import { checkFollowUps } from './check-follow-ups.ts';
 import { expirePostings } from './expire-postings.ts';
 import { finishSetupReminders } from './finish-setup-reminders.ts';
 import { generateMasterCv } from './generate-master-cv.ts';
@@ -47,6 +48,7 @@ export const registerHandlers = async (
   await queue.work('apify.poll-runs', pollApifyRuns(deps));
   await queue.work('apify.ingest-dataset', ingestDataset(deps), { concurrency: 1 });
   await queue.work('ingest.expire', expirePostings(deps));
+  await queue.work('follow-up.check', checkFollowUps(deps));
   await queue.work('email.send', sendEmail({ ...deps, ...email }), { concurrency });
   await queue.work('email.finish-setup-reminders', finishSetupReminders(deps));
   await queue.work('email.run-digest', runDigest(deps), { concurrency });

@@ -169,6 +169,70 @@ export const createDrizzleReviewRepository = (db: Db): ReviewRepository => {
         return toDraft(row);
       }),
 
+    listFollowUps: async (userId, itemId) => {
+      const rows = await db
+        .select({ f: followUp })
+        .from(followUp)
+        .innerJoin(pipelineItem, eq(pipelineItem.id, followUp.pipelineItemId))
+        .where(ownedBy(pipelineItem, userId, eq(followUp.pipelineItemId, itemId)))
+        .orderBy(asc(followUp.sequence));
+      return rows.map(({ f }) => ({
+        id: f.id,
+        sequence: f.sequence,
+        dueAt: f.dueAt,
+        status: f.status,
+        completedAt: f.completedAt,
+        draftId: f.draftId,
+      }));
+    },
+
+    completeFollowUp: ({ userId, id, now, nextDueAt, undoableUntil }) =>
+      db.transaction(async (tx) => {
+        const [current] = await tx
+          .select({ f: followUp, item: pipelineItem })
+          .from(followUp)
+          .innerJoin(pipelineItem, eq(pipelineItem.id, followUp.pipelineItemId))
+          .where(ownedBy(pipelineItem, userId, eq(followUp.id, id)))
+          .for('update');
+        if (!current) return { ok: false, reason: 'not_found' } as const;
+        const { f, item } = current;
+        if (f.status !== 'pending' || item.status !== 'sent') {
+          return { ok: false, reason: 'wrong_state' } as const;
+        }
+        await tx
+          .update(followUp)
+          .set({ status: 'done', completedAt: now, updatedAt: now })
+          .where(eq(followUp.id, id));
+        let nextId: string | null = null;
+        if (f.sequence === 1) {
+          const [next] = await tx
+            .insert(followUp)
+            .values({ pipelineItemId: item.id, sequence: 2, dueAt: nextDueAt })
+            .returning({ id: followUp.id });
+          nextId = next?.id ?? null;
+        }
+        const nextFollowUpAt = nextId ? nextDueAt : null;
+        await tx
+          .update(pipelineItem)
+          .set({ nextFollowUpAt, updatedAt: now })
+          .where(eq(pipelineItem.id, item.id));
+        const [act] = await tx
+          .insert(activity)
+          .values({
+            userId,
+            actor: 'user',
+            entity: 'follow_up',
+            entityId: id,
+            action: 'follow_up.complete',
+            before: { nextFollowUpAt: item.nextFollowUpAt?.toISOString() ?? null },
+            after: { nextFollowUpId: nextId, sequence: f.sequence },
+            undoableUntil,
+          })
+          .returning({ id: activity.id });
+        if (!act) throw new Error('activity insert returned no row');
+        return { ok: true, activityId: act.id, nextFollowUpAt } as const;
+      }),
+
     markDone: ({ userId, id, kind, now, followUpDueAt, undoableUntil }) =>
       db.transaction(async (tx) => {
         const [current] = await tx
