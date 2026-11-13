@@ -5,7 +5,7 @@ import { profile, profileProof, schedule, targets } from '@job-pilot/db/schema/p
 import type { JobHandler } from '@job-pilot/jobs/client';
 import type { Llm } from '@job-pilot/llm/client';
 import { type RunStepKey, type RunStepStatus, runStepKeys } from '@job-pilot/shared/enums';
-import { and, asc, eq } from 'drizzle-orm';
+import { and, asc, eq, inArray } from 'drizzle-orm';
 import {
   type EventCandidate,
   type JobCandidate,
@@ -43,10 +43,12 @@ export const agentRunHandler =
         startedAt: new Date(),
         steps: runStepKeys.map((key) => ({ key, status: 'waiting' as RunStepStatus })),
       })
-      .where(and(eq(agentRun.id, runId), eq(agentRun.status, 'queued')))
+      // `running` too: each run has exactly one queue job, so a retry means the previous attempt died
+      // (e.g. worker restart). Resuming is safe because opportunity inserts are idempotent.
+      .where(and(eq(agentRun.id, runId), inArray(agentRun.status, ['queued', 'running'])))
       .returning();
     if (!claimed) {
-      log.info('agent.run skipped: not queued', { runId });
+      log.info('agent.run skipped: already finished', { runId });
       return;
     }
     const userId = claimed.userId;

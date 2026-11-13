@@ -157,6 +157,15 @@ describe.skipIf(!url)('agentRunHandler', () => {
     expect(generateObject).not.toHaveBeenCalled();
   });
 
+  it('resumes a run left running by a crashed attempt (job retry)', async () => {
+    const runId = await newRun();
+    await db.update(agentRun).set({ status: 'running' }).where(eq(agentRun.id, runId));
+    await handler({ id: 'j', data: { runId } });
+    const [run] = await db.select().from(agentRun).where(eq(agentRun.id, runId));
+    expect(run?.status).toBe('succeeded');
+    expect(generateObject).toHaveBeenCalled();
+  });
+
   it('fails clearly when targets are missing', async () => {
     await db.delete(targets).where(eq(targets.userId, userId));
     const run = await exec();
