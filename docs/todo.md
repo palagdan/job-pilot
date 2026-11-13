@@ -113,8 +113,8 @@ Roadmap per person:
 - [ ] [Daniil] Run steps with progress (reading postings → checking boards & events → ranking → digest), progress endpoint (SSE or polling); >10 min warning; failure state
 - [x] [Daniil] Candidate prefilter in SQL (roles via Postgres full-text/trigram, locations, work format, exclusions, not already shown) — Featherless has no embeddings; cap N per run
 - [x] [Daniil] LLM ranking: fit %, why, gap note, suggested route (direct/event) + reason; uses skip-reason history; per-run caps
-- [ ] [Daniil] Today endpoints: list with counts by type, pursue, skip (+reason, undo), dismiss expired, change route
-- [ ] [Daniil] 07 Today: header counts, banners (new CV, follow-ups due, run failed, paused, offline), filter chips All/Jobs/Events, opportunity card, Pursue/Skip/Undo/Change route, expired state, empty states incl. "Confirm your CV first", run-in-progress panel
+- [x] [Daniil] Today endpoints: list with counts by type, pursue, skip (+reason, undo), dismiss expired, change route
+- [x] [Daniil] 07 Today (basic; no change-route UI, no SSE): header counts, banners (new CV, follow-ups due, run failed, paused, offline), filter chips All/Jobs/Events, opportunity card, Pursue/Skip/Undo/Change route, expired state, empty states incl. "Confirm your CV first", run-in-progress panel
 - [ ] [Artem] Run digest email (04) only when something new
 - [ ] [Artem] Settings: theme, pause/resume agent (C07, endpoint + UI + banner), sign out (C10)
 - [ ] [Artem] Global error handling: 401 → E03 modal, offline E09 banner, E10/E11/E12 toasts; 404 / 500 / Maintenance / No access pages

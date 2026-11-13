@@ -2,18 +2,20 @@ import type { Logger } from '@job-pilot/logger/logger';
 import type { FileStorage } from '@job-pilot/storage/file-storage';
 import { Hono } from 'hono';
 import { requestId } from 'hono/request-id';
+import type { AgentRunRepository } from './application/ports/agent-run-repository.ts';
 import type { CvFactsReader } from './application/ports/cv-facts-reader.ts';
 import type { CvFileRepository } from './application/ports/cv-file-repository.ts';
 import type { CvRenderer } from './application/ports/cv-renderer.ts';
 import type { CvRepository } from './application/ports/cv-repository.ts';
 import type { DevSessionIssuer } from './application/ports/dev-session-issuer.ts';
 import type { EmailPreferencesRepository } from './application/ports/email-preferences-repository.ts';
-import type { JobQueue } from './application/ports/job-queue.ts';
+import type { AgentJobQueue, JobQueue } from './application/ports/job-queue.ts';
 import type { ProfileRepository } from './application/ports/profile-repository.ts';
 import type { RateLimitStore } from './application/ports/rate-limit-store.ts';
 import type { ScheduleRepository } from './application/ports/schedule-repository.ts';
 import type { SessionReader } from './application/ports/session-reader.ts';
 import type { TargetsRepository } from './application/ports/targets-repository.ts';
+import type { TodayRepository } from './application/ports/today-repository.ts';
 import type { UploadRepository } from './application/ports/upload-repository.ts';
 import type { UserRepository } from './application/ports/user-repository.ts';
 import type { AppEnv } from './http/app-env.ts';
@@ -23,16 +25,20 @@ import { createRateLimit, rateLimits } from './http/middleware/rate-limit.ts';
 import { createRequestLogger } from './http/middleware/request-logger.ts';
 import { createRequireUser } from './http/middleware/require-user.ts';
 import { authBasePath } from './http/paths.ts';
+import { createAgentRoutes } from './http/routes/agent-routes.ts';
 import { createCvRoutes } from './http/routes/cv-routes.ts';
 import { createDevRoutes } from './http/routes/dev-routes.ts';
 import { createEmailRoutes } from './http/routes/email-routes.ts';
 import { createFileRoutes } from './http/routes/file-routes.ts';
 import { createMeRoutes } from './http/routes/me-routes.ts';
 import { createOnboardingRoutes } from './http/routes/onboarding-routes.ts';
+import { createOpportunityRoutes } from './http/routes/opportunity-routes.ts';
 import { createProfileRoutes } from './http/routes/profile-routes.ts';
 import { createScheduleRoutes } from './http/routes/schedule-routes.ts';
 import { createSuggestionRoutes } from './http/routes/suggestion-routes.ts';
 import { createTargetsRoutes } from './http/routes/targets-routes.ts';
+import { createTodayRoutes } from './http/routes/today-routes.ts';
+import { createUndoRoutes } from './http/routes/undo-routes.ts';
 import { createUploadRoutes } from './http/routes/upload-routes.ts';
 
 export type AppDeps = {
@@ -52,6 +58,9 @@ export type AppDeps = {
   renderer: CvRenderer;
   storage: FileStorage;
   jobs: JobQueue;
+  agentJobs: AgentJobQueue;
+  today: TodayRepository;
+  agentRuns: AgentRunRepository;
   /** Clock (tests pin it; defaults to the system clock). */
   now?: () => Date;
   /** Development only: enables `POST /api/dev/sign-in`. Leave undefined in production. */
@@ -74,7 +83,11 @@ export const createApp = (deps: AppDeps) => {
     .route('/schedule', createScheduleRoutes(deps))
     .route('/suggestions', createSuggestionRoutes(deps))
     .route('/cvs', createCvRoutes(deps))
-    .route('/files', createFileRoutes(deps));
+    .route('/files', createFileRoutes(deps))
+    .route('/today', createTodayRoutes(deps))
+    .route('/opportunities', createOpportunityRoutes(deps))
+    .route('/undo', createUndoRoutes(deps))
+    .route('/agent', createAgentRoutes({ ...deps, runs: deps.agentRuns }));
 
   const app = new Hono<AppEnv>()
     .use(requestId())
