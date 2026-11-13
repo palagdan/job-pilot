@@ -22,7 +22,9 @@ export const createDevRoutes = (devSessions: DevSessionIssuer) =>
       const cookies = await devSessions.issue(email);
       if (!cookies) return apiError(c, 'not_found', `No user ${email}. Run \`pnpm db:seed\`.`);
       for (const { name, value } of cookies) {
-        setCookie(c, name, value, { path: '/', httpOnly: true, sameSite: 'Lax' });
+        // Better Auth uses `__Secure-` names when WEB_URL is https (e.g. an ngrok tunnel); those require Secure.
+        const secure = name.startsWith('__Secure-');
+        setCookie(c, name, value, { path: '/', httpOnly: true, sameSite: 'Lax', secure });
       }
       c.var.log.warn('dev sign-in', { email });
       return c.json({ ok: true as const });

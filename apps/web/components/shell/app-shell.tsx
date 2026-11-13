@@ -9,15 +9,14 @@ import { useTheme } from '../../lib/theme/theme-provider.tsx';
 import { OfflineBanner } from '../errors/offline-banner.tsx';
 import { Banner } from '../ui/banner.tsx';
 import styles from './app-shell.module.css';
-import { ChatPanelSlot } from './chat-panel-slot.tsx';
 import { Sidebar } from './sidebar.tsx';
 
 /**
- * Signed-in layout (Figma 07–11): Sidebar 240 · Content (padding 32, gap 20) · Chat panel 320.
+ * Signed-in layout (Figma 07–11): Sidebar 240 · Content (padding 32, gap 20). The chat panel is out of scope.
  * The server layout already checked the session; if it expires later, the user goes back to login
  * (the E03 "You were signed out" window is the M3 global error handling item).
  */
-export function AppShell({ children, chat, initialMe }: { children: ReactNode; chat?: ReactNode; initialMe: Me }) {
+export function AppShell({ children, initialMe }: { children: ReactNode; initialMe: Me }) {
   const me = useMe(initialMe);
   // A 401 opens E03 "You were signed out" (global error windows); the banner below is for other failures.
   const signedOut = me.error instanceof ApiError && me.error.code === 'unauthorized';
@@ -50,7 +49,6 @@ export function AppShell({ children, chat, initialMe }: { children: ReactNode; c
         )}
         {children}
       </main>
-      <ChatPanelSlot>{chat}</ChatPanelSlot>
     </div>
   );
 }

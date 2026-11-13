@@ -3,8 +3,15 @@ import type { NextConfig } from 'next';
 /** Server-side only: where the Hono api runs. */
 const apiUrl = process.env.API_URL ?? 'http://localhost:3001';
 
+/** Extra origins allowed to load the dev server (e.g. an ngrok tunnel for demos), comma-separated. */
+const allowedDevOrigins = (process.env.ALLOWED_DEV_ORIGINS ?? '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  allowedDevOrigins,
   /** Workspace packages are raw TypeScript. */
   transpilePackages: ['@job-pilot/shared'],
   /** Google profile pictures (Better Auth stores the Google `picture` URL as `user.image`). */
