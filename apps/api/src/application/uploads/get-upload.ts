@@ -4,6 +4,15 @@ import type { FileStorage } from '@job-pilot/storage/file-storage';
 import type { UploadRepository } from '../ports/upload-repository.ts';
 import { toUploadDto } from './upload-dto.ts';
 
+/** GET /v1/uploads/current — the user's current CV upload (or null), so onboarding step 1 can resume after a reload. */
+export async function getCurrentUpload(
+  deps: { uploads: UploadRepository },
+  userId: string,
+): Promise<Upload | null> {
+  const found = await deps.uploads.findCurrentCv(userId);
+  return found ? toUploadDto(found) : null;
+}
+
 /** GET /v1/uploads/:id — polled by onboarding step 1 while the worker reads the CV. */
 export async function getUpload(
   deps: { uploads: UploadRepository },

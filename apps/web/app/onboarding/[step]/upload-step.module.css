@@ -1,0 +1,10 @@
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}

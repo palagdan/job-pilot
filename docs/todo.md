@@ -85,7 +85,7 @@ Roadmap per person:
 - [x] [Artem] Upload endpoint: type sniffing, ≤5 MB, store original; text extraction (unpdf, mammoth); unreadable → E04 — extraction + E04 live in the worker cv.parse job (Daniil); api stores + enqueues
 - [x] [Artem] Onboarding/profile/targets/schedule endpoints; `onboarding_step`; compute `next_run_at` (TZ/DST safe)
 - [ ] [Artem] Suggestions endpoints: roles (static + LLM from CV), locations (static CZ + EU list), skills
-- [ ] [Artem] Onboarding stepper + resumable progress; Step 1 Upload (dropzone states, replace, LinkedIn/portfolio URL validation, Continue disabled until parsed)
+- [x] [Artem] Onboarding stepper + resumable progress; Step 1 Upload (done by Daniil) (dropzone states, replace, LinkedIn/portfolio URL validation, Continue disabled until parsed)
 - [ ] [Artem] Step 2 Confirm profile (incl. salary, notice, languages), validation copy from spec §5
 - [ ] [Artem] Step 3 Targets (roles, locations incl. "Remote EU"/"Remote worldwide", work format, exclusions, Jobs/Events toggles); Step 4 Schedule (frequency, run time, timezone, email/push toggles)
 - [x] [Artem] Email infra (done by Daniil, see docs/handover/2026-11-13-email-infra.md) (Resend, `email_log` dedupe, List-Unsubscribe, shared layout); Welcome (01) and Finish-setup reminder (02, +24 h, once)
