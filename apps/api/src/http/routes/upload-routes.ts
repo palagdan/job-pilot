@@ -8,7 +8,11 @@ import { bodyLimit } from 'hono/body-limit';
 import type { JobQueue } from '../../application/ports/job-queue.ts';
 import type { RateLimitStore } from '../../application/ports/rate-limit-store.ts';
 import type { UploadRepository } from '../../application/ports/upload-repository.ts';
-import { getOriginalDownload, getUpload } from '../../application/uploads/get-upload.ts';
+import {
+  getCurrentUpload,
+  getOriginalDownload,
+  getUpload,
+} from '../../application/uploads/get-upload.ts';
 import { uploadCv } from '../../application/uploads/upload-cv.ts';
 import type { AppEnv } from '../app-env.ts';
 import { createRateLimit, rateLimits } from '../middleware/rate-limit.ts';
@@ -58,6 +62,7 @@ export const createUploadRoutes = (deps: UploadRoutesDeps) =>
         return c.json(result, 201);
       },
     )
+    .get('/current', async (c) => c.json(await getCurrentUpload(deps, c.var.user.id)))
     .get('/:id', validate('param', routeParams.id), async (c) =>
       c.json(await getUpload(deps, c.var.user.id, c.req.valid('param').id)),
     )

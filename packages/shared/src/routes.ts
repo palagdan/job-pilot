@@ -93,6 +93,13 @@ export const routes = {
     body: 'multipart',
     response: uploadSchema,
   },
+  /** The user's current (newest, not replaced) CV upload, or `null`. Lets Step 1 resume after a reload. */
+  getCurrentUpload: {
+    method: 'GET',
+    path: '/v1/uploads/current',
+    owner: 'daniil',
+    response: uploadSchema.nullable(),
+  },
   /** Poll parse status (Step 1 "Reading your CV..."). */
   getUpload: { method: 'GET', path: '/v1/uploads/:id', owner: 'artem', response: uploadSchema },
   saveOnboardingLinks: {

@@ -21,6 +21,7 @@ export const createQueryClient = () =>
 export const queryKeys = {
   me: ['me'] as const,
   profile: ['profile'] as const,
+  currentUpload: ['upload', 'current'] as const,
   targets: ['targets'] as const,
   schedule: ['schedule'] as const,
   today: (type?: string) => ['today', type ?? 'all'] as const,

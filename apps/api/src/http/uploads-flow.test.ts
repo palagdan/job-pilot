@@ -18,6 +18,8 @@ describe.skipIf(!testDatabaseUrl)('uploads (integration)', () => {
   });
   afterAll(() => t.teardown());
 
+  const freshHeaders = async () => (await t.signIn()).headers;
+
   const post = (headers: Headers, bytes: Uint8Array, name = 'My CV.pdf', query = '') => {
     const form = new FormData();
     form.set(
@@ -42,6 +44,15 @@ describe.skipIf(!testDatabaseUrl)('uploads (integration)', () => {
     expect((await t.app.request(`/v1/uploads/${firstId}`, { headers: alice })).status).toBe(200);
     expect((await t.app.request(`/v1/uploads/${firstId}`, { headers: bob })).status).toBe(404);
     expect((await t.app.request(`/v1/uploads/not-a-uuid`, { headers: alice })).status).toBe(400);
+  });
+
+  it('GET /v1/uploads/current returns the newest upload, or null when there is none', async () => {
+    const mine = await t.app.request('/v1/uploads/current', { headers: alice });
+    expect(mine.status).toBe(200);
+    expect(uploadSchema.parse(await mine.json()).id).toBe(firstId);
+    const none = await t.app.request('/v1/uploads/current', { headers: await freshHeaders() });
+    expect(none.status).toBe(200);
+    expect(await none.json()).toBeNull();
   });
 
   it('second CV without replace → 409; with ?replace=true → 201', async () => {
